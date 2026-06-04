@@ -34,32 +34,8 @@
 │   │   │   ├── admin_dashboard_private
 │   │   │   │   ├── audit-logs
 │   │   │   │   │   └── page.tsx
-│   │   │   │   ├── categories
-│   │   │   │   │   ├── page.tsx
-│   │   │   │   │   └── [categoryId]
-│   │   │   │   │       └── page.tsx
 │   │   │   │   ├── layout.tsx
-│   │   │   │   ├── orders
-│   │   │   │   │   ├── create
-│   │   │   │   │   │   └── page.tsx
-│   │   │   │   │   ├── details
-│   │   │   │   │   │   └── [...orderNumber]
-│   │   │   │   │   │       └── page.tsx
-│   │   │   │   │   ├── edit
-│   │   │   │   │   │   └── [orderId]
-│   │   │   │   │   │       └── page.tsx
-│   │   │   │   │   └── page.tsx
 │   │   │   │   ├── page.tsx
-│   │   │   │   ├── payments
-│   │   │   │   │   └── page.tsx
-│   │   │   │   ├── products
-│   │   │   │   │   ├── add
-│   │   │   │   │   │   └── page.tsx
-│   │   │   │   │   ├── archived
-│   │   │   │   │   ├── edit
-│   │   │   │   │   │   └── [...productId]
-│   │   │   │   │   │       └── page.tsx
-│   │   │   │   │   └── page.tsx
 │   │   │   │   ├── settings
 │   │   │   │   │   ├── master-access
 │   │   │   │   │   │   └── page.tsx
@@ -92,54 +68,6 @@
 │   │   │   │   ├── AuditLogs
 │   │   │   │   │   ├── AuditLogDetailsModal.tsx
 │   │   │   │   │   └── AuditLogTable.tsx
-│   │   │   │   ├── Category
-│   │   │   │   │   ├── CategoryTable.tsx
-│   │   │   │   │   └── ManageCategoryModal.tsx
-│   │   │   │   ├── Orders
-│   │   │   │   │   ├── AdminOrderHistoryTimeline.tsx
-│   │   │   │   │   ├── CreateRelated
-│   │   │   │   │   │   ├── CartItemsSection.tsx
-│   │   │   │   │   │   ├── CustomerInfoSection.tsx
-│   │   │   │   │   │   ├── OrderManagementForm.tsx
-│   │   │   │   │   │   ├── OrderSummaryFooter.tsx
-│   │   │   │   │   │   └── ProductSearchSection.tsx
-│   │   │   │   │   ├── Order.utils.tsx
-│   │   │   │   │   ├── OrdersFilterBar.tsx
-│   │   │   │   │   ├── OrdersManagementPage.tsx
-│   │   │   │   │   ├── OrdersManagementTable.tsx
-│   │   │   │   │   └── OrderStatusHeader.tsx
-│   │   │   │   ├── Products
-│   │   │   │   │   ├── AddProductForm
-│   │   │   │   │   │   ├── AddEditProductForm.tsx
-│   │   │   │   │   │   ├── ConfigurationCard.tsx
-│   │   │   │   │   │   ├── CustomFormField.tsx
-│   │   │   │   │   │   ├── FormCard.tsx
-│   │   │   │   │   │   ├── ImageSelectionModal.tsx
-│   │   │   │   │   │   ├── MediaCard.tsx
-│   │   │   │   │   │   ├── OrganizationRelated
-│   │   │   │   │   │   │   ├── BrandSelectField.tsx
-│   │   │   │   │   │   │   ├── Organization.helpers.ts
-│   │   │   │   │   │   │   ├── Organization.types.ts
-│   │   │   │   │   │   │   └── OrganizationCard.tsx
-│   │   │   │   │   │   ├── ProductForm.functions.ts
-│   │   │   │   │   │   ├── ProductForm.util.ts
-│   │   │   │   │   │   ├── ProductInformationCard.tsx
-│   │   │   │   │   │   ├── ProductOptionsCard.tsx
-│   │   │   │   │   │   ├── SeoCard.tsx
-│   │   │   │   │   │   ├── SpecificationsCard.tsx
-│   │   │   │   │   │   ├── VariantDrawer.tsx
-│   │   │   │   │   │   ├── VariantItem.tsx
-│   │   │   │   │   │   └── VariantsCard.tsx
-│   │   │   │   │   ├── MainProductsManagementTable.tsx
-│   │   │   │   │   ├── Product.utils.ts
-│   │   │   │   │   └── ProductFilterBar.tsx
-│   │   │   │   ├── Transaction
-│   │   │   │   │   ├── AddManualPaymentModal.tsx
-│   │   │   │   │   ├── AddManualRefundModal.tsx
-│   │   │   │   │   ├── OrderTransactionAudit.tsx
-│   │   │   │   │   ├── Transaction.utils.tsx
-│   │   │   │   │   ├── TransactionDetailsPopover.tsx
-│   │   │   │   │   └── TransactionTable.tsx
 │   │   │   │   └── usersManagement
 │   │   │   │       ├── badgesColor.tsx
 │   │   │   │       └── UsersManagementTable.tsx
@@ -152,7 +80,7 @@
 │   │   │   ├── IcfyIcon.tsx
 │   │   │   ├── LayoutContainer.tsx
 │   │   │   ├── Loader
-│   │   │   │   ├── IMSLoader.tsx
+│   │   │   │   ├── LogoLoader.tsx
 │   │   │   │   └── TableSkeleton.tsx
 │   │   │   ├── NotFoundPage.tsx
 │   │   │   ├── Pagination
@@ -226,28 +154,10 @@
 │   │   │   │   ├── Auth.interface.ts
 │   │   │   │   ├── Auth.validation.ts
 │   │   │   │   └── AuthAPi.ts
-│   │   │   ├── categoryApi
-│   │   │   │   ├── Category.interface.ts
-│   │   │   │   ├── Category.validation.ts
-│   │   │   │   └── CategoryApi.ts
-│   │   │   ├── orderApi
-│   │   │   │   ├── Order.constant.ts
-│   │   │   │   ├── Order.interface.ts
-│   │   │   │   ├── Order.validation.ts
-│   │   │   │   └── OrderApi.ts
-│   │   │   ├── productApi
-│   │   │   │   ├── Product.interface.ts
-│   │   │   │   ├── Product.validation.ts
-│   │   │   │   └── ProductApi.ts
-│   │   │   ├── transactionApi
-│   │   │   │   ├── Transaction.interface.ts
-│   │   │   │   ├── Transaction.validation.ts
-│   │   │   │   └── TransactionApi.ts
 │   │   │   └── userApi
 │   │   │       ├── User.interface.ts
 │   │   │       ├── User.validation.ts
 │   │   │       └── UserApi.ts
-│   │   ├── slices
 │   │   └── store.ts
 │   ├── Types
 │   │   └── codemirror.d.ts
