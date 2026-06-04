@@ -23,11 +23,6 @@ import {
   USER_ROLE,
 } from "@/Redux/services/userApi/User.interface";
 import { useAppState } from "@/Provider/StateProvider";
-import {
-  useGetAllStaffQuery,
-  useChangeUserStatusMutation,
-  useDeleteUserMutation,
-} from "@/Redux/services/userApi/UserApi";
 import PageHeader from "@/components/DashboardRelated/PageHeader";
 import Pagination from "@/components/Shared/Pagination/Pagination";
 import { Badge } from "@/components/ui/badge";
@@ -40,6 +35,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import ManageStaffModal from "@/components/AuthenticationRelated/ManageStaffModal";
+import {
+  useChangeUserStatusMutation,
+  useDeleteUserMutation,
+  useGetAllStaffQuery,
+} from "@/Redux/services/userApi/UserApi";
 
 type TSortOrder = "newest" | "oldest" | null;
 
@@ -131,42 +131,56 @@ const UserManagementPage = () => {
   const handleDeleteUser = async (userId: string) => {
     const result = await Swal.fire({
       title: "Remove Staff Member?",
-      text: "This will archive the user record permanently.",
+      text: "This will securely delete the user record.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#EF4444",
-      confirmButtonText: "Yes, Remove",
+      confirmButtonColor: "hsl(var(--destructive))",
+      confirmButtonText: "Yes, Delete",
+      background: "hsl(var(--card))",
+      color: "hsl(var(--foreground))",
     });
 
     if (result.isConfirmed) {
       try {
         await deleteUser(userId).unwrap();
-        Swal.fire("Removed", "Staff access has been revoked.", "success");
+        Swal.fire({
+          title: "Removed",
+          text: "Staff access revoked.",
+          icon: "success",
+          background: "hsl(var(--card))",
+          color: "hsl(var(--foreground))",
+        });
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
-        Swal.fire("Error", error?.data?.message || "Delete failed.", "error");
+        Swal.fire({
+          title: "Error",
+          text: error?.data?.message || "Delete failed.",
+          icon: "error",
+          background: "hsl(var(--card))",
+          color: "hsl(var(--foreground))",
+        });
       }
     }
   };
 
   return (
-    <div>
+    <div className="min-h-full flex flex-col">
       <PageHeader
-        title="Staff Management"
-        description="Manage system access levels and staff account statuses."
+        title="Team Directory"
+        description="Manage system access, roles, and staff account security."
         searchQuery={localSearchQuery}
         onSearchChange={setLocalSearchQuery}
-        placeholder="Search by name, email, or ID..."
+        placeholder="Search by name, email, or role..."
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           {selectedStatus && (
             <Badge
               variant="secondary"
-              className="gap-1 bg-primary/10 text-primary border-none"
+              className="gap-1 bg-primary/10 text-primary hover:bg-primary/20 transition-colors border-none py-1"
             >
-              {selectedStatus}{" "}
+              {selectedStatus}
               <X
-                className="h-3 w-3 cursor-pointer"
+                className="h-3 w-3 cursor-pointer ml-1"
                 onClick={() => setSelectedStatus(null)}
               />
             </Badge>
@@ -177,13 +191,13 @@ const UserManagementPage = () => {
               <Button
                 variant="outline"
                 size="sm"
-                className="h-9 border-slate-200 bg-white"
+                className="h-9 border-border bg-card"
               >
-                <Filter className="mr-2 h-4 w-4" /> Filter & Sort
+                <Filter className="mr-2 h-4 w-4 text-muted-foreground" /> Filter
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-slate-500">
+            <DropdownMenuContent align="end" className="w-56 border-border">
+              <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-muted-foreground">
                 Order
               </DropdownMenuLabel>
               <DropdownMenuCheckboxItem
@@ -198,15 +212,15 @@ const UserManagementPage = () => {
               >
                 <ArrowUpNarrowWide className="mr-2 h-4 w-4" /> Oldest First
               </DropdownMenuCheckboxItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-slate-500">
+              <DropdownMenuSeparator className="bg-border" />
+              <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-muted-foreground">
                 Status
               </DropdownMenuLabel>
               <DropdownMenuCheckboxItem
                 checked={selectedStatus === "active"}
                 onCheckedChange={() => setSelectedStatus("active")}
               >
-                Active Staff
+                Active Access
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
                 checked={selectedStatus === "blocked"}
@@ -220,45 +234,50 @@ const UserManagementPage = () => {
           {currentUser?.role === USER_ROLE.super_admin && (
             <Button
               size="sm"
-              className="h-9 bg-primary hover:bg-primary/90"
+              className="h-9 font-semibold"
               onClick={handleOpenCreateModal}
             >
-              Add Staff
+              Invite Member
             </Button>
           )}
         </div>
       </PageHeader>
 
-      <UsersManagementTable
-        users={usersData?.data?.result}
-        totalCount={usersData?.data?.meta?.total}
-        isLoading={showLoading}
-        startIndex={(currentPage - 1) * limit}
-        currentUser={currentUser}
-        onStatusChange={handleUserActiveStatus}
-        onDeleteUser={handleDeleteUser}
-        onEditUser={handleOpenEditModal}
-      />
+      <div className="p-6 flex-1">
+        <div className="border border-border rounded-xl shadow-sm bg-card overflow-hidden">
+          <UsersManagementTable
+            users={usersData?.data?.result}
+            totalCount={usersData?.data?.meta?.total}
+            isLoading={showLoading}
+            startIndex={(currentPage - 1) * limit}
+            currentUser={currentUser}
+            onStatusChange={handleUserActiveStatus}
+            onDeleteUser={handleDeleteUser}
+            onEditUser={handleOpenEditModal}
+          />
+        </div>
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+        <div className="mt-6">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </div>
+      </div>
 
-      {/* --- REUSABLE MODAL CONTAINER --- */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-3xl! w-full max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-2xl w-full max-h-[90vh] overflow-y-auto border-border bg-card">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="text-xl">
               {selectedUser
-                ? "Update Staff Permissions"
-                : "Register New Staff Member"}
+                ? "Update Profile & Access"
+                : "Provision New Account"}
             </DialogTitle>
             <DialogDescription>
               {selectedUser
-                ? `Modifying details for ${selectedUser.adminProfile.name}`
-                : "Fill in the details below to create a new system admin or manager account."}
+                ? `Modifying details for ${selectedUser.profile?.name || selectedUser.email}`
+                : "Create a secure account and assign role-based permissions."}
             </DialogDescription>
           </DialogHeader>
 

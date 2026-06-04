@@ -12,26 +12,24 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormDescription,
   FormMessage,
 } from "@/components/ui/form";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import {
-  useCreateStaffMutation,
-  useGetPermissionMetaQuery,
-  useUpdateStaffProfileMutation,
-} from "@/Redux/services/userApi/UserApi";
-import {
-  createStaffFormSchema,
-  updateStaffFormSchema,
-  TStaffFormValues,
-} from "@/Redux/services/userApi/User.validation";
 import {
   IManageStaffPayload,
   IUser,
+  USER_ROLE,
 } from "@/Redux/services/userApi/User.interface";
-import CustomFormField from "../DashboardRelated/Admin/Products/AddProductForm/CustomFormField";
+import {
+  useCreateStaffMutation,
+  useUpdateProfileMutation,
+} from "@/Redux/services/userApi/UserApi";
+import {
+  createStaffFormSchema,
+  TStaffFormValues,
+  updateStaffFormSchema,
+} from "@/Redux/services/userApi/User.validation";
+import CustomFormField from "@/Utils/CustomFormField";
 
 interface ManageStaffModalProps {
   user?: IUser;
@@ -42,10 +40,7 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
   const isUpdateMode = !!user;
 
   const [createStaff, { isLoading: isCreating }] = useCreateStaffMutation();
-  const [updateStaff, { isLoading: isUpdating }] =
-    useUpdateStaffProfileMutation();
-  const { data: permissionMeta, isLoading: isLoadingMeta } =
-    useGetPermissionMetaQuery();
+  const [updateStaff, { isLoading: isUpdating }] = useUpdateProfileMutation();
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -55,13 +50,12 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
   const form = useForm<TStaffFormValues>({
     resolver: zodResolver(
       isUpdateMode ? updateStaffFormSchema : createStaffFormSchema,
-    ),
+    ) as any,
     defaultValues: {
       name: "",
       email: "",
       contactNo: "",
-      role: "manager",
-      permissions: [],
+      role: USER_ROLE.team_member,
       password: "",
       confirmPassword: "",
     },
@@ -70,15 +64,10 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
   useEffect(() => {
     if (user) {
       form.reset({
-        name: user.adminProfile?.name || "",
+        name: user.profile?.name || "",
         email: user.email || "",
-        contactNo: user.adminProfile?.contactNo || "",
-
-        role: (user.role === "super_admin"
-          ? "admin"
-          : user.role) as TStaffFormValues["role"],
-        permissions: (user.adminProfile?.permissions ||
-          []) as TStaffFormValues["permissions"],
+        contactNo: user.profile?.contactNo || "",
+        role: user.role as TStaffFormValues["role"],
         password: "",
         confirmPassword: "",
       });
@@ -86,13 +75,12 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
   }, [user, form]);
 
   const onSubmit = async (values: TStaffFormValues) => {
-    const payload: IManageStaffPayload = {
+    const payload: IManageStaffPayload | any = {
       role: values.role,
-      admin: {
+      email: values.email,
+      profile: {
         name: values.name,
-        email: values.email,
         contactNo: values.contactNo,
-        permissions: values.permissions,
       },
     };
 
@@ -102,28 +90,49 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
 
     try {
       if (isUpdateMode && user) {
-        await updateStaff({ id: user.id, data: payload }).unwrap();
-        Swal.fire("Success", "Staff profile updated successfully.", "success");
+        const updatePayload = {
+          name: values.name,
+          contactNo: values.contactNo,
+        };
+        await updateStaff({
+          id: user.profile?.id || user.id,
+          data: updatePayload,
+        }).unwrap();
+
+        Swal.fire({
+          title: "Success",
+          text: "Profile updated successfully.",
+          icon: "success",
+          background: "hsl(var(--card))",
+          color: "hsl(var(--foreground))",
+        });
       } else {
         await createStaff(payload).unwrap();
-        Swal.fire(
-          "Success",
-          `New ${values.role} registered successfully.`,
-          "success",
-        );
+        Swal.fire({
+          title: "Provisioned",
+          text: `New ${values.role.replace("_", " ")} registered successfully.`,
+          icon: "success",
+          background: "hsl(var(--card))",
+          color: "hsl(var(--foreground))",
+        });
       }
       closeModal();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      Swal.fire("Error", error?.data?.message || "Action failed.", "error");
+      Swal.fire({
+        title: "Error",
+        text: error?.data?.message || "Action failed.",
+        icon: "error",
+        background: "hsl(var(--card))",
+        color: "hsl(var(--foreground))",
+      });
     }
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 px-1">
-        {/* --- Personal Information --- */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 px-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <CustomFormField
             control={form.control}
             name="name"
@@ -136,7 +145,7 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
             label="Staff Email"
             type="email"
             disabled={isUpdateMode}
-            placeholder="staff@ims.com"
+            placeholder="staff@smartproject.com"
           />
           <CustomFormField
             control={form.control}
@@ -149,92 +158,50 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
             name="role"
             label="System Role"
             type="select"
+            disabled={isUpdateMode}
             placeholder="Select a role"
             options={[
-              { label: "Admin (System Access)", value: "admin" },
-              { label: "Manager (Operational Access)", value: "manager" },
+              { label: "Administrator", value: USER_ROLE.admin },
+              { label: "Project Manager", value: USER_ROLE.project_manager },
+              {
+                label: "Team Member / Developer",
+                value: USER_ROLE.team_member,
+              },
             ]}
           />
         </div>
 
-        {/* --- Permissions Grid --- */}
-        <div className="space-y-3 rounded-lg border border-border p-4 bg-slate-50/30">
-          <h3 className="text-sm font-bold text-slate-700">
-            Module Permissions
-          </h3>
-          {isLoadingMeta ? (
-            <div className="flex items-center gap-2 text-xs text-muted-foreground justify-center py-4">
-              <Loader2 className="h-4 w-4 animate-spin" /> Loading manifest...
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {Object.entries(permissionMeta?.data || {}).map(([key, meta]) => (
-                <FormField
-                  key={key}
-                  control={form.control}
-                  name="permissions"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-3 bg-white shadow-sm hover:border-primary/20 transition-colors">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value?.includes(key)}
-                          onCheckedChange={(checked) => {
-                            const current = field.value || [];
-                            return checked
-                              ? field.onChange([...current, key])
-                              : field.onChange(
-                                  current.filter((v) => v !== key),
-                                );
-                          }}
-                        />
-                      </FormControl>
-                      <div className="leading-none space-y-1">
-                        <FormLabel className="text-xs font-bold cursor-pointer">
-                          {meta.label}
-                        </FormLabel>
-                        <FormDescription className="text-[10px] leading-tight line-clamp-1">
-                          {meta.description}
-                        </FormDescription>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              ))}
-            </div>
-          )}
-          <FormMessage className="text-xs" />
-        </div>
-
         {/* --- Security Section --- */}
-        <div className="bg-slate-50/50 p-4 rounded-lg border border-dashed border-slate-200">
+        <div className="bg-muted/30 p-5 rounded-lg border border-dashed border-border/60">
           <div className="flex flex-col mb-4">
-            <h3 className="text-[10px] font-bold uppercase text-slate-500 tracking-widest">
+            <h3 className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">
               {isUpdateMode ? "Credentials Reset" : "Security Credentials"}
             </h3>
             {isUpdateMode && (
-              <span className="text-[9px] text-slate-400 font-medium">
-                Keep blank to maintain the current secure password.
+              <span className="text-[10px] text-muted-foreground/70 font-medium mt-1">
+                Leave fields blank to maintain the current secure password.
               </span>
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
-            {/* Password Field */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="text-slate-600 font-medium">
+                  <FormLabel className="font-medium text-foreground">
                     {isUpdateMode ? "New Password" : "Temporary Password"}
                   </FormLabel>
                   <div className="relative">
                     <FormControl>
                       <Input
                         type={showPassword ? "text" : "password"}
-                        placeholder={isUpdateMode ? "New secret" : "••••••••"}
+                        placeholder={
+                          isUpdateMode ? "Leave blank to keep" : "••••••••"
+                        }
                         {...field}
-                        className="bg-white pr-10"
+                        className="bg-background pr-10"
                       />
                     </FormControl>
                     <button
@@ -254,13 +221,12 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
               )}
             />
 
-            {/* Confirm Password Field  */}
             <FormField
               control={form.control}
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel className="text-slate-600 font-medium">
+                  <FormLabel className="font-medium text-foreground">
                     Confirm Password
                   </FormLabel>
                   <div className="relative">
@@ -269,7 +235,7 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
                         type={showConfirmPassword ? "text" : "password"}
                         placeholder="••••••••"
                         {...field}
-                        className="bg-white pr-10"
+                        className="bg-background pr-10"
                       />
                     </FormControl>
                     <button
@@ -294,12 +260,12 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
         </div>
 
         {/* --- Footer Actions --- */}
-        <div className="flex justify-end gap-3 pt-4 border-t">
+        <div className="flex justify-end gap-3 pt-4 border-t border-border">
           <Button
             type="button"
             variant="ghost"
             onClick={closeModal}
-            className="font-bold text-xs uppercase tracking-widest"
+            className="font-bold text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground"
           >
             Cancel
           </Button>
@@ -310,12 +276,12 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="mr-2 h-3 w-3 animate-spin" /> Saving...
+                <Loader2 className="mr-2 h-3 w-3 animate-spin" /> Processing...
               </>
             ) : isUpdateMode ? (
               "Update Member"
             ) : (
-              "Create Access"
+              "Create Account"
             )}
           </Button>
         </div>

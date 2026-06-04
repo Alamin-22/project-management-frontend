@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
-import { MoreHorizontal, Trash2, ShieldCheck, UserCog } from "lucide-react";
+import { MoreHorizontal, Trash2, UserCog } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -48,36 +48,35 @@ const UsersManagementTable = ({
   onEditUser,
 }: UsersManagementTableProps) => {
   return (
-    <div className="border-b bg-white">
+    <div className="bg-card overflow-hidden">
       <Table>
-        <TableHeader className="bg-gray-100">
-          <TableRow className="border-none">
-            <TableHead className="w-72 font-bold text-slate-700">
-              <div className="flex items-center gap-3 pl-3">
+        <TableHeader className="bg-muted/40 border-b border-border">
+          <TableRow className="hover:bg-transparent">
+            <TableHead className="w-80 font-semibold text-muted-foreground">
+              <div className="flex items-center gap-3 pl-4">
                 <Badge
                   variant="secondary"
-                  className="rounded-sm px-1.5 min-w-8 justify-center text-black bg-white border border-slate-300"
+                  className="rounded-md px-2 bg-background border border-border"
                 >
                   {totalCount || 0}
                 </Badge>
-                <span>Staff Member</span>
+                <span>Team Member</span>
               </div>
             </TableHead>
-            <TableHead className="font-bold text-slate-700 text-center">Contact</TableHead>
-            <TableHead className="font-bold text-slate-700 text-center">
-              System Permissions
+            <TableHead className="font-semibold text-muted-foreground">
+              Contact
             </TableHead>
-            <TableHead className="text-center font-bold text-slate-700">
-              Status
-            </TableHead>
-            <TableHead className="text-center font-bold text-slate-700">
+            <TableHead className="font-semibold text-muted-foreground">
               Role
             </TableHead>
-            <TableHead className="whitespace-nowrap text-center font-bold text-slate-700">
+            <TableHead className="font-semibold text-muted-foreground text-center">
+              Status
+            </TableHead>
+            <TableHead className="font-semibold text-muted-foreground text-center">
               Last Active
             </TableHead>
-            <TableHead className="text-center font-bold text-slate-700">
-              Action
+            <TableHead className="font-semibold text-muted-foreground text-center">
+              Actions
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -93,77 +92,64 @@ const UsersManagementTable = ({
               return (
                 <TableRow
                   key={staff._id}
-                  className="even:bg-gray-50 group text-slate-600 border-slate-200"
+                  className="group border-b border-border/50 hover:bg-muted/20 transition-colors"
                 >
                   <TableCell>
-                    <div className="flex items-center gap-3 pl-3">
-                      <span className="text-slate-400 text-xs w-4 shrink-0">
+                    <div className="flex items-center gap-4 pl-4">
+                      <span className="text-muted-foreground text-xs w-4 shrink-0 font-medium">
                         {startIndex + idx + 1}
                       </span>
                       <div className="relative shrink-0">
                         <Image
                           width={40}
                           height={40}
-                          className="object-cover h-10 w-10 rounded-full border border-slate-200 bg-white shadow-sm"
+                          className="object-cover h-10 w-10 rounded-full border border-border bg-muted"
                           src={
-                            staff.adminProfile?.profileImg?.url ||
-                            `https://placehold.co/200x200/4F46E5/ffffff.png?text=${staff.adminProfile?.name?.charAt(0) || "U"}`
+                            staff.profile?.profileImg?.url ||
+                            `https://ui-avatars.com/api/?name=${encodeURIComponent(staff.profile?.name || "U")}&background=random`
                           }
                           alt="Avatar"
                         />
-                        {/* Status Presence Dot */}
                         <span
-                          className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white shadow-sm ${
+                          className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-card ${
                             staff.status === "active"
-                              ? "bg-green-500"
-                              : "bg-red-500"
+                              ? "bg-emerald-500"
+                              : "bg-destructive"
                           }`}
                         />
                       </div>
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="truncate font-bold text-slate-900 text-sm">
-                            {staff.adminProfile?.name || "Pending Profile"}
+                          <span className="truncate font-semibold text-foreground text-sm">
+                            {staff.profile?.name || "Pending Profile"}
                           </span>
                           {isSelf && (
-                            <Badge className="text-[9px] px-1 h-4 border-primary/20 text-primary bg-primary/5 hover:bg-primary/5">
+                            <Badge
+                              variant="outline"
+                              className="text-[9px] px-1.5 h-4 text-primary border-primary/30 bg-primary/10"
+                            >
                               You
                             </Badge>
                           )}
                         </div>
-                        <p className="truncate text-[11px] text-slate-500">
+                        <p className="truncate text-xs text-muted-foreground mt-0.5">
                           {staff.email}
                         </p>
                       </div>
                     </div>
                   </TableCell>
 
-                  <TableCell className="text-center">
-                    {staff.adminProfile.contactNo}
+                  <TableCell className="text-sm text-muted-foreground">
+                    {staff.profile?.contactNo || "—"}
                   </TableCell>
 
                   <TableCell>
-                    <div className="flex flex-wrap gap-1 max-w-64 justify-center">
-                      {staff.adminProfile?.permissions?.map((perm) => {
-                        const isFull = perm === "full_access";
-                        return (
-                          <Badge
-                            key={perm}
-                            variant="outline"
-                            className={`text-[9px] px-1.5 py-0 uppercase font-bold tracking-tighter ${
-                              isFull
-                                ? "bg-indigo-50 text-indigo-700 border-indigo-200"
-                                : "bg-slate-50 text-slate-600 border-slate-200"
-                            }`}
-                          >
-                            {isFull && (
-                              <ShieldCheck className="w-2.5 h-2.5 mr-1" />
-                            )}
-                            {perm.replace("_", " ")}
-                          </Badge>
-                        );
-                      })}
-                    </div>
+                    <Badge
+                      variant="secondary"
+                      className="text-[10px] font-bold uppercase tracking-wider border-border bg-muted text-foreground"
+                    >
+                      {staff.role.replace("_", " ")}
+                    </Badge>
                   </TableCell>
 
                   <TableCell className="text-center">
@@ -172,40 +158,27 @@ const UsersManagementTable = ({
                         staff.status === "active" ? "outline" : "default"
                       }
                       size="sm"
-                      // Cannot block Super Admin
                       disabled={isSuperAdmin}
                       onClick={() => onStatusChange(staff)}
                       className={`h-7 text-[10px] uppercase font-bold px-3 rounded-full transition-all ${
                         staff.status === "active"
-                          ? "border-red-100 text-red-600 hover:bg-red-50"
-                          : "bg-green-600 hover:bg-green-700 text-white"
+                          ? "border-destructive/30 text-destructive hover:bg-destructive/10"
+                          : "bg-emerald-600 hover:bg-emerald-700 text-white"
                       }`}
                     >
-                      {staff.status === "active" ? "Block" : "Activate"}
+                      {staff.status === "active" ? "Revoke" : "Restore"}
                     </Button>
                   </TableCell>
 
-                  <TableCell className="text-center">
-                    <Badge
-                      className={`text-[10px] font-bold uppercase border-none pointer-events-none ${
-                        isSuperAdmin
-                          ? "bg-indigo-600 shadow-sm shadow-indigo-200"
-                          : "bg-slate-500"
-                      }`}
-                    >
-                      {staff.role.replace("_", " ")}
-                    </Badge>
-                  </TableCell>
-
-                  <TableCell className="text-[11px] text-center whitespace-nowrap">
+                  <TableCell className="text-xs text-center whitespace-nowrap">
                     {staff.lastActive ? (
                       <div className="flex flex-col items-center">
-                        <span className="font-bold text-slate-700">
+                        <span className="font-medium text-foreground">
                           {formatDistanceToNow(new Date(staff.lastActive), {
                             addSuffix: true,
                           })}
                         </span>
-                        <span className="text-[9px] text-slate-400">
+                        <span className="text-[10px] text-muted-foreground mt-0.5">
                           {new Date(staff.lastActive).toLocaleTimeString([], {
                             hour: "2-digit",
                             minute: "2-digit",
@@ -213,7 +186,7 @@ const UsersManagementTable = ({
                         </span>
                       </div>
                     ) : (
-                      <span className="text-slate-400 italic">
+                      <span className="text-muted-foreground italic">
                         Never Active
                       </span>
                     )}
@@ -225,31 +198,28 @@ const UsersManagementTable = ({
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-slate-400 hover:text-slate-900"
+                          className="h-8 w-8 text-muted-foreground hover:text-foreground"
                         >
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent
                         align="end"
-                        className="w-48 shadow-lg border-slate-200"
+                        className="w-48 shadow-lg border-border"
                       >
                         <DropdownMenuItem
-                          className="cursor-pointer font-bold text-xs"
-                          //  Can only edit self if Super Admin, others can't edit Super Admin
+                          className="cursor-pointer font-medium text-xs"
                           disabled={isSuperAdmin && !isSelf}
                           onClick={() => onEditUser(staff)}
                         >
-                          <UserCog className="mr-2 h-4 w-4" /> Edit Staff
-                          Details
+                          <UserCog className="mr-2 h-4 w-4" /> Edit Profile
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          //  Super Admin is indestructible
                           disabled={isSuperAdmin || isSelf}
                           onClick={() => onDeleteUser(staff.id)}
-                          className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer font-bold text-xs"
+                          className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer font-medium text-xs"
                         >
-                          <Trash2 className="mr-2 h-4 w-4" /> Delete Account
+                          <Trash2 className="mr-2 h-4 w-4" /> Permanently Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -259,8 +229,8 @@ const UsersManagementTable = ({
             })
           ) : (
             <TableRow>
-              <TableCell colSpan={6} className="h-64 text-center">
-                <QueryNotFoundMessage message="No staff members match your criteria." />
+              <TableCell colSpan={6} className="h-64 text-center border-b-0">
+                <QueryNotFoundMessage message="No staff members match your current filters." />
               </TableCell>
             </TableRow>
           )}
