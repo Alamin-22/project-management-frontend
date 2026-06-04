@@ -3,6 +3,7 @@
 import { format } from "date-fns";
 import { Calendar, Users } from "lucide-react";
 import Link from "next/link";
+import DOMPurify from "isomorphic-dompurify";
 import { Badge } from "@/components/ui/badge";
 import { IProject } from "@/Redux/services/projectApi/Project.interface";
 
@@ -18,10 +19,11 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
   const deadlineDate = new Date(project.deadline);
   const isOverdue = deadlineDate < new Date() && !isCompleted;
 
+  const sanitizedDescription = DOMPurify.sanitize(project.description);
+
   return (
     <Link href={`${baseUrl}/${project.slug}`} className="block group">
       <div className="bg-card border border-border/60 hover:border-primary/50 rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300 h-full flex flex-col relative overflow-hidden">
-        {/* Top Header */}
         <div className="flex justify-between items-start mb-4">
           <div className="space-y-1 pr-4">
             <h3 className="font-bold text-lg leading-tight text-foreground group-hover:text-primary transition-colors line-clamp-1">
@@ -47,14 +49,12 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
           </Badge>
         </div>
 
-        {/* Description */}
-        <p className="text-sm text-muted-foreground line-clamp-2 mb-6 flex-1">
-          {project.description}
-        </p>
+        <div
+          className="text-sm text-muted-foreground line-clamp-2 mb-6 flex-1 prose prose-sm dark:prose-invert max-w-none *:m-0"
+          dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
+        />
 
-        {/* Footer Metrics */}
-        <div className="pt-4 border-t border-border/50 grid grid-cols-2 gap-4">
-          {/* Deadline Metric */}
+        <div className="pt-4 border-t border-border/50 grid grid-cols-2 gap-4 mt-auto">
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1">
               <Calendar className="h-3 w-3" /> Deadline
@@ -62,23 +62,20 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
             <span
               className={`text-xs font-medium ${isOverdue ? "text-destructive" : "text-foreground"}`}
             >
-              {format(deadlineDate, "MMM dd, yyyy")}
+              {format(deadlineDate, "MMM dd, yyyy - hh:mm a")}
               {isOverdue && <span className="ml-1 font-bold">(Overdue)</span>}
             </span>
           </div>
 
-          {/* Team Metric */}
           <div className="flex flex-col gap-1 items-end">
             <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1">
               <Users className="h-3 w-3" /> Team Size
             </span>
             <div className="flex items-center -space-x-2 overflow-hidden mt-0.5">
               {project.teamMembers.length > 0 ? (
-                <>
-                  <span className="text-xs font-medium text-foreground mr-3">
-                    {project.teamMembers.length} Assigned
-                  </span>
-                </>
+                <span className="text-xs font-medium text-foreground mr-3">
+                  {project.teamMembers.length} Assigned
+                </span>
               ) : (
                 <span className="text-xs text-muted-foreground italic">
                   Unassigned

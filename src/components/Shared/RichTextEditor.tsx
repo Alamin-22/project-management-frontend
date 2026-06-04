@@ -1,10 +1,15 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, FileText, Code } from "lucide-react";
+import CodeMirror, { EditorView } from "@uiw/react-codemirror";
+import { html } from "@codemirror/lang-html";
+import { vscodeDark } from "@uiw/codemirror-theme-vscode";
+import Swal from "sweetalert2";
+
 import TiptapWrapper from "./TiptapToolbar/TiptapWrapper";
 import { useUploadMediaMutation } from "@/Redux/services/uploaderApi/UploaderApi";
-import Swal from "sweetalert2";
+import { formatHtml } from "@/Utils/formatHtml";
 
 interface RichTextEditorProps {
   value: string;
@@ -16,6 +21,8 @@ interface RichTextEditorProps {
 const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
   const [uploadMedia, { isLoading }] = useUploadMediaMutation();
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [isCodeMode, setIsCodeMode] = useState(false);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [activeEditor, setActiveEditor] = useState<any>(null);
@@ -81,30 +88,74 @@ const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
   };
 
   return (
-    <div className="relative rounded-lg bg-card">
-      {isLoading && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-sm rounded-lg">
-          <Loader2 className="h-6 w-6 animate-spin text-primary" />
-          <span className="ml-2 text-sm font-semibold text-primary">
-            Uploading...
-          </span>
+    <div className="flex flex-col gap-2">
+      <div className="flex justify-end">
+        <div className="flex items-center gap-1 bg-muted/50 p-1 rounded-md border border-border">
+          <button
+            type="button"
+            onClick={() => setIsCodeMode(false)}
+            className={`flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold rounded transition-all ${
+              !isCodeMode
+                ? "bg-background text-primary shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <FileText className="w-3 h-3" /> Visual
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsCodeMode(true)}
+            className={`flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold rounded transition-all ${
+              isCodeMode
+                ? "bg-background text-primary shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Code className="w-3 h-3" /> HTML
+          </button>
         </div>
-      )}
+      </div>
 
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        className="hidden"
-        multiple
-      />
+      {/* --- Editor Container --- */}
+      <div className="relative rounded-lg bg-card border border-input shadow-sm overflow-hidden">
+        {isLoading && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-sm rounded-lg">
+            <Loader2 className="h-6 w-6 animate-spin text-primary" />
+            <span className="ml-2 text-sm font-semibold text-primary">
+              Uploading...
+            </span>
+          </div>
+        )}
 
-      <TiptapWrapper
-        value={value}
-        onChange={onChange}
-        onImageUpload={handleAttachmentClick}
-        className="min-h-62.5"
-      />
+        {/* Hidden File Input */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          className="hidden"
+          multiple
+        />
+
+        {isCodeMode ? (
+          <div className="p-0">
+            <CodeMirror
+              value={formatHtml(value || "")}
+              height="350px"
+              extensions={[html(), EditorView.lineWrapping]}
+              theme={vscodeDark}
+              onChange={(val) => onChange(val)}
+              className="text-sm"
+            />
+          </div>
+        ) : (
+          <TiptapWrapper
+            value={value}
+            onChange={onChange}
+            onImageUpload={handleAttachmentClick}
+            className="min-h-62.5"
+          />
+        )}
+      </div>
     </div>
   );
 };

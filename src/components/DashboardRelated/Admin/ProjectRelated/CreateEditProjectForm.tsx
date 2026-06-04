@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Swal from "sweetalert2";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -38,6 +39,8 @@ const CreateEditProjectForm = ({ project }: CreateEditProjectFormProps) => {
 
   const isSubmitting = isCreating || isUpdating;
 
+  const formatForInput = (date: Date) => format(date, "yyyy-MM-dd'T'HH:mm");
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const form = useForm<any>({
     resolver: zodResolver(
@@ -48,7 +51,7 @@ const CreateEditProjectForm = ({ project }: CreateEditProjectFormProps) => {
     defaultValues: {
       name: "",
       description: "",
-      deadline: new Date(),
+      deadline: formatForInput(new Date()),
       status: PROJECT_STATUS.active,
     },
   });
@@ -59,7 +62,7 @@ const CreateEditProjectForm = ({ project }: CreateEditProjectFormProps) => {
       form.reset({
         name: project.name,
         description: project.description,
-        deadline: new Date(project.deadline),
+        deadline: formatForInput(new Date(project.deadline)),
         status: project.status,
       });
     }
@@ -74,7 +77,7 @@ const CreateEditProjectForm = ({ project }: CreateEditProjectFormProps) => {
           data: {
             name: values.name,
             description: values.description,
-            deadline: values.deadline,
+            deadline: new Date(values.deadline),
             status: values.status,
           },
         }).unwrap();
@@ -90,7 +93,7 @@ const CreateEditProjectForm = ({ project }: CreateEditProjectFormProps) => {
         await createProject({
           name: values.name,
           description: values.description,
-          deadline: values.deadline,
+          deadline: new Date(values.deadline),
         }).unwrap();
 
         Swal.fire({
@@ -131,11 +134,10 @@ const CreateEditProjectForm = ({ project }: CreateEditProjectFormProps) => {
             control={form.control}
             name="deadline"
             label="Target Deadline"
-            type="date"
+            type="datetime-local"
           />
         </div>
 
-        {/* Status Dropdown - ONLY shows in Edit Mode */}
         {isUpdateMode && (
           <div className="w-full md:w-1/2 md:pr-3">
             <CustomFormField
