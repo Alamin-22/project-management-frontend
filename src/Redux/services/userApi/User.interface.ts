@@ -8,21 +8,28 @@ export const USER_ROLE = {
 } as const;
 
 export const USER_STATUS = {
-  in_progress: "in-progress",
+  active: "active",
   blocked: "blocked",
 } as const;
 
 export type TUserRole = keyof typeof USER_ROLE;
-export type TUserStatus = (typeof USER_STATUS)[keyof typeof USER_STATUS];
+export type TUserStatus = keyof typeof USER_STATUS;
 
 export interface IProfile {
+  _id?: string;
+  id: string;
+  user: string;
+
   name: string;
   email: string;
-  contactNo?: string;
-  profileImg?: string; // Or { url: string; publicId: string } depending on your exact backend model
+  contactNo: string;
 
-  _id?: string;
-  user?: string;
+  profileImg?: {
+    url?: string;
+    publicId?: string;
+  };
+
+  isDeleted?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -36,9 +43,13 @@ export interface IManageStaffPayload {
   };
 }
 
-export interface IUpdateStaffArgs {
+export interface IUpdateProfileArgs {
   id: string;
-  data: Partial<IManageStaffPayload>;
+  data: Partial<{
+    name: string;
+    contactNo: string;
+    profileImg: { url: string; publicId: string };
+  }>;
 }
 
 export interface IUser {
@@ -47,8 +58,12 @@ export interface IUser {
   email: string;
   role: TUserRole;
   status: TUserStatus;
+
   profile: IProfile;
 
+  needsPasswordChange?: boolean;
+  lastActive?: string;
+  isVerified?: boolean;
   isDeleted?: boolean;
   createdAt?: string;
   updatedAt?: string;

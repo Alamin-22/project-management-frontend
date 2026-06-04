@@ -25,6 +25,7 @@ import { useAppState } from "@/Provider/StateProvider";
 import { Fragment, useEffect, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { USER_ROLE } from "@/Redux/services/userApi/User.interface";
 
 const AppSidebar = ({ links }: { links: TNavLink[] }) => {
   const pathName = usePathname();
@@ -35,12 +36,14 @@ const AppSidebar = ({ links }: { links: TNavLink[] }) => {
     handleLogOut,
     searchQuery,
     setSearchQuery,
-    isManager,
   } = useAppState();
   const { setOpenMobile } = useSidebar();
   const activeItemRef = useRef<HTMLAnchorElement | null>(null);
 
-  const baseRoute = isManager ? "/manager_workspace" : "/member_workspace";
+  const baseRoute =
+    user?.role === USER_ROLE.project_manager
+      ? "/manager_workspace"
+      : "/member_workspace";
 
   useEffect(() => {
     if (activeItemRef.current) {
@@ -171,7 +174,7 @@ const AppSidebar = ({ links }: { links: TNavLink[] }) => {
           ) : (
             <div className="relative shrink-0">
               <Image
-                src={user?.profile?.profileImg || "/Assets/user-icon.png"}
+                src={user?.profile?.profileImg?.url || "/Assets/user-icon.png"}
                 alt="User"
                 width={32}
                 height={32}

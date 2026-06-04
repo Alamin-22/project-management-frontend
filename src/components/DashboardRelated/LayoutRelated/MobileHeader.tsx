@@ -14,12 +14,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { USER_ROLE } from "@/Redux/services/userApi/User.interface";
 
 const MobileHeader = () => {
-  const { user, loading, isAuthError, handleLogOut, isManager } = useAppState();
+  const { user, loading, isAuthError, handleLogOut } = useAppState();
   const { toggleSidebar } = useSidebar();
 
-  const baseRoute = isManager ? "/manager_workspace" : "/member_workspace";
+  const baseRoute =
+    user?.role === USER_ROLE.project_manager
+      ? "/manager_workspace"
+      : "/member_workspace";
+
   const showSkeletons = loading || !user || isAuthError;
 
   return (
@@ -46,7 +51,7 @@ const MobileHeader = () => {
             <DropdownMenuTrigger asChild>
               <button className="relative h-8 w-8 overflow-hidden rounded-full border border-border outline-none active:scale-95 transition-transform">
                 <Image
-                  src={user?.profile?.profileImg || "/Assets/user-icon.png"}
+                  src={user?.profile.profileImg?.url || "/Assets/user-icon.png"}
                   alt="Profile"
                   fill
                   className="object-cover"

@@ -1,10 +1,11 @@
 import { z } from "zod";
+import { USER_ROLE } from "./User.interface";
 
 export type TStaffFormValues = {
   name: string;
   email: string;
   contactNo: string;
-  role: "super_admin" | "admin" | "project_manager" | "team_member";
+  role: keyof typeof USER_ROLE;
   password?: string;
   confirmPassword?: string;
 };
@@ -13,7 +14,11 @@ const baseStaffSchema = z.object({
   name: z.string().min(1, "Full Name is required"),
   email: z.string().email("Invalid email address"),
   contactNo: z.string().min(1, "Contact number is required"),
-  role: z.enum(["super_admin", "admin", "project_manager", "team_member"]),
+  role: z.enum([
+    USER_ROLE.admin,
+    USER_ROLE.project_manager,
+    USER_ROLE.team_member,
+  ]),
 });
 
 export const createStaffFormSchema = baseStaffSchema
