@@ -47,7 +47,6 @@ const UsersManagementTable = ({
   onDeleteUser,
   onEditUser,
 }: UsersManagementTableProps) => {
-  console.log(currentUser);
   return (
     <div className="bg-card overflow-hidden">
       <Table>

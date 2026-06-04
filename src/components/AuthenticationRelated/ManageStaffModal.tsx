@@ -90,10 +90,17 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
 
     try {
       if (isUpdateMode && user) {
-        const updatePayload = {
-          name: values.name,
-          contactNo: values.contactNo,
+        const updatePayload: any = {
+          profile: {
+            name: values.name,
+            contactNo: values.contactNo,
+          },
         };
+
+        if (values.password && values.password.trim().length > 0) {
+          updatePayload.password = values.password;
+        }
+
         await updateStaff({
           id: user.profile?.id || user.id,
           data: updatePayload,
@@ -166,6 +173,14 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
             disabled={isUpdateMode}
             placeholder="Select a role"
             options={[
+              ...(isUpdateMode && user?.role === USER_ROLE.super_admin
+                ? [
+                    {
+                      label: "System Kernel (Super Admin)",
+                      value: USER_ROLE.super_admin,
+                    },
+                  ]
+                : []),
               { label: "Administrator", value: USER_ROLE.admin },
               { label: "Project Manager", value: USER_ROLE.project_manager },
               {

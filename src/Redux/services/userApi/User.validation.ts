@@ -5,7 +5,7 @@ export type TStaffFormValues = {
   name: string;
   email: string;
   contactNo: string;
-  role?: keyof typeof USER_ROLE;
+  role?: keyof typeof USER_ROLE | "";
   password?: string;
   confirmPassword?: string;
 };
@@ -34,7 +34,7 @@ export const createStaffFormSchema = baseStaffSchema
 
 export const updateStaffFormSchema = baseStaffSchema
   .extend({
-    role: baseStaffSchema.shape.role.optional(),
+    role: baseStaffSchema.shape.role.optional().or(z.literal("")),
     password: z.string().min(6).max(20).optional().or(z.literal("")),
     confirmPassword: z.string().optional().or(z.literal("")),
   })
