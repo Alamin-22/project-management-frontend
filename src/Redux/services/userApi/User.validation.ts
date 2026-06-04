@@ -4,8 +4,7 @@ export type TStaffFormValues = {
   name: string;
   email: string;
   contactNo: string;
-  role: "admin" | "manager" | "super_admin";
-  permissions: string[];
+  role: "super_admin" | "admin" | "project_manager" | "team_member";
   password?: string;
   confirmPassword?: string;
 };
@@ -14,8 +13,7 @@ const baseStaffSchema = z.object({
   name: z.string().min(1, "Full Name is required"),
   email: z.string().email("Invalid email address"),
   contactNo: z.string().min(1, "Contact number is required"),
-  role: z.enum(["admin", "manager", "super_admin"]),
-  permissions: z.array(z.string()).min(1, "Select at least one permission"),
+  role: z.enum(["super_admin", "admin", "project_manager", "team_member"]),
 });
 
 export const createStaffFormSchema = baseStaffSchema

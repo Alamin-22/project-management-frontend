@@ -1,35 +1,34 @@
 import AdminMobileHeader from "@/components/DashboardRelated/LayoutRelated/MobileHeader";
 import AppSidebar from "@/components/DashboardRelated/LayoutRelated/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { AdminNavbarLinks } from "@/lib/getDashboardNavLinks";
+import { ManagerNavLinks } from "@/lib/getDashboardNavLinks";
 import PrivateRoute from "@/Provider/PrivateRoute";
 import { USER_ROLE } from "@/Redux/services/userApi/User.interface";
 
 export const metadata = {
-  title: "Inventory Management System",
+  title: "Smart Project Workspace",
   robots: { index: false, follow: false },
 };
 
-const AdminLayout = ({ children }: { children: React.ReactNode }) => {
+const ManagerLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <SidebarProvider>
       <div className="flex h-screen w-full bg-background overflow-hidden">
-        <AppSidebar links={AdminNavbarLinks} />
+        <AppSidebar links={ManagerNavLinks} />
 
-        {/* Main Layout Structure */}
         <main className="flex flex-1 flex-col min-w-0 min-h-0 overflow-hidden">
           <AdminMobileHeader />
 
           {/* Scrollable Content Area */}
           <div
             id="admin-scroll-container"
-            className="flex-1 overflow-y-auto overflow-x-hidden relative"
+            className="flex-1 overflow-y-auto overflow-x-hidden relative bg-muted/20"
           >
             <PrivateRoute
               allowedRoles={[
-                USER_ROLE.admin,
                 USER_ROLE.super_admin,
-                USER_ROLE.manager,
+                USER_ROLE.admin,
+                USER_ROLE.project_manager,
               ]}
             >
               {children}
@@ -41,4 +40,4 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default AdminLayout;
+export default ManagerLayout;

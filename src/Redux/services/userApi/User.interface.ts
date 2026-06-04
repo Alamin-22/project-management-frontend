@@ -1,34 +1,28 @@
 import { IQueryMeta } from "@/app/types/common";
-import { IBaseResponse } from "@/Redux/api/baseApi";
 
 export const USER_ROLE = {
   super_admin: "super_admin",
   admin: "admin",
-  manager: "manager",
+  project_manager: "project_manager",
+  team_member: "team_member",
 } as const;
 
 export const USER_STATUS = {
-  active: "active",
+  in_progress: "in-progress",
   blocked: "blocked",
 } as const;
 
 export type TUserRole = keyof typeof USER_ROLE;
-export type TUserStatus = keyof typeof USER_STATUS;
+export type TUserStatus = (typeof USER_STATUS)[keyof typeof USER_STATUS];
 
-export interface IAdminProfile {
+export interface IProfile {
   name: string;
   email: string;
-  contactNo: string;
-  permissions: string[];
-  profileImg?: {
-    url: string;
-    publicId: string;
-  };
+  contactNo?: string;
+  profileImg?: string; // Or { url: string; publicId: string } depending on your exact backend model
 
   _id?: string;
-  id?: string;
   user?: string;
-  isDeleted?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -36,11 +30,9 @@ export interface IAdminProfile {
 export interface IManageStaffPayload {
   password?: string;
   role?: TUserRole;
-  admin: {
+  profile: {
     name: string;
-    email: string;
     contactNo: string;
-    permissions: string[];
   };
 }
 
@@ -55,12 +47,9 @@ export interface IUser {
   email: string;
   role: TUserRole;
   status: TUserStatus;
-  adminProfile: IAdminProfile;
+  profile: IProfile;
 
-  lastActive?: string;
-  isVerified?: boolean;
   isDeleted?: boolean;
-  needsPasswordChange?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -69,12 +58,3 @@ export interface IGetStaffResponse {
   meta: IQueryMeta;
   result: IUser[];
 }
-
-export interface IPermissionMeta {
-  label: string;
-  description: string;
-}
-
-export type TPermissionManifestResponse = IBaseResponse<
-  Record<string, IPermissionMeta>
->;

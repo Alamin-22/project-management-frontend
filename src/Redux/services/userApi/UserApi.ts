@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import baseApi, { IBaseResponse } from "@/Redux/api/baseApi";
 import {
-  IAdminProfile,
+  IProfile,
   TUserStatus,
   IGetStaffResponse,
-  TPermissionManifestResponse,
   IUpdateStaffArgs,
 } from "./User.interface";
 
@@ -15,7 +14,6 @@ const STAFF_TAGS = {
 
 export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // 2. STAFF MANAGEMENT (Admin Routes)
     getAllStaff: builder.query<
       IBaseResponse<IGetStaffResponse>,
       Record<string, any>
@@ -38,10 +36,9 @@ export const userApi = baseApi.injectEndpoints({
           : [STAFF_TAGS.LIST],
     }),
 
-    // 3. CREATE STAFF
-    createStaff: builder.mutation<IBaseResponse<IAdminProfile>, any>({
+    createStaff: builder.mutation<IBaseResponse<any>, any>({
       query: (data) => ({
-        url: "/users/create-staff",
+        url: "/users/create-user",
         method: "POST",
         body: data,
         isPrivate: true,
@@ -49,13 +46,12 @@ export const userApi = baseApi.injectEndpoints({
       invalidatesTags: [STAFF_TAGS.LIST],
     }),
 
-    // 4. UPDATE STAFF PROFILE
     updateStaffProfile: builder.mutation<
-      IBaseResponse<IAdminProfile>,
-      IUpdateStaffArgs // Using our new strict type instead of any
+      IBaseResponse<IProfile>,
+      IUpdateStaffArgs
     >({
       query: ({ id, data }) => ({
-        url: `/admins/${id}`,
+        url: `/users/${id}`, // Adjust based on your backend update route
         method: "PATCH",
         body: data,
         isPrivate: true,
@@ -67,7 +63,6 @@ export const userApi = baseApi.injectEndpoints({
       ],
     }),
 
-    // 5. CHANGE AUTH STATUS
     changeUserStatus: builder.mutation<
       IBaseResponse<any>,
       { userId: string; status: TUserStatus }
@@ -84,7 +79,6 @@ export const userApi = baseApi.injectEndpoints({
       ],
     }),
 
-    // 6. DELETE USER
     deleteUser: builder.mutation<IBaseResponse<any>, string>({
       query: (userId) => ({
         url: `/users/${userId}`,
@@ -92,15 +86,6 @@ export const userApi = baseApi.injectEndpoints({
         isPrivate: true,
       }),
       invalidatesTags: [STAFF_TAGS.LIST],
-    }),
-
-    // 7. PERMISSION METADATA (Admin Routes)
-    getPermissionMeta: builder.query<TPermissionManifestResponse, void>({
-      query: () => ({
-        url: "/admins/meta/permissions",
-        method: "GET",
-        isPrivate: true,
-      }),
     }),
   }),
 });
@@ -111,5 +96,4 @@ export const {
   useUpdateStaffProfileMutation,
   useChangeUserStatusMutation,
   useDeleteUserMutation,
-  useGetPermissionMetaQuery,
 } = userApi;
