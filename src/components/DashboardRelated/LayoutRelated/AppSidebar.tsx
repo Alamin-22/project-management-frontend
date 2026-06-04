@@ -176,7 +176,7 @@ const AppSidebar = ({ links }: { links: TNavLink[] }) => {
           ) : (
             <div className="relative shrink-0">
               <Image
-                src={user?.profile?.profileImg?.url || "/Assets/user-icon.png"}
+                src={user?.profile?.profileImg?.url || `https://placehold.co/200x200/png?text=U`}
                 alt="User"
                 width={32}
                 height={32}

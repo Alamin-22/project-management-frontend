@@ -70,7 +70,6 @@ const ProjectTeamPage = () => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-6">
-      {/* Currently Assigned Members */}
       <div className="bg-card rounded-xl border border-border p-6 shadow-sm flex flex-col h-150">
         <div className="flex items-center justify-between border-b border-border pb-4 mb-4">
           <div className="flex items-center gap-2">
@@ -90,9 +89,9 @@ const ProjectTeamPage = () => {
             </div>
           ) : (
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            project.teamMembers.map((member: any) => (
+            project.teamMembers.map((member: any, idx) => (
               <div
-                key={member._id}
+                key={idx}
                 className="flex items-center justify-between p-3 rounded-lg border border-border/50 bg-muted/10 hover:bg-muted/30 transition-colors"
               >
                 <div className="flex items-center gap-3">
@@ -102,7 +101,7 @@ const ProjectTeamPage = () => {
                     className="rounded-full bg-muted border border-border object-cover"
                     src={
                       member.profile?.profileImg?.url ||
-                      `https://ui-avatars.com/api/?name=${member.profile?.name || "U"}`
+                      `https://placehold.co/200x200/png?text=U`
                     }
                     alt="Avatar"
                   />
@@ -164,7 +163,7 @@ const ProjectTeamPage = () => {
                     className="rounded-full bg-muted border border-border object-cover"
                     src={
                       staff.profile?.profileImg?.url ||
-                      `https://ui-avatars.com/api/?name=${staff.profile?.name || "U"}`
+                      `https://placehold.co/200x200/png?text=U`
                     }
                     alt="Avatar"
                   />

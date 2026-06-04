@@ -52,7 +52,7 @@ const MobileHeader = () => {
               <button className="relative h-8 w-8 overflow-hidden rounded-full border border-border outline-none active:scale-95 transition-transform">
                 <Image
                   src={
-                    user?.profile?.profileImg?.url || "/Assets/user-icon.png"
+                    user?.profile?.profileImg?.url || `https://placehold.co/200x200/png?text=U`
                   }
                   alt="Profile"
                   fill
