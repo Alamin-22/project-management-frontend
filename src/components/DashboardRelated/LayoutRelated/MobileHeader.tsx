@@ -15,20 +15,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const AdminMobileHeader = () => {
-  const { user, loading, isAuthError, handleLogOut } = useAppState();
+const MobileHeader = () => {
+  const { user, loading, isAuthError, handleLogOut, isManager } = useAppState();
   const { toggleSidebar } = useSidebar();
 
+  const baseRoute = isManager ? "/manager_workspace" : "/member_workspace";
   const showSkeletons = loading || !user || isAuthError;
 
   return (
     <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b bg-card px-4 shadow-sm md:hidden">
       <Link
-        href="/admin_dashboard_private"
+        href={baseRoute}
         className="flex items-center gap-2 active:scale-95 transition-all"
       >
         <Image
-          src="/Assets/logo/IMS-Logo.png"
+          src="/Assets/logo/logo.png"
           alt="Logo"
           width={100}
           height={32}
@@ -45,10 +46,7 @@ const AdminMobileHeader = () => {
             <DropdownMenuTrigger asChild>
               <button className="relative h-8 w-8 overflow-hidden rounded-full border border-border outline-none active:scale-95 transition-transform">
                 <Image
-                  src={
-                    user?.adminProfile.profileImg?.url ||
-                    "/Assets/user-icon.png"
-                  }
+                  src={user?.profile?.profileImg || "/Assets/user-icon.png"}
                   alt="Profile"
                   fill
                   className="object-cover"
@@ -60,17 +58,17 @@ const AdminMobileHeader = () => {
               <DropdownMenuLabel>
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-semibold">
-                    {user?.adminProfile.name || "Staff Member"}
+                    {user?.profile?.name || "Staff Member"}
                   </p>
                   <p className="text-[10px] text-muted-foreground uppercase">
-                    {user?.email}
+                    {user?.role.replace("_", " ")}
                   </p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link
-                  href="/admin_dashboard_private/settings/profile"
+                  href={`${baseRoute}/settings/profile`}
                   className="flex items-center gap-2 w-full"
                 >
                   <IcfyIcon
@@ -106,4 +104,4 @@ const AdminMobileHeader = () => {
   );
 };
 
-export default AdminMobileHeader;
+export default MobileHeader;

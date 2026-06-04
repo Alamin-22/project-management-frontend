@@ -1,7 +1,7 @@
-import AdminMobileHeader from "@/components/DashboardRelated/LayoutRelated/AdminMobileHeader";
-import { AppSidebar } from "@/components/DashboardRelated/LayoutRelated/AppSidebar";
+import AdminMobileHeader from "@/components/DashboardRelated/LayoutRelated/MobileHeader";
+import AppSidebar from "@/components/DashboardRelated/LayoutRelated/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { AdminNavbarLinks } from "@/lib/getAdminDashboardNavLinks";
+import { AdminNavbarLinks } from "@/lib/getDashboardNavLinks";
 import PrivateRoute from "@/Provider/PrivateRoute";
 import { USER_ROLE } from "@/Redux/services/userApi/User.interface";
 

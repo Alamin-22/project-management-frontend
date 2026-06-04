@@ -20,13 +20,13 @@ import {
 } from "@/components/ui/sidebar";
 import { Input } from "@/components/ui/input";
 import IcfyIcon from "@/components/Shared/IcfyIcon";
-import { TNavLink } from "@/lib/getAdminDashboardNavLinks";
+import { TNavLink } from "@/lib/getDashboardNavLinks";
 import { useAppState } from "@/Provider/StateProvider";
 import { Fragment, useEffect, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 
-export const AppSidebar = ({ links }: { links: TNavLink[] }) => {
+const AppSidebar = ({ links }: { links: TNavLink[] }) => {
   const pathName = usePathname();
   const {
     user,
@@ -35,9 +35,12 @@ export const AppSidebar = ({ links }: { links: TNavLink[] }) => {
     handleLogOut,
     searchQuery,
     setSearchQuery,
+    isManager,
   } = useAppState();
   const { setOpenMobile } = useSidebar();
   const activeItemRef = useRef<HTMLAnchorElement | null>(null);
+
+  const baseRoute = isManager ? "/manager_workspace" : "/member_workspace";
 
   useEffect(() => {
     if (activeItemRef.current) {
@@ -61,12 +64,12 @@ export const AppSidebar = ({ links }: { links: TNavLink[] }) => {
       <SidebarHeader className="p-4 border-b border-sidebar-border ">
         <div className="hidden md:flex flex-row items-center justify-center">
           <Link
-            href="/admin_dashboard_private"
+            href={baseRoute}
             className="flex items-center gap-2 active:scale-95 transition-all"
           >
             <div className="overflow-hidden transition-all duration-300 group-data-[collapsible=icon]:w-0 group-data-[collapsible=icon]:opacity-0">
               <Image
-                src="/Assets/logo/IMS-Logo.png"
+                src="/Assets/logo/logo.png"
                 alt="Logo"
                 width={140}
                 height={40}
@@ -83,11 +86,10 @@ export const AppSidebar = ({ links }: { links: TNavLink[] }) => {
           </Link>
         </div>
 
-        {/* Mobile Header logic inside Sidebar */}
         <div className="flex flex-col gap-4 md:hidden">
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-medium text-sidebar-foreground">
-              IMS Menu
+              Menu
             </h1>
             <button
               onClick={() => setOpenMobile(false)}
@@ -162,7 +164,6 @@ export const AppSidebar = ({ links }: { links: TNavLink[] }) => {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* FIXED: Standardized footer with new gray theme */}
       <SidebarFooter className="p-4 border-t border-sidebar-border bg-sidebar-accent/30">
         <div className="flex items-center gap-3 px-1 py-2">
           {showSkeletons ? (
@@ -170,9 +171,7 @@ export const AppSidebar = ({ links }: { links: TNavLink[] }) => {
           ) : (
             <div className="relative shrink-0">
               <Image
-                src={
-                  user?.adminProfile.profileImg?.url || "/Assets/user-icon.png"
-                }
+                src={user?.profile?.profileImg || "/Assets/user-icon.png"}
                 alt="User"
                 width={32}
                 height={32}
@@ -191,10 +190,10 @@ export const AppSidebar = ({ links }: { links: TNavLink[] }) => {
             ) : (
               <>
                 <span className="text-xs font-bold text-sidebar-foreground truncate">
-                  {user?.adminProfile.name}
+                  {user?.profile?.name}
                 </span>
-                <span className="text-[10px] text-muted-foreground truncate  tracking-tighter">
-                  {user?.email}
+                <span className="text-[10px] text-muted-foreground truncate  tracking-tighter uppercase">
+                  {user?.role.replace("_", " ")}
                 </span>
               </>
             )}

@@ -14,7 +14,6 @@ export interface IBaseResponse<T> {
   data: T;
 }
 
-// Extend FetchArgs to include your custom 'isPrivate' flag
 interface CustomFetchArgs extends FetchArgs {
   isPrivate?: boolean;
 }
@@ -40,7 +39,6 @@ const baseQueryWithReauth: BaseQueryFn<
   const isPrivate =
     typeof args === "object" && "isPrivate" in args && args.isPrivate;
 
-  // Clone the args safely
   const modifiedArgs: CustomFetchArgs =
     typeof args === "string" ? { url: args } : { ...args };
 
@@ -104,14 +102,7 @@ const baseQueryWithReauth: BaseQueryFn<
 const baseApi = createApi({
   reducerPath: "BaseApi",
   baseQuery: baseQueryWithReauth,
-  tagTypes: [
-    "Users",
-    "Order",
-    "Product",
-    "Categories",
-    "AuditLog",
-    "Transaction",
-  ],
+  tagTypes: ["Users", "Projects", "Tasks", "Comments", "Dashboard", "AuditLog"],
   endpoints: () => ({}),
 });
 
