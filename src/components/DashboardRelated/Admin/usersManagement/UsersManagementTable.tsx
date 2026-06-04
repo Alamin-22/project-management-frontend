@@ -47,6 +47,7 @@ const UsersManagementTable = ({
   onDeleteUser,
   onEditUser,
 }: UsersManagementTableProps) => {
+  console.log(currentUser);
   return (
     <div className="bg-card overflow-hidden">
       <Table>
@@ -158,13 +159,13 @@ const UsersManagementTable = ({
                         staff.status === "active" ? "outline" : "default"
                       }
                       size="sm"
-                      disabled={isSuperAdmin}
+                      disabled={isSuperAdmin || isSelf}
                       onClick={() => onStatusChange(staff)}
                       className={`h-7 text-[10px] uppercase font-bold px-3 rounded-full transition-all ${
                         staff.status === "active"
                           ? "border-destructive/30 text-destructive hover:bg-destructive/10"
                           : "bg-emerald-600 hover:bg-emerald-700 text-white"
-                      }`}
+                      } disabled:opacity-40 disabled:cursor-not-allowed`}
                     >
                       {staff.status === "active" ? "Revoke" : "Restore"}
                     </Button>
@@ -209,7 +210,7 @@ const UsersManagementTable = ({
                         className="w-48 shadow-lg border-border"
                       >
                         <DropdownMenuItem
-                          className="cursor-pointer font-medium text-xs"
+                          className="cursor-pointer font-medium text-xs disabled:opacity-50"
                           disabled={isSuperAdmin && !isSelf}
                           onClick={() => onEditUser(staff)}
                         >
@@ -218,7 +219,7 @@ const UsersManagementTable = ({
                         <DropdownMenuItem
                           disabled={isSuperAdmin || isSelf}
                           onClick={() => onDeleteUser(staff.id)}
-                          className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer font-medium text-xs"
+                          className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer font-medium text-xs disabled:opacity-50"
                         >
                           <Trash2 className="mr-2 h-4 w-4" /> Permanently Delete
                         </DropdownMenuItem>

@@ -134,10 +134,10 @@ const UserManagementPage = () => {
       text: "This will securely delete the user record.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "hsl(var(--destructive))",
+      confirmButtonColor: "var(--destructive)",
       confirmButtonText: "Yes, Delete",
-      background: "hsl(var(--card))",
-      color: "hsl(var(--foreground))",
+      background: "var(--card)",
+      color: "var(--foreground)",
     });
 
     if (result.isConfirmed) {
