@@ -16,7 +16,6 @@ const TableSkeleton = ({ columns, rows = 10 }: TableSkeletonProps) => {
         >
           {Array.from({ length: columns }).map((_, colIndex) => (
             <TableCell key={colIndex}>
-              {/* Random widths to look like real data */}
               <Skeleton
                 className={`h-4 rounded ${colIndex === 0 ? "w-8" : "w-full"}`}
               />

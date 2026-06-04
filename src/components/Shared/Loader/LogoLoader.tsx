@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-const IMSLoader = () => {
+const LogoLoader = () => {
   const keyframes = `
     @keyframes pulse {
       0%, 100% {
@@ -22,11 +22,11 @@ const IMSLoader = () => {
       <div className="flex min-h-screen w-full flex-col items-center justify-center bg-white font-sans">
         <div style={logoStyle}>
           <Image
-            src={"/Assets/logo/IMS-Logo.png"}
+            src={"/Assets/logo/logo.png"}
             width={256}
             height={256}
             style={{ height: "auto", width: "auto" }}
-            alt="Bring By Air Logo"
+            alt="SmartProject Logo"
             priority={true}
             quality={90}
           />
@@ -36,4 +36,4 @@ const IMSLoader = () => {
   );
 };
 
-export default IMSLoader;
+export default LogoLoader;

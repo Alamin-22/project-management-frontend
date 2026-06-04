@@ -1,9 +1,9 @@
-import BBALoader from "@/components/Shared/Loader/LogoLoader";
+import LogoLoader from "@/components/Shared/Loader/LogoLoader";
 
 const LoadingPage = () => {
   return (
     <div>
-      <BBALoader />
+      <LogoLoader />
     </div>
   );
 };
