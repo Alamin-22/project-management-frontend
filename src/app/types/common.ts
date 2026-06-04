@@ -17,3 +17,8 @@ export interface IQueryMeta {
   limit: number;
   totalPages: number;
 }
+
+export interface IPaginatedResponse<T> {
+  meta: IQueryMeta;
+  result: T[];
+}

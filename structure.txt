@@ -25,7 +25,8 @@
 │   │   │   └── reset-password
 │   │   │       └── page.tsx
 │   │   ├── (Dashboard)
-│   │   │   ├── admin_dashboard_private
+│   │   │   ├── layout.tsx
+│   │   │   ├── manager_workspace
 │   │   │   │   ├── audit-logs
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── layout.tsx
@@ -38,8 +39,7 @@
 │   │   │   │   │       └── page.tsx
 │   │   │   │   └── users
 │   │   │   │       └── page.tsx
-│   │   │   ├── customer_dashboard
-│   │   │   └── layout.tsx
+│   │   │   └── member_workspace
 │   │   ├── favicon.ico
 │   │   ├── globals.css
 │   │   ├── layout.tsx
@@ -63,12 +63,12 @@
 │   │   │   │   │   ├── AuditLogDetailsModal.tsx
 │   │   │   │   │   └── AuditLogTable.tsx
 │   │   │   │   └── usersManagement
-│   │   │   │       ├── badgesColor.tsx
+│   │   │   │       ├── UserManagementToolbar.tsx
 │   │   │   │       └── UsersManagementTable.tsx
 │   │   │   ├── ChangePasswordForm.tsx
 │   │   │   ├── LayoutRelated
-│   │   │   │   ├── AdminMobileHeader.tsx
-│   │   │   │   └── AppSidebar.tsx
+│   │   │   │   ├── AppSidebar.tsx
+│   │   │   │   └── MobileHeader.tsx
 │   │   │   └── PageHeader.tsx
 │   │   ├── Shared
 │   │   │   ├── IcfyIcon.tsx
@@ -84,6 +84,7 @@
 │   │   │   ├── Skeletons
 │   │   │   ├── SmartOptimizedLink
 │   │   │   │   └── SmartOptimizedLink.tsx
+│   │   │   ├── ThemeToggle.tsx
 │   │   │   └── TiptapToolbar
 │   │   │       ├── tiptap-extensions.ts
 │   │   │       ├── TiptapToolbar.tsx
@@ -125,7 +126,7 @@
 │   │   ├── usePageTitle.ts
 │   │   └── useScrollToTop.ts
 │   ├── lib
-│   │   ├── getAdminDashboardNavLinks.ts
+│   │   ├── getDashboardNavLinks.ts
 │   │   └── utils.ts
 │   ├── Provider
 │   │   ├── PrivateRoute.tsx
@@ -157,10 +158,12 @@
 │   │   └── codemirror.d.ts
 │   └── Utils
 │       ├── buildQueryString.ts
+│       ├── CustomFormField.tsx
 │       ├── errorFormatter.ts
 │       ├── fileDownloader.ts
 │       ├── formatCurrency.ts
 │       ├── formatHtml.ts
+│       ├── FormCard.tsx
 │       ├── getBlurDataURL.ts
 │       ├── serverDataFetcher.ts
 │       ├── slugify.ts
