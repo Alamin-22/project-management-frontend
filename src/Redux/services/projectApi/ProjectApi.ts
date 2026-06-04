@@ -8,6 +8,11 @@ import {
   IUpdateTeamPayload,
 } from "./Project.interface";
 
+export const PROJECT_TAGS = {
+  LIST: { type: "Projects" as const, id: "LIST" },
+  ARCHIVED_LIST: { type: "Projects" as const, id: "ARCHIVED_LIST" },
+};
+
 export const projectApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllProjects: builder.query<
@@ -15,7 +20,6 @@ export const projectApi = baseApi.injectEndpoints({
       IQueryParams | void
     >({
       query: (params) => {
-        // Build the query string and safely cast params
         const queryStr = buildQueryString(
           (params as Record<string, string | string[]>) || {},
         );
@@ -25,9 +29,27 @@ export const projectApi = baseApi.injectEndpoints({
           isPrivate: true,
         };
       },
-      providesTags: ["Projects"],
+      providesTags: [PROJECT_TAGS.LIST],
     }),
 
+    getArchivedProjects: builder.query<
+      IBaseResponse<IPaginatedResponse<IProject>>,
+      IQueryParams | void
+    >({
+      query: (params) => {
+        const queryStr = buildQueryString(
+          (params as Record<string, string | string[]>) || {},
+        );
+        return {
+          url: `/projects/archive/all?${queryStr}`,
+          method: "GET",
+          isPrivate: true,
+        };
+      },
+      providesTags: [PROJECT_TAGS.ARCHIVED_LIST],
+    }),
+
+    // 3. Get Single Project
     getSingleProject: builder.query<IBaseResponse<IProject>, string>({
       query: (slug) => ({
         url: `/projects/${slug}`,
@@ -47,7 +69,7 @@ export const projectApi = baseApi.injectEndpoints({
         body,
         isPrivate: true,
       }),
-      invalidatesTags: ["Projects"],
+      invalidatesTags: [PROJECT_TAGS.LIST],
     }),
 
     updateProject: builder.mutation<
@@ -61,7 +83,7 @@ export const projectApi = baseApi.injectEndpoints({
         isPrivate: true,
       }),
       invalidatesTags: (_result, _error, { slug }) => [
-        "Projects",
+        PROJECT_TAGS.LIST,
         { type: "Projects", id: slug },
       ],
     }),
@@ -77,7 +99,7 @@ export const projectApi = baseApi.injectEndpoints({
         isPrivate: true,
       }),
       invalidatesTags: (_result, _error, { slug }) => [
-        "Projects",
+        PROJECT_TAGS.LIST,
         { type: "Projects", id: slug },
       ],
     }),
@@ -88,7 +110,37 @@ export const projectApi = baseApi.injectEndpoints({
         method: "DELETE",
         isPrivate: true,
       }),
-      invalidatesTags: ["Projects"],
+      invalidatesTags: (_result, _error, slug) => [
+        PROJECT_TAGS.LIST,
+        PROJECT_TAGS.ARCHIVED_LIST,
+        { type: "Projects", id: slug },
+      ],
+    }),
+
+    restoreProject: builder.mutation<IBaseResponse<IProject>, string>({
+      query: (slug) => ({
+        url: `/projects/${slug}/restore`,
+        method: "PATCH",
+        isPrivate: true,
+      }),
+      // Invalidates both lists because a project moved from Archived -> Active
+      invalidatesTags: (_result, _error, slug) => [
+        PROJECT_TAGS.LIST,
+        PROJECT_TAGS.ARCHIVED_LIST,
+        { type: "Projects", id: slug },
+      ],
+    }),
+
+    permanentDeleteProject: builder.mutation<IBaseResponse<null>, string>({
+      query: (slug) => ({
+        url: `/projects/${slug}/permanent`,
+        method: "DELETE",
+        isPrivate: true,
+      }),
+      invalidatesTags: (_result, _error, slug) => [
+        PROJECT_TAGS.ARCHIVED_LIST,
+        { type: "Projects", id: slug },
+      ],
     }),
   }),
   overrideExisting: false,
@@ -96,9 +148,12 @@ export const projectApi = baseApi.injectEndpoints({
 
 export const {
   useGetAllProjectsQuery,
+  useGetArchivedProjectsQuery,
   useGetSingleProjectQuery,
   useCreateProjectMutation,
   useUpdateProjectMutation,
   useUpdateTeamMembersMutation,
   useDeleteProjectMutation,
+  useRestoreProjectMutation,
+  usePermanentDeleteProjectMutation,
 } = projectApi;
