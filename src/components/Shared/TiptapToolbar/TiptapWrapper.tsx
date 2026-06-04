@@ -71,14 +71,15 @@ interface TiptapWrapperProps {
   value: string;
   // eslint-disable-next-line no-unused-vars
   onChange: (val: string) => void;
-  // onImageUpload: (editor: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-unused-vars
+  onImageUpload: (editor: any) => void;
   className?: string;
 }
 
 const TiptapWrapper = ({
   value,
   onChange,
-  // onImageUpload,
+  onImageUpload,
   className = "",
 }: TiptapWrapperProps) => {
   const editor = useEditor({
@@ -127,7 +128,7 @@ const TiptapWrapper = ({
     <div className="flex flex-col">
       <TiptapToolbar
         editor={editor}
-        // onImageUpload={() => onImageUpload(editor)}
+        onImageUpload={() => onImageUpload(editor)}
       />
       <EditorContent editor={editor} />
     </div>

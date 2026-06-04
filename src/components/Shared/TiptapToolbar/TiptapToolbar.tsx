@@ -12,7 +12,7 @@ import {
   Quote,
   Undo,
   Redo,
-  // Image as ImageIcon,
+  Image as ImageIcon,
   AlignLeft,
   AlignCenter,
   AlignRight,
@@ -25,7 +25,7 @@ import { Separator } from "@/components/ui/separator";
 
 interface ToolbarProps {
   editor: Editor | null;
-  // onImageUpload: () => void;
+  onImageUpload: () => void;
 }
 
 const FONT_SIZES = [
@@ -44,7 +44,7 @@ const FONT_SIZES = [
   "72",
 ];
 
-const TiptapToolbar = ({ editor /* onImageUpload */ }: ToolbarProps) => {
+const TiptapToolbar = ({ editor, onImageUpload }: ToolbarProps) => {
   if (!editor) return null;
 
   // eslint-disable-next-line no-unused-vars
@@ -295,7 +295,7 @@ const TiptapToolbar = ({ editor /* onImageUpload */ }: ToolbarProps) => {
 
       {/* 4. Insert Group */}
       <div className="flex items-center gap-1">
-        {/* <Button
+        <Button
           variant="ghost"
           size="sm"
           onClick={onImageUpload}
@@ -304,7 +304,7 @@ const TiptapToolbar = ({ editor /* onImageUpload */ }: ToolbarProps) => {
           title="Upload Image"
         >
           <ImageIcon className="h-4 w-4" />
-        </Button> */}
+        </Button>
 
         <Toggle
           size="sm"

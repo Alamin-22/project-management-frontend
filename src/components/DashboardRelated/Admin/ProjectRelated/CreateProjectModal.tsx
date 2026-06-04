@@ -1,12 +1,14 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Swal from "sweetalert2";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { Label } from "@/components/ui/label";
 import CustomFormField from "@/Utils/CustomFormField";
+import RichTextEditor from "@/components/Shared/RichTextEditor";
 import {
   createProjectValidationSchema,
   TCreateProjectFormValues,
@@ -21,6 +23,7 @@ const CreateProjectModal = ({ closeModal }: CreateProjectModalProps) => {
   const [createProject, { isLoading }] = useCreateProjectMutation();
 
   const form = useForm<TCreateProjectFormValues>({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(createProjectValidationSchema) as any,
     defaultValues: {
       name: "",
@@ -64,13 +67,23 @@ const CreateProjectModal = ({ closeModal }: CreateProjectModalProps) => {
           placeholder="e.g. Website Redesign"
         />
 
-        <CustomFormField
-          control={form.control}
-          name="description"
-          label="Project Description"
-          type="textarea"
-          placeholder="Briefly describe the project goals..."
-        />
+        <div className="space-y-2">
+          <Label className="font-semibold text-foreground">
+            Project Description
+          </Label>
+          <Controller
+            name="description"
+            control={form.control}
+            render={({ field }) => (
+              <RichTextEditor value={field.value} onChange={field.onChange} />
+            )}
+          />
+          {form.formState.errors.description && (
+            <p className="text-xs font-medium text-destructive mt-1">
+              {form.formState.errors.description.message}
+            </p>
+          )}
+        </div>
 
         <CustomFormField
           control={form.control}
