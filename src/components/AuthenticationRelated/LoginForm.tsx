@@ -75,7 +75,7 @@ const LoginForm = () => {
       shouldTouch: true,
     };
 
-    form.setValue("email", "admin@smartproject.com", options);
+    form.setValue("email", "manager@smartproject.com", options);
     form.setValue("password", "admin123456", options);
 
     toast.success(

@@ -92,7 +92,7 @@ const UsersManagementTable = ({
               return (
                 <TableRow
                   key={staff._id}
-                  className="border-b border-border even:bg-slate-50 "
+                  className="group border-b border-border/50 even:bg-muted/50 hover:bg-muted/50 transition-colors"
                 >
                   <TableCell>
                     <div className="flex items-center gap-4 pl-4">
@@ -203,7 +203,7 @@ const UsersManagementTable = ({
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      
+
                       <DropdownMenuContent
                         align="end"
                         className="w-48 shadow-lg border-border"

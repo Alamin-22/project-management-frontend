@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAppState } from "./StateProvider";
 import { TUserRole } from "@/Redux/services/userApi/User.interface";
 import toast from "react-hot-toast";
-import IMSLoader from "@/components/Shared/Loader/LogoLoader";
+import LogoLoader from "@/components/Shared/Loader/LogoLoader";
 
 interface PrivateRouteProps {
   children: ReactNode;
@@ -38,7 +38,7 @@ const PrivateRoute = ({ children, allowedRoles = [] }: PrivateRouteProps) => {
   if (loading || !user || !isAuthorized) {
     return (
       <div className="flex h-dvh w-full items-center justify-center bg-transparent">
-        <IMSLoader />
+        <LogoLoader />
       </div>
     );
   }

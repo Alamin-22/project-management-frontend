@@ -5,7 +5,7 @@ export type TStaffFormValues = {
   name: string;
   email: string;
   contactNo: string;
-  role: keyof typeof USER_ROLE;
+  role?: keyof typeof USER_ROLE;
   password?: string;
   confirmPassword?: string;
 };
@@ -15,6 +15,7 @@ const baseStaffSchema = z.object({
   email: z.string().email("Invalid email address"),
   contactNo: z.string().min(1, "Contact number is required"),
   role: z.enum([
+    USER_ROLE.super_admin,
     USER_ROLE.admin,
     USER_ROLE.project_manager,
     USER_ROLE.team_member,
@@ -33,6 +34,7 @@ export const createStaffFormSchema = baseStaffSchema
 
 export const updateStaffFormSchema = baseStaffSchema
   .extend({
+    role: baseStaffSchema.shape.role.optional(),
     password: z.string().min(6).max(20).optional().or(z.literal("")),
     confirmPassword: z.string().optional().or(z.literal("")),
   })

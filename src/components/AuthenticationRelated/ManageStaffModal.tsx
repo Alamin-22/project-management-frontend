@@ -108,9 +108,14 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
         });
       } else {
         await createStaff(payload).unwrap();
+
+        const roleDisplayName = values.role
+          ? values.role.replace("_", " ")
+          : "Account";
+
         Swal.fire({
-          title: "Created",
-          text: `New ${values.role.replace("_", " ")} registered successfully.`,
+          title: "Provisioned",
+          text: `New ${roleDisplayName} registered successfully.`,
           icon: "success",
           background: "var(--card)",
           color: "var(--foreground)",
