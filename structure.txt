@@ -1,0 +1,266 @@
+├── .env.local
+├── .gitignore
+├── components.json
+├── eslint.config.mjs
+├── generate-tree.js
+├── next-env.d.ts
+├── next.config.ts
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── public
+│   ├── Assets
+│   │   ├── background.jpeg
+│   │   ├── logo
+│   │   │   └── IMS-Logo.png
+│   │   ├── notfound.svg
+│   │   └── user-icon.png
+│   ├── favicon-3.png
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── next.svg
+│   ├── vercel.svg
+│   └── window.svg
+├── README.md
+├── src
+│   ├── app
+│   │   ├── (Authentication)
+│   │   │   ├── layout.tsx
+│   │   │   ├── login
+│   │   │   │   └── page.tsx
+│   │   │   └── reset-password
+│   │   │       └── page.tsx
+│   │   ├── (Dashboard)
+│   │   │   ├── admin_dashboard_private
+│   │   │   │   ├── audit-logs
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── categories
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   └── [categoryId]
+│   │   │   │   │       └── page.tsx
+│   │   │   │   ├── layout.tsx
+│   │   │   │   ├── orders
+│   │   │   │   │   ├── create
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── details
+│   │   │   │   │   │   └── [...orderNumber]
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   ├── edit
+│   │   │   │   │   │   └── [orderId]
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── page.tsx
+│   │   │   │   ├── payments
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── products
+│   │   │   │   │   ├── add
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── archived
+│   │   │   │   │   ├── edit
+│   │   │   │   │   │   └── [...productId]
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── settings
+│   │   │   │   │   ├── master-access
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   └── security
+│   │   │   │   │       └── page.tsx
+│   │   │   │   └── users
+│   │   │   │       └── page.tsx
+│   │   │   ├── customer_dashboard
+│   │   │   └── layout.tsx
+│   │   ├── favicon.ico
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   ├── loading.tsx
+│   │   ├── not-found.tsx
+│   │   ├── page.tsx
+│   │   └── types
+│   │       └── common.ts
+│   ├── components
+│   │   ├── AuthenticationRelated
+│   │   │   ├── ForgetPassword.tsx
+│   │   │   ├── LoginForm.tsx
+│   │   │   └── ManageStaffModal.tsx
+│   │   ├── DashboardRelated
+│   │   │   ├── Admin
+│   │   │   │   ├── Analytical
+│   │   │   │   │   ├── AnalyticsStatsGrid.tsx
+│   │   │   │   │   ├── RestockQueueCard.tsx
+│   │   │   │   │   └── WarehouseStatsCard.tsx
+│   │   │   │   ├── AuditLogs
+│   │   │   │   │   ├── AuditLogDetailsModal.tsx
+│   │   │   │   │   └── AuditLogTable.tsx
+│   │   │   │   ├── Category
+│   │   │   │   │   ├── CategoryTable.tsx
+│   │   │   │   │   └── ManageCategoryModal.tsx
+│   │   │   │   ├── Orders
+│   │   │   │   │   ├── AdminOrderHistoryTimeline.tsx
+│   │   │   │   │   ├── CreateRelated
+│   │   │   │   │   │   ├── CartItemsSection.tsx
+│   │   │   │   │   │   ├── CustomerInfoSection.tsx
+│   │   │   │   │   │   ├── OrderManagementForm.tsx
+│   │   │   │   │   │   ├── OrderSummaryFooter.tsx
+│   │   │   │   │   │   └── ProductSearchSection.tsx
+│   │   │   │   │   ├── Order.utils.tsx
+│   │   │   │   │   ├── OrdersFilterBar.tsx
+│   │   │   │   │   ├── OrdersManagementPage.tsx
+│   │   │   │   │   ├── OrdersManagementTable.tsx
+│   │   │   │   │   └── OrderStatusHeader.tsx
+│   │   │   │   ├── Products
+│   │   │   │   │   ├── AddProductForm
+│   │   │   │   │   │   ├── AddEditProductForm.tsx
+│   │   │   │   │   │   ├── ConfigurationCard.tsx
+│   │   │   │   │   │   ├── CustomFormField.tsx
+│   │   │   │   │   │   ├── FormCard.tsx
+│   │   │   │   │   │   ├── ImageSelectionModal.tsx
+│   │   │   │   │   │   ├── MediaCard.tsx
+│   │   │   │   │   │   ├── OrganizationRelated
+│   │   │   │   │   │   │   ├── BrandSelectField.tsx
+│   │   │   │   │   │   │   ├── Organization.helpers.ts
+│   │   │   │   │   │   │   ├── Organization.types.ts
+│   │   │   │   │   │   │   └── OrganizationCard.tsx
+│   │   │   │   │   │   ├── ProductForm.functions.ts
+│   │   │   │   │   │   ├── ProductForm.util.ts
+│   │   │   │   │   │   ├── ProductInformationCard.tsx
+│   │   │   │   │   │   ├── ProductOptionsCard.tsx
+│   │   │   │   │   │   ├── SeoCard.tsx
+│   │   │   │   │   │   ├── SpecificationsCard.tsx
+│   │   │   │   │   │   ├── VariantDrawer.tsx
+│   │   │   │   │   │   ├── VariantItem.tsx
+│   │   │   │   │   │   └── VariantsCard.tsx
+│   │   │   │   │   ├── MainProductsManagementTable.tsx
+│   │   │   │   │   ├── Product.utils.ts
+│   │   │   │   │   └── ProductFilterBar.tsx
+│   │   │   │   ├── Transaction
+│   │   │   │   │   ├── AddManualPaymentModal.tsx
+│   │   │   │   │   ├── AddManualRefundModal.tsx
+│   │   │   │   │   ├── OrderTransactionAudit.tsx
+│   │   │   │   │   ├── Transaction.utils.tsx
+│   │   │   │   │   ├── TransactionDetailsPopover.tsx
+│   │   │   │   │   └── TransactionTable.tsx
+│   │   │   │   └── usersManagement
+│   │   │   │       ├── badgesColor.tsx
+│   │   │   │       └── UsersManagementTable.tsx
+│   │   │   ├── ChangePasswordForm.tsx
+│   │   │   ├── LayoutRelated
+│   │   │   │   ├── AdminMobileHeader.tsx
+│   │   │   │   └── AppSidebar.tsx
+│   │   │   └── PageHeader.tsx
+│   │   ├── Shared
+│   │   │   ├── IcfyIcon.tsx
+│   │   │   ├── LayoutContainer.tsx
+│   │   │   ├── Loader
+│   │   │   │   ├── IMSLoader.tsx
+│   │   │   │   └── TableSkeleton.tsx
+│   │   │   ├── NotFoundPage.tsx
+│   │   │   ├── Pagination
+│   │   │   │   └── Pagination.tsx
+│   │   │   ├── QueryNotFoundMessage.tsx
+│   │   │   ├── ReusableBreadcrumb.tsx
+│   │   │   ├── Skeletons
+│   │   │   ├── SmartOptimizedLink
+│   │   │   │   └── SmartOptimizedLink.tsx
+│   │   │   └── TiptapToolbar
+│   │   │       ├── tiptap-extensions.ts
+│   │   │       ├── TiptapToolbar.tsx
+│   │   │       └── TiptapWrapper.tsx
+│   │   └── ui
+│   │       ├── accordion.tsx
+│   │       ├── alert-dialog.tsx
+│   │       ├── avatar.tsx
+│   │       ├── badge.tsx
+│   │       ├── breadcrumb.tsx
+│   │       ├── button.tsx
+│   │       ├── card.tsx
+│   │       ├── checkbox.tsx
+│   │       ├── dialog.tsx
+│   │       ├── dropdown-menu.tsx
+│   │       ├── form.tsx
+│   │       ├── input.tsx
+│   │       ├── label.tsx
+│   │       ├── navigation-menu.tsx
+│   │       ├── popover.tsx
+│   │       ├── progress.tsx
+│   │       ├── radio-group.tsx
+│   │       ├── scroll-area.tsx
+│   │       ├── select.tsx
+│   │       ├── separator.tsx
+│   │       ├── sheet.tsx
+│   │       ├── sidebar.tsx
+│   │       ├── skeleton.tsx
+│   │       ├── slider.tsx
+│   │       ├── switch.tsx
+│   │       ├── table.tsx
+│   │       ├── tabs.tsx
+│   │       ├── textarea.tsx
+│   │       ├── toggle.tsx
+│   │       └── tooltip.tsx
+│   ├── hooks
+│   │   ├── use-mobile.ts
+│   │   ├── useIsClient.ts
+│   │   ├── usePageTitle.ts
+│   │   └── useScrollToTop.ts
+│   ├── lib
+│   │   ├── getAdminDashboardNavLinks.ts
+│   │   └── utils.ts
+│   ├── Provider
+│   │   ├── PrivateRoute.tsx
+│   │   ├── ReduxProvider.tsx
+│   │   ├── RootConfigProvider.tsx
+│   │   ├── StateProvider.tsx
+│   │   └── TokenFromUrl.ts
+│   ├── Redux
+│   │   ├── api
+│   │   │   └── baseApi.ts
+│   │   ├── hook.ts
+│   │   ├── services
+│   │   │   ├── analyticalApi
+│   │   │   │   ├── Analytics.interface.ts
+│   │   │   │   └── AnalyticsApi.ts
+│   │   │   ├── auditApi
+│   │   │   │   ├── AuditLog.interface.ts
+│   │   │   │   └── AuditLogApi.ts
+│   │   │   ├── authApi
+│   │   │   │   ├── Auth.interface.ts
+│   │   │   │   ├── Auth.validation.ts
+│   │   │   │   └── AuthAPi.ts
+│   │   │   ├── categoryApi
+│   │   │   │   ├── Category.interface.ts
+│   │   │   │   ├── Category.validation.ts
+│   │   │   │   └── CategoryApi.ts
+│   │   │   ├── orderApi
+│   │   │   │   ├── Order.constant.ts
+│   │   │   │   ├── Order.interface.ts
+│   │   │   │   ├── Order.validation.ts
+│   │   │   │   └── OrderApi.ts
+│   │   │   ├── productApi
+│   │   │   │   ├── Product.interface.ts
+│   │   │   │   ├── Product.validation.ts
+│   │   │   │   └── ProductApi.ts
+│   │   │   ├── transactionApi
+│   │   │   │   ├── Transaction.interface.ts
+│   │   │   │   ├── Transaction.validation.ts
+│   │   │   │   └── TransactionApi.ts
+│   │   │   └── userApi
+│   │   │       ├── User.interface.ts
+│   │   │       ├── User.validation.ts
+│   │   │       └── UserApi.ts
+│   │   ├── slices
+│   │   └── store.ts
+│   ├── Types
+│   │   └── codemirror.d.ts
+│   └── Utils
+│       ├── buildQueryString.ts
+│       ├── errorFormatter.ts
+│       ├── fileDownloader.ts
+│       ├── formatCurrency.ts
+│       ├── formatHtml.ts
+│       ├── getBlurDataURL.ts
+│       ├── serverDataFetcher.ts
+│       ├── slugify.ts
+│       ├── stripHtml.ts
+│       └── useDebounce.ts
+├── structure.txt
+└── tsconfig.json
