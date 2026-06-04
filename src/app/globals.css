@@ -5,18 +5,13 @@
 @plugin "@tailwindcss/typography";
 
 @theme inline {
-  /* Brand Identity */
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
-
-  /* System States (IMS Logic) */
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
-
-  /* Surface & UI */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -29,13 +24,9 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
-
-  /* Borders & Inputs */
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-
-  /* Sidebar (Fixed to Professional Grey) */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -44,8 +35,6 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-
-  /* Radius System */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -53,36 +42,26 @@
 }
 
 :root {
-  /* Main Palette */
-  --primary: #4f46e5; /* Indigo 600 */
+  --primary: #4f46e5;
   --primary-foreground: #ffffff;
-  --secondary: #334155; /* Slate 700 */
+  --secondary: #334155;
   --secondary-foreground: #ffffff;
-
-  --background: #f8fafc; /* Subtle Slate Tint */
+  --background: #f8fafc;
   --foreground: #0f172a;
-
   --card: #ffffff;
   --card-foreground: #0f172a;
-
   --popover: #ffffff;
   --popover-foreground: #0f172a;
-
   --muted: #f1f5f9;
   --muted-foreground: #64748b;
-
   --accent: #f1f5f9;
   --accent-foreground: #4f46e5;
-
   --destructive: #e11d48;
   --destructive-foreground: #ffffff;
-
   --border: #e2e8f0;
   --input: #e2e8f0;
   --ring: #4f46e5;
-
   --radius: 0.5rem;
-
   --sidebar: #f8faf8;
   --sidebar-foreground: #1a2e1f;
   --sidebar-primary: #4f46e5;
@@ -94,44 +73,41 @@
 }
 
 .dark {
-  --background: #020617; /* Deepest Indigo/Black */
-  --foreground: #f8fafc;
-
-  --card: #030712;
+  /* Midnight Violet Palette */
+  --background: #0f0a14;
+  --foreground: #e2e8f0;
+  --card: #161020;
   --card-foreground: #f8fafc;
-
-  --popover: #020617;
+  --popover: #0f0a14;
   --popover-foreground: #f8fafc;
-
-  --primary: #6366f1; /* Indigo 500 */
+  --primary: #8b5cf6;
   --primary-foreground: #ffffff;
-
-  --secondary: #1e293b;
-  --secondary-foreground: #f8fafc;
-
-  --muted: #0f172a;
+  --secondary: #2d1b4e;
+  --secondary-foreground: #e2e8f0;
+  --muted: #1e152e;
   --muted-foreground: #94a3b8;
+  --accent: #2d1b4e;
+  --accent-foreground: #e2e8f0;
+  --destructive: #e11d48;
+  --destructive-foreground: #ffffff;
+  --border: #2d243e;
+  --input: #2d243e;
+  --ring: #8b5cf6;
 
-  --border: #1e293b;
-  --input: #1e293b;
-  --ring: #6366f1;
-
-  /* SIDEBAR: Professional Deep Grey (Dark Mode) */
-  --sidebar: #0f172a; /* Slate 900 - Dark Charcoal Grey */
-  --sidebar-foreground: #94a3b8; /* Slate 400 */
-  --sidebar-primary: #6366f1;
+  /* Sidebar */
+  --sidebar: #130d1b;
+  --sidebar-foreground: #a78bfa;
+  --sidebar-primary: #8b5cf6;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #1e293b; /* Slate 800 */
-  --sidebar-accent-foreground: #f8fafc;
-  --sidebar-border: #1e293b;
-  --sidebar-ring: #6366f1;
+  --sidebar-accent: #2d1b4e;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #2d243e;
+  --sidebar-ring: #8b5cf6;
 }
 
-/* SweetAlert2 Modal Fixes */
 body > .swal2-container {
   z-index: 99999 !important;
 }
-
 body.swal2-shown {
   pointer-events: auto !important;
 }
@@ -140,7 +116,6 @@ body.swal2-shown {
   body {
     @apply bg-background text-foreground antialiased;
   }
-
   *,
   ::after,
   ::before {
