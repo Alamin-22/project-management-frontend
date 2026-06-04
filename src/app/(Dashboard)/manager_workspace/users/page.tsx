@@ -147,8 +147,8 @@ const UserManagementPage = () => {
           title: "Removed",
           text: "Staff access revoked.",
           icon: "success",
-          background: "hsl(var(--card))",
-          color: "hsl(var(--foreground))",
+          background: "var(--card)",
+          color: "var(--foreground)",
         });
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
@@ -156,8 +156,8 @@ const UserManagementPage = () => {
           title: "Error",
           text: error?.data?.message || "Delete failed.",
           icon: "error",
-          background: "hsl(var(--card))",
-          color: "hsl(var(--foreground))",
+          background: "var(--card)",
+          color: "var(--foreground)",
         });
       }
     }
@@ -263,7 +263,7 @@ const UserManagementPage = () => {
       </div>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-2xl w-full max-h-[90vh] overflow-y-auto border-border bg-card">
+        <DialogContent className="max-w-2xl! w-full max-h-[90vh] overflow-y-auto border-border bg-card">
           <DialogHeader>
             <DialogTitle className="text-xl">
               {selectedUser

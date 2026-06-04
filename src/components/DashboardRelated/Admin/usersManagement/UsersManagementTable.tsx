@@ -92,7 +92,7 @@ const UsersManagementTable = ({
               return (
                 <TableRow
                   key={staff._id}
-                  className="group border-b border-border/50 hover:bg-muted/30 transition-colors"
+                  className="border-b border-border even:bg-slate-50 "
                 >
                   <TableCell>
                     <div className="flex items-center gap-4 pl-4">
@@ -106,9 +106,7 @@ const UsersManagementTable = ({
                           className="object-cover h-10 w-10 rounded-full border border-border bg-muted"
                           src={
                             staff.profile?.profileImg?.url ||
-                            `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                              staff.profile?.name || "U",
-                            )}&background=random`
+                            `https://placehold.co/200x200/png?text=U`
                           }
                           alt="Avatar"
                         />
@@ -205,6 +203,7 @@ const UsersManagementTable = ({
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
+                      
                       <DropdownMenuContent
                         align="end"
                         className="w-48 shadow-lg border-border"

@@ -77,10 +77,10 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
   const onSubmit = async (values: TStaffFormValues) => {
     const payload: IManageStaffPayload | any = {
       role: values.role,
-      email: values.email,
       profile: {
         name: values.name,
         contactNo: values.contactNo,
+        email: values.email,
       },
     };
 
@@ -103,17 +103,17 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
           title: "Success",
           text: "Profile updated successfully.",
           icon: "success",
-          background: "hsl(var(--card))",
-          color: "hsl(var(--foreground))",
+          background: "var(--card)",
+          color: "var(--foreground)",
         });
       } else {
         await createStaff(payload).unwrap();
         Swal.fire({
-          title: "Provisioned",
+          title: "Created",
           text: `New ${values.role.replace("_", " ")} registered successfully.`,
           icon: "success",
-          background: "hsl(var(--card))",
-          color: "hsl(var(--foreground))",
+          background: "var(--card)",
+          color: "var(--foreground)",
         });
       }
       closeModal();
@@ -123,8 +123,8 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
         title: "Error",
         text: error?.data?.message || "Action failed.",
         icon: "error",
-        background: "hsl(var(--card))",
-        color: "hsl(var(--foreground))",
+        background: "var(--card)",
+        color: "var(--foreground)",
       });
     }
   };
