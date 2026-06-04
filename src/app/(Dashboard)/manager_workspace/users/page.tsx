@@ -231,39 +231,35 @@ const UserManagementPage = () => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {currentUser?.role === USER_ROLE.super_admin && (
+          {currentUser?.role !== USER_ROLE.team_member && (
             <Button
               size="sm"
               className="h-9 font-semibold"
               onClick={handleOpenCreateModal}
             >
-              Invite Member
+              create Member
             </Button>
           )}
         </div>
       </PageHeader>
 
-      <div className="p-6 flex-1">
-        <div className="border border-border rounded-xl shadow-sm bg-card overflow-hidden">
-          <UsersManagementTable
-            users={usersData?.data?.result}
-            totalCount={usersData?.data?.meta?.total}
-            isLoading={showLoading}
-            startIndex={(currentPage - 1) * limit}
-            currentUser={currentUser}
-            onStatusChange={handleUserActiveStatus}
-            onDeleteUser={handleDeleteUser}
-            onEditUser={handleOpenEditModal}
-          />
-        </div>
+      <UsersManagementTable
+        users={usersData?.data?.result}
+        totalCount={usersData?.data?.meta?.total}
+        isLoading={showLoading}
+        startIndex={(currentPage - 1) * limit}
+        currentUser={currentUser}
+        onStatusChange={handleUserActiveStatus}
+        onDeleteUser={handleDeleteUser}
+        onEditUser={handleOpenEditModal}
+      />
 
-        <div className="mt-6">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </div>
+      <div className="mt-6">
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>

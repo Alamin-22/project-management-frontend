@@ -50,7 +50,7 @@ const UsersManagementTable = ({
   return (
     <div className="bg-card overflow-hidden">
       <Table>
-        <TableHeader className="bg-muted/40 border-b border-border">
+        <TableHeader className="bg-muted/50 border-b border-border">
           <TableRow className="hover:bg-transparent">
             <TableHead className="w-80 font-semibold text-muted-foreground">
               <div className="flex items-center gap-3 pl-4">
@@ -92,7 +92,7 @@ const UsersManagementTable = ({
               return (
                 <TableRow
                   key={staff._id}
-                  className="group border-b border-border/50 hover:bg-muted/20 transition-colors"
+                  className="group border-b border-border/50 hover:bg-muted/30 transition-colors"
                 >
                   <TableCell>
                     <div className="flex items-center gap-4 pl-4">
@@ -106,7 +106,9 @@ const UsersManagementTable = ({
                           className="object-cover h-10 w-10 rounded-full border border-border bg-muted"
                           src={
                             staff.profile?.profileImg?.url ||
-                            `https://ui-avatars.com/api/?name=${encodeURIComponent(staff.profile?.name || "U")}&background=random`
+                            `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                              staff.profile?.name || "U",
+                            )}&background=random`
                           }
                           alt="Avatar"
                         />

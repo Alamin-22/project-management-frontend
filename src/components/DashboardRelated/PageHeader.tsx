@@ -26,7 +26,7 @@ const PageHeader = ({
   const isMobile = useIsMobile();
 
   return (
-    <div className="sticky top-0 z-20 flex min-w-0 items-center justify-between gap-4 bg-background/80 backdrop-blur-md px-6 py-4 border-b border-border shadow-sm">
+    <div className="sticky top-0 z-20 flex min-w-0 items-center justify-between gap-4 bg-card px-6 py-4 border-b border-border shadow-sm">
       <div className="flex shrink-0 flex-col min-w-0">
         <h1 className="font-bold text-xl text-foreground tracking-tight truncate">
           {title}
@@ -46,7 +46,7 @@ const PageHeader = ({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={placeholder}
-            className="w-full pl-10 pr-8 bg-muted/50 border-transparent hover:bg-muted focus-visible:bg-background focus-visible:border-primary transition-colors"
+            className="w-full pl-10 pr-8 bg-background border-input hover:border-primary/50 focus-visible:border-primary transition-colors rounded-lg"
           />
           {searchQuery && (
             <button

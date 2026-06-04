@@ -5,28 +5,36 @@
 @plugin "@tailwindcss/typography";
 
 @theme inline {
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
+  /* Status Colors */
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
+
+  /* Base Variables Mapping */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+
+  /* Borders & Inputs */
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  /* Sidebar */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -35,6 +43,8 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Border Radius System */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -42,72 +52,96 @@
 }
 
 :root {
-  --primary: #4f46e5;
-  --primary-foreground: #ffffff;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --card: #ffffff;
+  /* LIGHT MODE: Crisp, Clean, and Trustworthy */
+  --background: #fbfbfd; /* Very subtle off-white to make pure white cards pop */
+  --foreground: #0f172a; /* Slate 900 */
+
+  --card: #ffffff; /* Pure White */
   --card-foreground: #0f172a;
+
   --popover: #ffffff;
   --popover-foreground: #0f172a;
+
+  --primary: #006fee; /* Enterprise Royal Blue */
+  --primary-foreground: #ffffff;
+
+  --secondary: #f1f5f9; /* Slate 100 */
+  --secondary-foreground: #0f172a;
+
   --muted: #f1f5f9;
-  --muted-foreground: #64748b;
+  --muted-foreground: #64748b; /* Slate 500 */
+
   --accent: #f1f5f9;
-  --accent-foreground: #4f46e5;
+  --accent-foreground: #006fee; /* Blue hover text */
+
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #4f46e5;
+
+  /* Borders */
+  --border: #e2e8f0; /* Slate 200 - Highly visible on cards */
+  --input: #cbd5e1; /* Slate 300 - Slightly darker for input boxes */
+  --ring: #006fee;
+
   --radius: 0.5rem;
 
-  --sidebar: #f8fafc;
-  --sidebar-foreground: #0f172a;
-  --sidebar-primary: #4f46e5;
+  /* Sidebar */
+  --sidebar: #ffffff;
+  --sidebar-foreground: #334155;
+  --sidebar-primary: #006fee;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #e2e8f0;
+  --sidebar-accent: #f8fafc;
   --sidebar-accent-foreground: #0f172a;
   --sidebar-border: #e2e8f0;
-  --sidebar-ring: #4f46e5;
+  --sidebar-ring: #006fee;
 }
 
 .dark {
-  /* Midnight Violet Premium Dark Mode */
-  --background: #09090b;
-  --foreground: #f8fafc;
-  --card: #121214;
-  --card-foreground: #f8fafc;
-  --popover: #121214;
-  --popover-foreground: #f8fafc;
-  --primary: #8b5cf6;
-  --primary-foreground: #ffffff;
-  --secondary: #1f1f22;
-  --secondary-foreground: #f8fafc;
-  --muted: #1f1f22;
-  --muted-foreground: #a1a1aa;
-  --accent: #1f1f22;
-  --accent-foreground: #f8fafc;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-  --border: #27272a;
-  --input: #27272a;
-  --ring: #8b5cf6;
+  /* DARK MODE: Deep Navy & Slate (The "Linear" Look) */
+  --background: #0b0e14; /* Deepest Navy/Slate */
+  --foreground: #f8fafc; /* Slate 50 */
 
-  --sidebar: #09090b;
-  --sidebar-foreground: #a1a1aa;
-  --sidebar-primary: #8b5cf6;
+  --card: #151923; /* Elevated Navy for cards */
+  --card-foreground: #f8fafc;
+
+  --popover: #151923;
+  --popover-foreground: #f8fafc;
+
+  --primary: #338ef7; /* Lighter, glowing Blue for dark mode */
+  --primary-foreground: #ffffff;
+
+  --secondary: #202635; /* Elevated Slate */
+  --secondary-foreground: #f8fafc;
+
+  --muted: #202635;
+  --muted-foreground: #94a3b8; /* Slate 400 */
+
+  --accent: #202635;
+  --accent-foreground: #338ef7;
+
+  --destructive: #f31260;
+  --destructive-foreground: #ffffff;
+
+  /* Borders */
+  --border: #2b3245; /* Distinct visible border against deep navy */
+  --input: #2b3245;
+  --ring: #338ef7;
+
+  /* Sidebar */
+  --sidebar: #0b0e14; /* Merges seamlessly with background */
+  --sidebar-foreground: #94a3b8;
+  --sidebar-primary: #338ef7;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #1f1f22;
+  --sidebar-accent: #151923;
   --sidebar-accent-foreground: #f8fafc;
-  --sidebar-border: #27272a;
-  --sidebar-ring: #8b5cf6;
+  --sidebar-border: #2b3245;
+  --sidebar-ring: #338ef7;
 }
 
+/* SweetAlert2 Fixes */
 body > .swal2-container {
   z-index: 99999 !important;
 }
+
 body.swal2-shown {
   pointer-events: auto !important;
 }
@@ -116,6 +150,7 @@ body.swal2-shown {
   body {
     @apply bg-background text-foreground antialiased;
   }
+
   *,
   ::after,
   ::before {
