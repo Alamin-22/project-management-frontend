@@ -1,9 +1,10 @@
 import { IBaseResponse } from "@/Redux/api/baseApi";
+import { TUserRole } from "../userApi/User.interface";
 
 export interface IAuthUser {
   id: string;
   email: string;
-  role: string;
+  role: TUserRole;
 }
 
 export interface IAuthResponseData {
@@ -32,11 +33,6 @@ export interface IResetPasswordRequest {
 export interface IMasterEmailChangeRequest {
   newEmail: string;
   currentPassword: string;
-}
-
-export interface IChangePasswordRequest {
-  oldPassword: string;
-  newPassword: string;
 }
 
 export interface IMasterEmailChangeResponse {

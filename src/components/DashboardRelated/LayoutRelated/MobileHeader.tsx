@@ -15,13 +15,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { USER_ROLE } from "@/Redux/services/userApi/User.interface";
+import ThemeToggle from "@/components/Shared/ThemeToggle";
 
 const MobileHeader = () => {
   const { user, loading, isAuthError, handleLogOut } = useAppState();
   const { toggleSidebar } = useSidebar();
 
   const baseRoute =
-    user?.role === USER_ROLE.project_manager
+    user?.role === USER_ROLE.project_manager ||
+    user?.role === USER_ROLE.admin ||
+    user?.role === USER_ROLE.super_admin
       ? "/manager_workspace"
       : "/member_workspace";
 
@@ -33,17 +36,14 @@ const MobileHeader = () => {
         href={baseRoute}
         className="flex items-center gap-2 active:scale-95 transition-all"
       >
-        <Image
-          src="/Assets/logo/logo.png"
-          alt="Logo"
-          width={100}
-          height={32}
-          className="h-7 w-auto object-contain"
-          priority
-        />
+        <p className="text-lg font-bold tracking-tight text-foreground">
+          Project <span className="text-primary">M.</span>
+        </p>
       </Link>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
+        <ThemeToggle />
+
         {showSkeletons ? (
           <Skeleton className="h-8 w-8 rounded-full" />
         ) : (
@@ -51,7 +51,9 @@ const MobileHeader = () => {
             <DropdownMenuTrigger asChild>
               <button className="relative h-8 w-8 overflow-hidden rounded-full border border-border outline-none active:scale-95 transition-transform">
                 <Image
-                  src={user?.profile.profileImg?.url || "/Assets/user-icon.png"}
+                  src={
+                    user?.profile?.profileImg?.url || "/Assets/user-icon.png"
+                  }
                   alt="Profile"
                   fill
                   className="object-cover"

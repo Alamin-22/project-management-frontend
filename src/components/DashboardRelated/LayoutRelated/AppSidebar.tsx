@@ -26,6 +26,7 @@ import { Fragment, useEffect, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { USER_ROLE } from "@/Redux/services/userApi/User.interface";
+import ThemeToggle from "@/components/Shared/ThemeToggle";
 
 const AppSidebar = ({ links }: { links: TNavLink[] }) => {
   const pathName = usePathname();
@@ -41,7 +42,9 @@ const AppSidebar = ({ links }: { links: TNavLink[] }) => {
   const activeItemRef = useRef<HTMLAnchorElement | null>(null);
 
   const baseRoute =
-    user?.role === USER_ROLE.project_manager
+    user?.role === USER_ROLE.project_manager ||
+    user?.role === USER_ROLE.admin ||
+    user?.role === USER_ROLE.super_admin
       ? "/manager_workspace"
       : "/member_workspace";
 
@@ -60,9 +63,9 @@ const AppSidebar = ({ links }: { links: TNavLink[] }) => {
     <Sidebar
       variant="sidebar"
       collapsible="icon"
-      className="border-r border-sidebar-border  bg-white!"
+      className="border-r border-sidebar-border  bg-sidebar"
     >
-      <SidebarTrigger className="absolute right-1 top-4 z-50 hidden md:flex h-6 w-6 rounded-full border bg-white shadow-sm hover:bg-slate-100" />
+      <SidebarTrigger className="absolute right-1 top-4 z-50 hidden md:flex h-6 w-6 rounded-full border bg-background shadow-sm hover:bg-muted" />
 
       <SidebarHeader className="p-4 border-b border-sidebar-border ">
         <div className="hidden md:flex flex-row items-center justify-center">
@@ -71,13 +74,12 @@ const AppSidebar = ({ links }: { links: TNavLink[] }) => {
             className="flex items-center gap-2 active:scale-95 transition-all"
           >
             <div className="overflow-hidden transition-all duration-300 group-data-[collapsible=icon]:w-0 group-data-[collapsible=icon]:opacity-0">
-              <Image
-                src="/Assets/logo/logo.png"
-                alt="Logo"
-                width={140}
-                height={40}
-                priority
-              />
+              <div className="flex items-center gap-3">
+                <p className="text-lg font-bold tracking-tight text-sidebar-foreground">
+                  Project {"   "}
+                  <span className="text-primary">Management</span>
+                </p>
+              </div>
             </div>
 
             <div className="hidden group-data-[collapsible=icon]:block">
@@ -195,11 +197,15 @@ const AppSidebar = ({ links }: { links: TNavLink[] }) => {
                 <span className="text-xs font-bold text-sidebar-foreground truncate">
                   {user?.profile?.name}
                 </span>
-                <span className="text-[10px] text-muted-foreground truncate  tracking-tighter uppercase">
+                <span className="text-[10px] text-muted-foreground truncate uppercase">
                   {user?.role.replace("_", " ")}
                 </span>
               </>
             )}
+          </div>
+
+          <div className="ml-auto group-data-[collapsible=icon]:hidden">
+            <ThemeToggle />
           </div>
         </div>
 

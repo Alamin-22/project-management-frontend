@@ -40,7 +40,7 @@ export const AuthApi = baseApi.injectEndpoints({
       providesTags: [{ type: "Users", id: "get_me" }],
     }),
 
-    //  Clears cookie on backend and session locally
+    // Clears cookie on backend and session locally
     logout: builder.mutation<IBaseResponse<null>, void>({
       query: () => ({
         url: "/auth/logout",
@@ -97,7 +97,7 @@ export const AuthApi = baseApi.injectEndpoints({
       }),
     }),
 
-    //  Master Key: Owner Handover (Email Change)
+    // Master Key: Owner Handover (Email Change)
     updateMasterEmail: builder.mutation<
       IBaseResponse<IMasterEmailChangeResponse>,
       IMasterEmailChangeRequest
