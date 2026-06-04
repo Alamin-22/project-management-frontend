@@ -2,31 +2,12 @@
 
 import { useState, useMemo } from "react";
 import Swal from "sweetalert2";
-import {
-  ArrowDownWideNarrow,
-  ArrowUpNarrowWide,
-  Filter,
-  X,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuCheckboxItem,
-} from "@/components/ui/dropdown-menu";
-import {
-  IUser,
-  TUserStatus,
-  USER_ROLE,
-} from "@/Redux/services/userApi/User.interface";
+import { IUser, TUserStatus } from "@/Redux/services/userApi/User.interface";
 import { useAppState } from "@/Provider/StateProvider";
 import PageHeader from "@/components/DashboardRelated/PageHeader";
 import Pagination from "@/components/Shared/Pagination/Pagination";
-import { Badge } from "@/components/ui/badge";
 import UsersManagementTable from "@/components/DashboardRelated/Admin/usersManagement/UsersManagementTable";
+import UserManagementToolbar from "@/components/DashboardRelated/Admin/usersManagement/UserManagementToolbar";
 import {
   Dialog,
   DialogContent,
@@ -172,75 +153,14 @@ const UserManagementPage = () => {
         onSearchChange={setLocalSearchQuery}
         placeholder="Search by name, email, or role..."
       >
-        <div className="flex items-center gap-3">
-          {selectedStatus && (
-            <Badge
-              variant="secondary"
-              className="gap-1 bg-primary/10 text-primary hover:bg-primary/20 transition-colors border-none py-1"
-            >
-              {selectedStatus}
-              <X
-                className="h-3 w-3 cursor-pointer ml-1"
-                onClick={() => setSelectedStatus(null)}
-              />
-            </Badge>
-          )}
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-9 border-border bg-card"
-              >
-                <Filter className="mr-2 h-4 w-4 text-muted-foreground" /> Filter
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 border-border">
-              <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                Order
-              </DropdownMenuLabel>
-              <DropdownMenuCheckboxItem
-                checked={selectedSort === "newest"}
-                onCheckedChange={() => setSelectedSort("newest")}
-              >
-                <ArrowDownWideNarrow className="mr-2 h-4 w-4" /> Newest First
-              </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem
-                checked={selectedSort === "oldest"}
-                onCheckedChange={() => setSelectedSort("oldest")}
-              >
-                <ArrowUpNarrowWide className="mr-2 h-4 w-4" /> Oldest First
-              </DropdownMenuCheckboxItem>
-              <DropdownMenuSeparator className="bg-border" />
-              <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                Status
-              </DropdownMenuLabel>
-              <DropdownMenuCheckboxItem
-                checked={selectedStatus === "active"}
-                onCheckedChange={() => setSelectedStatus("active")}
-              >
-                Active Access
-              </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem
-                checked={selectedStatus === "blocked"}
-                onCheckedChange={() => setSelectedStatus("blocked")}
-              >
-                Blocked Access
-              </DropdownMenuCheckboxItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {currentUser?.role !== USER_ROLE.team_member && (
-            <Button
-              size="sm"
-              className="h-9 font-semibold"
-              onClick={handleOpenCreateModal}
-            >
-              create Member
-            </Button>
-          )}
-        </div>
+        <UserManagementToolbar
+          selectedStatus={selectedStatus}
+          setSelectedStatus={setSelectedStatus}
+          selectedSort={selectedSort}
+          setSelectedSort={setSelectedSort}
+          currentUser={currentUser}
+          onOpenCreateModal={handleOpenCreateModal}
+        />
       </PageHeader>
 
       <UsersManagementTable
@@ -254,13 +174,11 @@ const UserManagementPage = () => {
         onEditUser={handleOpenEditModal}
       />
 
-      <div className="mt-6">
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-        />
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="max-w-2xl! w-full max-h-[90vh] overflow-y-auto border-border bg-card">
