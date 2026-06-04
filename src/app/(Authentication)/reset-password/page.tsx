@@ -37,7 +37,7 @@ const ResetPasswordPage = () => {
   const [emailValue, setEmailValue] = useState("");
 
   useEffect(() => {
-    document.title = "Reset Password | Pond&Garden Depot";
+    document.title = "Reset Password | Smart Project Workspace";
 
     // Function to load email from session storage
     const loadEmail = () => {
@@ -93,7 +93,7 @@ const ResetPasswordPage = () => {
         title: "Success!",
         text: "Your password has been reset successfully. Please login with your new credentials.",
         icon: "success",
-        confirmButtonColor: "#3a7d44",
+        confirmButtonColor: "hsl(var(--primary))",
       });
 
       router.push("/login");

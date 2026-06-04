@@ -44,12 +44,12 @@ const ForgetPassword = ({ closeModal }: ForgetPasswordProps) => {
       const res = await forgetPassword(data).unwrap();
 
       if (res?.success) {
-        Swal.fire(
-          "Please Check your Email",
-          `${res?.message || "Please check your email!"}`,
-          "success",
-        );
-        // toast.success(res?.message || "Please check your email!");
+        Swal.fire({
+          title: "Check Your Email",
+          text: res?.message || "We've sent a secure reset link to your inbox.",
+          icon: "success",
+          confirmButtonColor: "hsl(var(--primary))",
+        });
         closeModal();
       }
     } catch (error: any) {
@@ -57,7 +57,7 @@ const ForgetPassword = ({ closeModal }: ForgetPasswordProps) => {
       const errorMessage =
         error?.data?.errorSource?.[0]?.message ||
         error?.data?.message ||
-        "Something went wrong";
+        "Failed to request password reset.";
       toast.error(errorMessage);
     }
   };
@@ -67,10 +67,11 @@ const ForgetPassword = ({ closeModal }: ForgetPasswordProps) => {
       <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle className="text-center text-2xl font-semibold">
-            Verify Your Account
+            Account Recovery
           </DialogTitle>
           <DialogDescription className="text-center">
-            Enter your email address to receive a verification link.
+            Enter your staff email address to receive a secure password reset
+            link.
           </DialogDescription>
         </DialogHeader>
 
@@ -80,7 +81,7 @@ const ForgetPassword = ({ closeModal }: ForgetPasswordProps) => {
             <Input
               {...register("email")}
               id="email"
-              placeholder="you@example.com"
+              placeholder="name@company.com"
               className={errors.email ? "border-destructive" : ""}
               type="email"
             />
@@ -89,8 +90,12 @@ const ForgetPassword = ({ closeModal }: ForgetPasswordProps) => {
             )}
           </div>
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Processing..." : "Verify Email"}
+          <Button
+            type="submit"
+            className="w-full font-semibold"
+            disabled={isLoading}
+          >
+            {isLoading ? "Processing..." : "Send Reset Link"}
           </Button>
         </form>
       </DialogContent>

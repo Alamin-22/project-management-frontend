@@ -1,7 +1,7 @@
 import LoginForm from "@/components/AuthenticationRelated/LoginForm";
 
 export const metadata = {
-  title: " Login | Smart Inventory System",
+  title: "Login | Smart Project Workspace",
 };
 
 const LoginPage = () => {
@@ -10,10 +10,10 @@ const LoginPage = () => {
       <div className="w-full max-w-md space-y-6 rounded-2xl bg-card p-8 shadow-lg border border-border">
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold tracking-tight text-primary">
-            Smart IMS
+            Smart Workspace
           </h1>
           <p className="text-sm text-muted-foreground">
-            Enter your staff credentials to manage stock and orders.
+            Enter your staff credentials to access your projects and tasks.
           </p>
         </div>
 

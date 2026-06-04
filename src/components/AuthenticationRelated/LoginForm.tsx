@@ -40,9 +40,6 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (values: ILoginFormData) => {
-    const redirectUrl =
-      searchParams.get("redirectUrl") || "/admin_dashboard_private";
-
     try {
       const res = await login(values).unwrap();
 
@@ -50,7 +47,17 @@ const LoginForm = () => {
         sessionStorage.setItem("accessToken", res.data.accessToken);
       }
 
-      toast.success(`Access Granted: Welcome, ${res.data.user.role}`);
+      const userRole = res?.data?.user?.role || "";
+      const isManager = ["super_admin", "admin", "project_manager"].includes(
+        userRole,
+      );
+      const defaultRedirectUrl = isManager
+        ? "/manager_workspace"
+        : "/member_workspace";
+
+      const redirectUrl = searchParams.get("redirectUrl") || defaultRedirectUrl;
+
+      toast.success(`Access Granted: Welcome to the Workspace`);
       router.push(redirectUrl);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -61,20 +68,25 @@ const LoginForm = () => {
     }
   };
 
-  /**
-   *  Demo Login button (pre-filled)
-   */
   const handleDemoLogin = () => {
-    form.setValue("email", "admin@ims.com");
-    form.setValue("password", "admin123456");
-    toast.success("Demo credentials loaded into form.");
+    const options = {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    };
+
+    form.setValue("email", "admin@smartproject.com", options);
+    form.setValue("password", "admin123456", options);
+
+    toast.success(
+      "Demo credentials loaded! Click 'Sign In to Workspace' to proceed.",
+    );
   };
 
   return (
     <div className="mt-6 space-y-6">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          {/* Email Field */}
           <FormField
             control={form.control}
             name="email"
@@ -83,7 +95,7 @@ const LoginForm = () => {
                 <FormLabel>Staff Email</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="admin@ims.com"
+                    placeholder="name@company.com"
                     {...field}
                     className="bg-background"
                   />
@@ -93,7 +105,6 @@ const LoginForm = () => {
             )}
           />
 
-          {/* Password Field */}
           <FormField
             control={form.control}
             name="password"
@@ -143,31 +154,32 @@ const LoginForm = () => {
             className="w-full font-bold h-11"
             disabled={isLoading}
           >
-            {isLoading ? "Validating Session..." : "Sign In to System"}
+            {isLoading ? "Validating Session..." : "Sign In to Workspace"}
           </Button>
         </form>
       </Form>
 
-      {/* --- Evaluation Section --- */}
+      {/* Visual Divider */}
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-[10px] uppercase tracking-widest">
           <span className="bg-card px-2 text-muted-foreground font-semibold">
-            System Evaluation
+            Quick Fill
           </span>
         </div>
       </div>
 
       <Button
         variant="outline"
+        type="button"
         className="w-full border-primary/20 text-primary hover:bg-primary/5 font-bold h-11"
         onClick={handleDemoLogin}
         disabled={isLoading}
       >
         <IcfyIcon icon="solar:user-id-bold-duotone" className="mr-2 text-xl" />
-        One-Click Demo Login
+        One-Click Demo Credentials
       </Button>
 
       {isForgetModalOpen && (
