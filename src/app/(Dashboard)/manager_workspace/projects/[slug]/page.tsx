@@ -66,14 +66,12 @@ const ProjectOverviewPage = () => {
 
         {/* Right Column: Key Details & Quick Actions */}
         <div className="space-y-6">
-          {/* Project Details Card */}
           <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
             <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4">
               Project Details
             </h3>
 
             <div className="space-y-5">
-              {/* Created Date */}
               <div className="flex items-start gap-3">
                 <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-500 mt-0.5">
                   <CalendarDays className="h-5 w-5" />
@@ -88,7 +86,6 @@ const ProjectOverviewPage = () => {
                 </div>
               </div>
 
-              {/* Dynamic Deadline Date */}
               <div className="flex items-start gap-3">
                 <div
                   className={`p-2 rounded-lg mt-0.5 ${
@@ -158,6 +155,7 @@ const ProjectOverviewPage = () => {
                   </p>
                 </div>
               </div>
+
               <div className="flex items-start gap-3">
                 <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-500 mt-0.5">
                   <Activity className="h-5 w-5" />
@@ -181,14 +179,16 @@ const ProjectOverviewPage = () => {
                     </Badge>
                   </div>
 
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-7 px-3 text-[10px] font-bold uppercase tracking-widest"
-                    onClick={() => setIsStatusModalOpen(true)}
-                  >
-                    Update Status
-                  </Button>
+                  {!project.isDeleted && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-7 px-3 text-[10px] font-bold uppercase tracking-widest"
+                      onClick={() => setIsStatusModalOpen(true)}
+                    >
+                      Update Status
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>

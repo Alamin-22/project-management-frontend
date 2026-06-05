@@ -1,7 +1,13 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, AlertTriangle } from "lucide-react";
+import {
+  ArrowLeft,
+  Loader2,
+  AlertTriangle,
+  RefreshCcw,
+  Trash2,
+} from "lucide-react";
 import Link from "next/link";
 import Swal from "sweetalert2";
 
@@ -12,6 +18,8 @@ import CreateEditProjectForm from "@/components/DashboardRelated/Admin/ProjectRe
 import {
   useGetSingleProjectQuery,
   useDeleteProjectMutation,
+  useRestoreProjectMutation,
+  usePermanentDeleteProjectMutation,
 } from "@/Redux/services/projectApi/ProjectApi";
 
 const ProjectSettingsPage = () => {
@@ -24,10 +32,14 @@ const ProjectSettingsPage = () => {
   });
 
   const [deleteProject, { isLoading: isDeleting }] = useDeleteProjectMutation();
+  const [restoreProject, { isLoading: isRestoring }] =
+    useRestoreProjectMutation();
+  const [permanentDelete, { isLoading: isPermDeleting }] =
+    usePermanentDeleteProjectMutation();
 
   const project = data?.data;
 
-  const handleDelete = async () => {
+  const handleArchive = async () => {
     if (!project) return;
 
     const { value: confirmedName, isConfirmed } = await Swal.fire({
@@ -47,7 +59,6 @@ const ProjectSettingsPage = () => {
       inputPlaceholder: project.name,
       icon: "warning",
       showCancelButton: true,
-
       confirmButtonColor: "#ef4444",
       cancelButtonColor: "#64748b",
       confirmButtonText: "Archive Project",
@@ -88,6 +99,58 @@ const ProjectSettingsPage = () => {
     }
   };
 
+  const handleRestore = async () => {
+    try {
+      await restoreProject(slug).unwrap();
+      Swal.fire({
+        title: "Restored!",
+        text: "Project has been reactivated and returned to the dashboard.",
+        icon: "success",
+        background: "var(--card)",
+        color: "var(--foreground)",
+      });
+      router.push(`/manager_workspace/projects/${slug}`);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      Swal.fire("Error", error?.data?.message || "Failed to restore.", "error");
+    }
+  };
+
+  const handlePermanentDelete = async () => {
+    const { isConfirmed } = await Swal.fire({
+      title: "Permanent Deletion",
+      text: "This will completely erase the project and all tasks forever. This action CANNOT be undone.",
+      icon: "error",
+      showCancelButton: true,
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#64748b",
+      confirmButtonText: "Yes, erase it forever",
+      background: "var(--card)",
+      color: "var(--foreground)",
+    });
+
+    if (isConfirmed) {
+      try {
+        await permanentDelete(slug).unwrap();
+        Swal.fire({
+          title: "Erased!",
+          text: "Project permanently deleted.",
+          icon: "success",
+          background: "var(--card)",
+          color: "var(--foreground)",
+        });
+        router.push("/manager_workspace/projects/archived");
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        Swal.fire(
+          "Error",
+          error?.data?.message || "Failed to delete.",
+          "error",
+        );
+      }
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex h-[60vh] items-center justify-center">
@@ -100,7 +163,7 @@ const ProjectSettingsPage = () => {
 
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-6">
-      <div>
+      <div className="space-y-2">
         <ReusableBreadcrumb
           paths={[
             { label: "Projects", href: "/manager_workspace/projects" },
@@ -126,45 +189,101 @@ const ProjectSettingsPage = () => {
               Project Settings
             </h1>
             <p className="text-sm text-muted-foreground">
-              Modify workspace details, update the deadline, or change the
-              status.
+              {project.isDeleted
+                ? "This project is archived. Restore it to modify details."
+                : "Modify workspace details, update the deadline, or change the status."}
             </p>
           </div>
         </div>
       </div>
 
-      <FormCard title="Edit Project Details">
-        <CreateEditProjectForm project={project} />
-      </FormCard>
+      {/* Conditional Rendering based on Archive State */}
+      {!project.isDeleted ? (
+        <>
+          <FormCard title="Edit Project Details">
+            <CreateEditProjectForm project={project} />
+          </FormCard>
 
-      {/* --- DANGER ZONE --- */}
-      <div className="mt-12 mb-8">
-        <h2 className="text-lg font-bold text-destructive mb-4 flex items-center gap-2">
-          <AlertTriangle className="h-5 w-5" /> Danger Zone
-        </h2>
-        <div className="border border-destructive/30 rounded-xl p-6 bg-destructive/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h3 className="font-semibold text-foreground">
-              Archive this project
-            </h3>
-            <p className="text-sm text-muted-foreground mt-1">
-              Mark this project as archived. It will be removed from the active
-              grid but can be restored later.
-            </p>
+          {/*  ACTIVE: DANGER ZONE  */}
+          <div className="mt-12 mb-8">
+            <h2 className="text-lg font-bold text-destructive mb-4 flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5" /> Danger Zone
+            </h2>
+            <div className="border border-destructive/30 rounded-xl p-6 bg-destructive/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h3 className="font-semibold text-foreground">
+                  Archive this project
+                </h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Mark this project as archived. It will be removed from the
+                  active grid but can be restored later.
+                </p>
+              </div>
+              <Button
+                variant="destructive"
+                onClick={handleArchive}
+                disabled={isDeleting}
+                className="shrink-0"
+              >
+                {isDeleting ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : null}
+                Archive Project
+              </Button>
+            </div>
           </div>
-          <Button
-            variant="destructive"
-            onClick={handleDelete}
-            disabled={isDeleting}
-            className="shrink-0"
-          >
-            {isDeleting ? (
-              <Loader2 className="h-4 w-4 animate-spin mr-2" />
-            ) : null}
-            Archive Project
-          </Button>
+        </>
+      ) : (
+        /*  ARCHIVED: RESTORE & DELETE  */
+        <div className="mt-6 mb-8 space-y-6">
+          <div className="border border-emerald-500/30 rounded-xl p-6 bg-emerald-500/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h3 className="font-semibold text-foreground">Restore Project</h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                Reactivate this project and return it to the main dashboard.
+                Team assignments will be preserved.
+              </p>
+            </div>
+            <Button
+              onClick={handleRestore}
+              disabled={isRestoring}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white shrink-0"
+            >
+              {isRestoring ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <RefreshCcw className="mr-2 h-4 w-4" />
+              )}
+              Restore Project
+            </Button>
+          </div>
+
+          <div className="border border-destructive/30 rounded-xl p-6 bg-destructive/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h3 className="font-semibold text-foreground">
+                Permanently Delete
+              </h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                Erase this project and all associated tasks forever. This action
+                cannot be reversed.
+              </p>
+            </div>
+            <Button
+              variant="destructive"
+              onClick={handlePermanentDelete}
+              disabled={isPermDeleting}
+              className="shrink-0"
+            >
+              {isPermDeleting ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Trash2 className="mr-2 h-4 w-4" />
+              )}
+              Permanently Delete
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

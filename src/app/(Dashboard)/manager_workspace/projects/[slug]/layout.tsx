@@ -9,9 +9,10 @@ import {
   Settings,
   Loader2,
   ArrowLeft,
+  AlertCircle,
 } from "lucide-react";
-import { useGetSingleProjectQuery } from "@/Redux/services/projectApi/ProjectApi";
 import { Button } from "@/components/ui/button";
+import { useGetSingleProjectQuery } from "@/Redux/services/projectApi/ProjectApi";
 
 const ProjectWorkspaceLayout = ({
   children,
@@ -70,7 +71,14 @@ const ProjectWorkspaceLayout = ({
       {/* Project Header Banner */}
       <div className="bg-card border-b border-border px-6 py-6">
         <div className="max-w-7xl mx-auto flex items-start gap-4">
-          <Link href="/manager_workspace/projects" className="mt-1">
+          <Link
+            href={
+              project.isDeleted
+                ? "/manager_workspace/projects/archived"
+                : "/manager_workspace/projects"
+            }
+            className="mt-1"
+          >
             <Button
               variant="outline"
               size="icon"
@@ -95,6 +103,15 @@ const ProjectWorkspaceLayout = ({
           </div>
         </div>
       </div>
+
+      {/* READ-ONLY WARNING BANNER */}
+      {project.isDeleted && (
+        <div className="bg-amber-500/10 border-b border-amber-500/20 px-6 py-3 flex items-center justify-center gap-2 text-amber-600 dark:text-amber-500 text-sm font-semibold">
+          <AlertCircle className="h-4 w-4" />
+          This workspace is archived and in read-only mode. Go to Settings to
+          restore it.
+        </div>
+      )}
 
       {/* Navigation Tabs */}
       <div className="bg-card border-b border-border sticky top-0 z-10">
@@ -124,6 +141,7 @@ const ProjectWorkspaceLayout = ({
         </div>
       </div>
 
+      {/* Tab Content Area */}
       <div className="flex-1 bg-muted/20">
         <div className="max-w-7xl mx-auto py-6">{children}</div>
       </div>

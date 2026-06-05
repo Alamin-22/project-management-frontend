@@ -101,16 +101,18 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
                 align="end"
                 className="w-44 border-border shadow-lg z-50"
               >
-                <DropdownMenuItem
-                  className="cursor-pointer"
-                  onSelect={(e) => {
-                    e.preventDefault();
-                    setIsStatusModalOpen(true);
-                  }}
-                >
-                  <RefreshCw className="w-4 h-4 mr-2 text-muted-foreground" />
-                  Update Status
-                </DropdownMenuItem>
+                {!project.isDeleted && (
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onSelect={(e) => {
+                      e.preventDefault();
+                      setIsStatusModalOpen(true);
+                    }}
+                  >
+                    <RefreshCw className="w-4 h-4 mr-2 text-muted-foreground" />
+                    Update Status
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem asChild className="cursor-pointer">
                   <Link href={`${baseUrl}/${project.slug}/team`}>
                     <UserPlus className="w-4 h-4 mr-2 text-muted-foreground" />
