@@ -22,11 +22,7 @@ export const ManagerNavLinks: TNavLink[] = [
     label: "Archived Projects",
     icon: "solar:archive-bold-duotone",
   },
-  {
-    href: "/manager_workspace/tasks",
-    label: "All Tasks",
-    icon: "solar:clipboard-list-bold-duotone",
-  },
+
   { heading: "Administration" },
   {
     href: "/manager_workspace/users",

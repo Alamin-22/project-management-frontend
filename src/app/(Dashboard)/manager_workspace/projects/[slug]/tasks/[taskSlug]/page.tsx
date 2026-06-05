@@ -1,8 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
-  Activity,
   ArrowLeft,
   CalendarDays,
   Clock,
@@ -10,8 +10,9 @@ import {
   MessageSquare,
   Trash2,
   Users,
+  AlertCircle,
+  Activity,
 } from "lucide-react";
-import Link from "next/link";
 import { format } from "date-fns";
 import DOMPurify from "isomorphic-dompurify";
 import Swal from "sweetalert2";
@@ -24,8 +25,6 @@ import {
   useGetSingleTaskQuery,
   useDeleteTaskMutation,
 } from "@/Redux/services/taskApi/TaskApi";
-import Image from "next/image";
-import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -34,14 +33,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import UpdateTaskStatusModal from "@/components/DashboardRelated/Admin/TaskRelated/UpdateTaskStatusModal";
+import Image from "next/image";
 
 const TaskDetailsPage = () => {
   const params = useParams();
   const projectSlug = params.slug as string;
   const taskSlug = params.taskSlug as string;
   const router = useRouter();
-
-  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
 
   const { data: projectData } = useGetSingleProjectQuery(projectSlug, {
     skip: !projectSlug,
@@ -54,6 +52,7 @@ const TaskDetailsPage = () => {
   const task = taskData?.data;
 
   const [deleteTask] = useDeleteTaskMutation();
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
 
   const handleDelete = async () => {
     const result = await Swal.fire({
@@ -100,7 +99,15 @@ const TaskDetailsPage = () => {
   const sanitizedDescription = DOMPurify.sanitize(task.description);
 
   return (
-    <div className="max-w-5xl mx-auto p-4 space-y-6">
+    <div className="max-w-5xl mx-auto p-6 space-y-6">
+      {/* WARNING BANNER */}
+      {task.isDeleted && (
+        <div className="bg-amber-500/10 border border-amber-500/20 px-6 py-3 rounded-lg flex items-center gap-2 text-amber-600 dark:text-amber-500 text-sm font-semibold">
+          <AlertCircle className="h-4 w-4 shrink-0" />
+          This task is archived and currently in read-only mode.
+        </div>
+      )}
+
       {/* Header & Breadcrumbs */}
       <div className="space-y-2">
         <ReusableBreadcrumb
@@ -119,15 +126,14 @@ const TaskDetailsPage = () => {
         />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <Link href={`/manager_workspace/projects/${projectSlug}/tasks`}>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8 rounded-full"
-              >
-                <ArrowLeft className="h-4 w-4 text-muted-foreground" />
-              </Button>
-            </Link>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 rounded-full"
+              onClick={() => router.back()}
+            >
+              <ArrowLeft className="h-4 w-4 text-muted-foreground" />
+            </Button>
             <div>
               <div className="flex items-center gap-3 mb-1">
                 <Badge variant="outline" className="text-[10px] font-mono">
@@ -152,14 +158,14 @@ const TaskDetailsPage = () => {
             </div>
           </div>
 
-          {/* Action Buttons */}
+          {/* Action Buttons (Disabled if task or project is archived) */}
           {!project.isDeleted && (
             <div className="flex items-center gap-2">
-              {/* NEW Update Status Button */}
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setIsStatusModalOpen(true)}
+                disabled={task.isDeleted}
               >
                 <Activity className="h-4 w-4 mr-2" /> Update Status
               </Button>
@@ -171,10 +177,16 @@ const TaskDetailsPage = () => {
                     `/manager_workspace/projects/${projectSlug}/tasks/${taskSlug}/edit`,
                   )
                 }
+                disabled={task.isDeleted}
               >
                 <Edit className="h-4 w-4 mr-2" /> Edit Task
               </Button>
-              <Button variant="destructive" size="sm" onClick={handleDelete}>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={handleDelete}
+                disabled={task.isDeleted}
+              >
                 <Trash2 className="h-4 w-4 mr-2" /> Archive
               </Button>
             </div>
@@ -185,7 +197,7 @@ const TaskDetailsPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Description & Comments */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-card rounded-xl border border-border p-6 ">
+          <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
             <h2 className="text-lg font-bold text-foreground mb-4 border-b border-border pb-2">
               Description
             </h2>
@@ -196,7 +208,7 @@ const TaskDetailsPage = () => {
           </div>
 
           {/* Comments Section Placeholder */}
-          <div className="bg-card rounded-xl border border-border p-6 ">
+          <div className="bg-card rounded-xl border border-border p-6 shadow-sm opacity-50">
             <div className="flex items-center gap-2 border-b border-border pb-4 mb-4">
               <MessageSquare className="h-5 w-5 text-primary" />
               <h2 className="text-lg font-bold text-foreground">Discussion</h2>
@@ -211,7 +223,7 @@ const TaskDetailsPage = () => {
 
         {/* Right Column: Meta Info */}
         <div className="space-y-6">
-          <div className="bg-card rounded-xl border border-border p-6 ">
+          <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
             <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4">
               Task Details
             </h3>

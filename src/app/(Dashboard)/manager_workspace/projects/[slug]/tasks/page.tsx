@@ -68,7 +68,6 @@ const TaskBoardPage = () => {
   const [serverDataRef, setServerDataRef] = useState<ITask[] | undefined>(
     undefined,
   );
-
   const [statusModalTask, setStatusModalTask] = useState<ITask | null>(null);
 
   const currentTasks = tasksData?.data?.result;
@@ -95,6 +94,20 @@ const TaskBoardPage = () => {
     }),
   );
 
+  // Helper function to reliably find which column a task is CURRENTLY in
+  const findContainer = (id: string) => {
+    if (
+      id === TASK_STATUS.todo ||
+      id === TASK_STATUS.in_progress ||
+      id === TASK_STATUS.completed
+    ) {
+      return id as TTaskStatus;
+    }
+    return Object.keys(boardData).find((key) =>
+      boardData[key as TTaskStatus].some((task) => task.slug === id),
+    ) as TTaskStatus;
+  };
+
   const onDragStart = (event: DragStartEvent) => {
     const { active } = event;
     const task = active.data.current?.task as ITask;
@@ -105,20 +118,13 @@ const TaskBoardPage = () => {
     const { active, over } = event;
     if (!over) return;
 
-    const activeId = active.id;
-    const overId = over.id;
+    const activeId = String(active.id);
+    const overId = String(over.id);
 
     if (activeId === overId) return;
 
-    const isActiveTask = active.data.current?.type === "Task";
-    const isOverTask = over.data.current?.type === "Task";
-
-    if (!isActiveTask) return;
-
-    const activeContainer = active.data.current?.task.status as TTaskStatus;
-    const overContainer = isOverTask
-      ? (over.data.current?.task.status as TTaskStatus)
-      : (over.id as TTaskStatus);
+    const activeContainer = findContainer(activeId);
+    const overContainer = findContainer(overId);
 
     if (!activeContainer || !overContainer || activeContainer === overContainer)
       return;
@@ -128,13 +134,16 @@ const TaskBoardPage = () => {
       const overItems = [...prev[overContainer]];
 
       const activeIndex = activeItems.findIndex((t) => t.slug === activeId);
-      const overIndex = isOverTask
-        ? overItems.findIndex((t) => t.slug === overId)
-        : overItems.length;
+      const overIndex = overItems.findIndex((t) => t.slug === overId);
 
       const [movedTask] = activeItems.splice(activeIndex, 1);
+
+      // Clone to prevent strict-mode mutation errors
       const updatedTask = { ...movedTask, status: overContainer };
-      overItems.splice(overIndex, 0, updatedTask);
+
+      // If hovering over an empty column space, drop at the end
+      const newOverIndex = overIndex >= 0 ? overIndex : overItems.length;
+      overItems.splice(newOverIndex, 0, updatedTask);
 
       return {
         ...prev,
@@ -149,21 +158,28 @@ const TaskBoardPage = () => {
     const { active, over } = event;
     if (!over) return;
 
-    const activeContainer = active.data.current?.task.status as TTaskStatus;
-    const overContainer = (over.data.current?.task?.status ||
-      over.id) as TTaskStatus;
+    const activeId = String(active.id);
+    const overId = String(over.id);
+
+    const activeContainer = findContainer(activeId);
+    const overContainer = findContainer(overId);
 
     if (!activeContainer || !overContainer) return;
 
     const activeIndex = boardData[activeContainer].findIndex(
-      (t) => t.slug === active.id,
+      (t) => t.slug === activeId,
     );
-    const overIndex = boardData[overContainer].findIndex(
-      (t) => t.slug === over.id,
+    let overIndex = boardData[overContainer].findIndex(
+      (t) => t.slug === overId,
     );
+
+    if (overIndex === -1) {
+      overIndex = boardData[overContainer].length;
+    }
 
     let newBoardState = { ...boardData };
 
+    // Handle same-column vertical reordering
     if (activeContainer === overContainer && activeIndex !== overIndex) {
       newBoardState = {
         ...boardData,
@@ -176,28 +192,31 @@ const TaskBoardPage = () => {
       setBoardData(newBoardState);
     }
 
+    //  Find exactly what changed vs the Server
     const payloadTasks: { slug: string; status: TTaskStatus; order: number }[] =
       [];
 
-    newBoardState[overContainer].forEach((task, index) => {
-      payloadTasks.push({
-        slug: task.slug,
-        status: overContainer,
-        order: index,
+    Object.keys(newBoardState).forEach((statusKey) => {
+      newBoardState[statusKey as TTaskStatus].forEach((task, index) => {
+        const originalTask = currentTasks?.find((t) => t.slug === task.slug);
+
+        // If the task moved columns OR shifted up/down, add it to the payload!
+        if (
+          !originalTask ||
+          originalTask.status !== statusKey ||
+          originalTask.order !== index
+        ) {
+          payloadTasks.push({
+            slug: task.slug,
+            status: statusKey as TTaskStatus,
+            order: index,
+          });
+        }
       });
     });
 
-    if (activeContainer !== overContainer) {
-      newBoardState[activeContainer].forEach((task, index) => {
-        payloadTasks.push({
-          slug: task.slug,
-          status: activeContainer,
-          order: index,
-        });
-      });
-    }
-
-    if (activeContainer !== overContainer || activeIndex !== overIndex) {
+    // Fire API if there are actual changes
+    if (payloadTasks.length > 0) {
       try {
         await reorderTasks({ tasks: payloadTasks }).unwrap();
       } catch (error) {
@@ -231,7 +250,7 @@ const TaskBoardPage = () => {
               <Button
                 variant="outline"
                 size="sm"
-                className="font-semibold  text-red-500 "
+                className="font-semibold text-red-500"
               >
                 <ArchiveX className="mr-2 h-4 w-4" /> Archives
               </Button>

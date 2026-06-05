@@ -5,6 +5,7 @@ import { ArrowLeft, Loader2, RotateCcw, Trash2, ArchiveX } from "lucide-react";
 import Link from "next/link";
 import Swal from "sweetalert2";
 import { format } from "date-fns";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,18 +16,18 @@ import {
   useRestoreTaskMutation,
   usePermanentDeleteTaskMutation,
 } from "@/Redux/services/taskApi/TaskApi";
+import { stripHtml } from "@/Utils/stripHtml";
+import { ITask } from "@/Redux/services/taskApi/Task.interface";
 
 const ArchivedTasksPage = () => {
   const params = useParams();
   const slug = params.slug as string;
   const router = useRouter();
 
-  // 1. Fetch Project Details
   const { data: projectData, isLoading: isProjectLoading } =
     useGetSingleProjectQuery(slug, { skip: !slug });
   const project = projectData?.data;
 
-  // 2. Fetch Archived Tasks for this specific project
   const { data: archivedData, isLoading: isTasksLoading } =
     useGetArchivedTasksQuery(
       { project: project?._id, limit: 100 },
@@ -119,7 +120,7 @@ const ArchivedTasksPage = () => {
   if (!project) return null;
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-6">
+    <div className="max-w-7xl mx-auto p-6 space-y-6">
       <div className="space-y-2">
         <ReusableBreadcrumb
           paths={[
@@ -156,9 +157,9 @@ const ArchivedTasksPage = () => {
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+      <div className="mt-6">
         {archivedTasks.length === 0 ? (
-          <div className="p-12 flex flex-col items-center justify-center text-center">
+          <div className="bg-card border border-border rounded-xl p-12 flex flex-col items-center justify-center text-center ">
             <div className="h-16 w-16 bg-muted/50 rounded-full flex items-center justify-center mb-4">
               <ArchiveX className="h-8 w-8 text-muted-foreground" />
             </div>
@@ -180,84 +181,102 @@ const ArchivedTasksPage = () => {
             </Button>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
-              <thead className="text-xs text-muted-foreground uppercase bg-muted/50 border-b border-border">
-                <tr>
-                  <th className="px-6 py-4 font-bold">Task ID & Title</th>
-                  <th className="px-6 py-4 font-bold">Deleted On</th>
-                  <th className="px-6 py-4 font-bold">Priority</th>
-                  <th className="px-6 py-4 font-bold text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {archivedTasks.map((task) => (
-                  <tr
-                    key={task.slug}
-                    className="hover:bg-muted/30 transition-colors"
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {archivedTasks.map((task: ITask) => (
+              <div
+                key={task.slug}
+                className="bg-card p-5 rounded-xl border border-border  opacity-80 hover:opacity-100 transition-opacity flex flex-col"
+              >
+                {/* Header Row */}
+                <div className="flex items-start justify-between mb-3">
+                  <Badge
+                    variant="outline"
+                    className="text-[10px] font-mono text-muted-foreground"
                   >
-                    <td className="px-6 py-4">
-                      <div className="flex flex-col gap-1">
-                        <Badge
-                          variant="outline"
-                          className="w-fit text-[10px] font-mono"
-                        >
-                          {task.taskId}
-                        </Badge>
-                        <span className="font-bold text-foreground">
-                          {task.title}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-muted-foreground">
+                    {task.taskId}
+                  </Badge>
+                  <Badge
+                    variant="secondary"
+                    className="text-[10px] uppercase tracking-wider bg-muted text-muted-foreground"
+                  >
+                    Archived
+                  </Badge>
+                </div>
+
+                {/* Title & Description */}
+                <Link
+                  href={`/manager_workspace/projects/${slug}/tasks/${task.slug}`}
+                >
+                  <h4 className="font-bold text-sm text-foreground leading-snug mb-2 hover:text-primary transition-colors cursor-pointer">
+                    {task.title}
+                  </h4>
+                </Link>
+                <p className="text-xs text-muted-foreground line-clamp-2 mb-4 leading-relaxed flex-1">
+                  {stripHtml(task.description)}
+                </p>
+
+                {/* Multi-Avatar Display */}
+                {task.assigneeProfiles && task.assigneeProfiles.length > 0 && (
+                  <div className="flex items-center -space-x-2 overflow-hidden mb-4">
+                    {task.assigneeProfiles.map((profile, i) => (
+                      <Image
+                        key={i}
+                        className="inline-block h-6 w-6 rounded-full ring-2 ring-card object-cover bg-muted"
+                        src={
+                          profile.profileImg?.url ||
+                          `https://placehold.co/200x200/png?text=U`
+                        }
+                        width={50}
+                        height={50}
+                        alt={profile.name}
+                        title={profile.name}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {/* Footer Row: Actions */}
+                <div className="flex items-center justify-between border-t border-border pt-4 mt-auto">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-medium text-muted-foreground mb-1">
+                      Deleted On
+                    </span>
+                    <span className="text-xs font-bold text-foreground">
                       {task.deletedAt
                         ? format(new Date(task.deletedAt), "MMM dd, yyyy")
                         : "Unknown"}
-                    </td>
-                    <td className="px-6 py-4">
-                      <Badge
-                        variant="secondary"
-                        className={`text-[10px] ${
-                          task.priority === "High"
-                            ? "bg-destructive/10 text-destructive"
-                            : task.priority === "Medium"
-                              ? "bg-amber-500/10 text-amber-600 dark:text-amber-500"
-                              : "bg-blue-500/10 text-blue-500"
-                        }`}
-                      >
-                        {task.priority}
-                      </Badge>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleRestore(task.slug, task.title)}
-                          disabled={project.isDeleted} // Cannot restore if project is deleted
-                          title={
-                            project.isDeleted
-                              ? "Cannot restore: Project is archived"
-                              : "Restore Task"
-                          }
-                        >
-                          <RotateCcw className="h-4 w-4 mr-2" /> Restore
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() =>
-                            handlePermanentDelete(task.slug, task.title)
-                          }
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-8 text-xs font-semibold"
+                      onClick={() => handleRestore(task.slug, task.title)}
+                      disabled={project.isDeleted}
+                      title={
+                        project.isDeleted
+                          ? "Cannot restore: Project is archived"
+                          : "Restore Task"
+                      }
+                    >
+                      <RotateCcw className="h-3 w-3 mr-1.5" /> Restore
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      className="h-8 px-2.5"
+                      onClick={() =>
+                        handlePermanentDelete(task.slug, task.title)
+                      }
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
