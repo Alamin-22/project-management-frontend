@@ -35,15 +35,14 @@ export const createTaskValidationSchema = z.object({
 });
 
 export const updateTaskValidationSchema = z.object({
-  title: z.string().optional(),
-  description: z.string().optional(),
+  title: z.string().min(1, "Task title cannot be empty").optional(),
+  description: z.string().min(1, "Description cannot be empty").optional(),
   assignedMembers: z
     .array(z.string())
     .min(1, "Please select at least one member")
     .optional(),
   priority: z.enum(priorityEnum).optional(),
   status: z.enum(statusEnum).optional(),
-
   dueDate: z.string().min(1, "Due date cannot be empty").optional(),
 });
 

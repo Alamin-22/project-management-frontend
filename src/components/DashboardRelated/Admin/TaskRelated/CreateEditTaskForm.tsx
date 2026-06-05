@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Swal from "sweetalert2";
@@ -53,39 +52,21 @@ const CreateEditTaskForm = ({ task, projectSlug }: CreateEditTaskFormProps) => {
     resolver: zodResolver(
       isUpdateMode ? updateTaskValidationSchema : createTaskValidationSchema,
     ),
-    defaultValues: {
-      title: "",
-      description: "",
-      project: "",
-      assignedMembers: [],
-      priority: TASK_PRIORITY.medium,
-      dueDate: formatForInput(new Date()),
-      status: TASK_STATUS.todo,
+    values: {
+      title: task?.title || "",
+      description: task?.description || "",
+      project: task?.project || project?._id || "",
+      assignedMembers:
+        task?.assignedMembers?.map((m: any) =>
+          typeof m === "object" ? m._id : m,
+        ) || [],
+      priority: task?.priority || TASK_PRIORITY.medium,
+      dueDate: task?.dueDate
+        ? formatForInput(new Date(task.dueDate))
+        : formatForInput(new Date()),
+      status: task?.status || TASK_STATUS.todo,
     },
   });
-
-  useEffect(() => {
-    if (project && !isUpdateMode) {
-      form.setValue("project", project._id);
-    }
-
-    if (project && isUpdateMode && task) {
-      form.reset({
-        title: task.title || "",
-        description: task.description || "",
-        project: task.project || project._id,
-        assignedMembers:
-          task.assignedMembers?.map((m: any) =>
-            typeof m === "object" ? m._id : m,
-          ) || [],
-        priority: task.priority || TASK_PRIORITY.medium,
-        dueDate: task.dueDate
-          ? formatForInput(new Date(task.dueDate))
-          : formatForInput(new Date()),
-        status: task.status || TASK_STATUS.todo,
-      });
-    }
-  }, [project, task, isUpdateMode, form]);
 
   const onError = (errors: any) => {
     const firstErrorKey = Object.keys(errors)[0];

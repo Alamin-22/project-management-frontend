@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { Loader2, Plus } from "lucide-react";
+import { ArchiveX, Loader2, Plus } from "lucide-react";
 import {
   DndContext,
   DragOverlay,
@@ -226,11 +226,22 @@ const TaskBoardPage = () => {
           </p>
         </div>
         {!project.isDeleted && (
-          <Link href={`/manager_workspace/projects/${slug}/tasks/create`}>
-            <Button size="sm" className="font-semibold">
-              <Plus className="mr-2 h-4 w-4" /> Add Task
-            </Button>
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link href={`/manager_workspace/projects/${slug}/tasks/archived`}>
+              <Button
+                variant="outline"
+                size="sm"
+                className="font-semibold  text-red-500 "
+              >
+                <ArchiveX className="mr-2 h-4 w-4" /> Archives
+              </Button>
+            </Link>
+            <Link href={`/manager_workspace/projects/${slug}/tasks/create`}>
+              <Button size="sm" className="font-semibold">
+                <Plus className="mr-2 h-4 w-4" /> Add Task
+              </Button>
+            </Link>
+          </div>
         )}
       </div>
 
