@@ -31,6 +31,24 @@
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── layout.tsx
 │   │   │   │   ├── page.tsx
+│   │   │   │   ├── projects
+│   │   │   │   │   ├── archived
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── create
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── page.tsx
+│   │   │   │   │   └── [slug]
+│   │   │   │   │       ├── layout.tsx
+│   │   │   │   │       ├── page.tsx
+│   │   │   │   │       ├── settings
+│   │   │   │   │       │   └── page.tsx
+│   │   │   │   │       ├── tasks
+│   │   │   │   │       │   ├── archived
+│   │   │   │   │       │   ├── create
+│   │   │   │   │       │   ├── page.tsx
+│   │   │   │   │       │   └── [taskSlug]
+│   │   │   │   │       └── team
+│   │   │   │   │           └── page.tsx
 │   │   │   │   ├── settings
 │   │   │   │   │   ├── master-access
 │   │   │   │   │   │   └── page.tsx
@@ -40,6 +58,13 @@
 │   │   │   │   └── users
 │   │   │   │       └── page.tsx
 │   │   │   └── member_workspace
+│   │   │       ├── layout.tsx
+│   │   │       ├── page.tsx
+│   │   │       └── projects
+│   │   │           └── [slug]
+│   │   │               ├── layout.tsx
+│   │   │               └── tasks
+│   │   │                   └── page.tsx
 │   │   ├── favicon.ico
 │   │   ├── globals.css
 │   │   ├── layout.tsx
@@ -62,6 +87,17 @@
 │   │   │   │   ├── AuditLogs
 │   │   │   │   │   ├── AuditLogDetailsModal.tsx
 │   │   │   │   │   └── AuditLogTable.tsx
+│   │   │   │   ├── CommentRelated
+│   │   │   │   │   └── TaskComments.tsx
+│   │   │   │   ├── ProjectRelated
+│   │   │   │   │   ├── CreateEditProjectForm.tsx
+│   │   │   │   │   ├── ProjectCard.tsx
+│   │   │   │   │   └── UpdateStatusModal.tsx
+│   │   │   │   ├── TaskRelated
+│   │   │   │   │   ├── CreateEditTaskForm.tsx
+│   │   │   │   │   ├── KanbanColumn.tsx
+│   │   │   │   │   ├── SortableTaskCard.tsx
+│   │   │   │   │   └── UpdateTaskStatusModal.tsx
 │   │   │   │   └── usersManagement
 │   │   │   │       ├── UserManagementToolbar.tsx
 │   │   │   │       └── UsersManagementTable.tsx
@@ -81,6 +117,7 @@
 │   │   │   │   └── Pagination.tsx
 │   │   │   ├── QueryNotFoundMessage.tsx
 │   │   │   ├── ReusableBreadcrumb.tsx
+│   │   │   ├── RichTextEditor.tsx
 │   │   │   ├── Skeletons
 │   │   │   ├── SmartOptimizedLink
 │   │   │   │   └── SmartOptimizedLink.tsx
@@ -149,6 +186,20 @@
 │   │   │   │   ├── Auth.interface.ts
 │   │   │   │   ├── Auth.validation.ts
 │   │   │   │   └── AuthAPi.ts
+│   │   │   ├── commentApi
+│   │   │   │   ├── Comment.interface.ts
+│   │   │   │   ├── Comment.validation.ts
+│   │   │   │   └── CommentApi.ts
+│   │   │   ├── projectApi
+│   │   │   │   ├── Project.interface.ts
+│   │   │   │   ├── Project.validation.ts
+│   │   │   │   └── ProjectApi.ts
+│   │   │   ├── taskApi
+│   │   │   │   ├── Task.interface.ts
+│   │   │   │   ├── Task.validation.ts
+│   │   │   │   └── TaskApi.ts
+│   │   │   ├── uploaderApi
+│   │   │   │   └── UploaderApi.ts
 │   │   │   └── userApi
 │   │   │       ├── User.interface.ts
 │   │   │       ├── User.validation.ts
