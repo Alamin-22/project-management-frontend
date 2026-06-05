@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { ArchiveX, Loader2, Plus } from "lucide-react";
 import {
   DndContext,
   DragOverlay,
@@ -16,6 +16,7 @@ import {
   DragEndEvent,
 } from "@dnd-kit/core";
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import Link from "next/link";
 
 import { useGetSingleProjectQuery } from "@/Redux/services/projectApi/ProjectApi";
 import {
@@ -27,6 +28,7 @@ import {
   TASK_STATUS,
   TTaskStatus,
 } from "@/Redux/services/taskApi/Task.interface";
+import { Button } from "@/components/ui/button";
 
 import KanbanColumn from "@/components/DashboardRelated/Admin/TaskRelated/KanbanColumn";
 import SortableTaskCard from "@/components/DashboardRelated/Admin/TaskRelated/SortableTaskCard";
@@ -41,7 +43,7 @@ import {
 
 type BoardState = Record<TTaskStatus, ITask[]>;
 
-const MemberTaskBoardPage = () => {
+const TaskBoardPage = () => {
   const params = useParams();
   const slug = params.slug as string;
 
@@ -92,20 +94,23 @@ const MemberTaskBoardPage = () => {
     }),
   );
 
+  // Helper function to reliably find which column a task is CURRENTLY in
   const findContainer = (id: string) => {
     if (
       id === TASK_STATUS.todo ||
       id === TASK_STATUS.in_progress ||
       id === TASK_STATUS.completed
-    )
+    ) {
       return id as TTaskStatus;
+    }
     return Object.keys(boardData).find((key) =>
       boardData[key as TTaskStatus].some((task) => task.slug === id),
     ) as TTaskStatus;
   };
 
   const onDragStart = (event: DragStartEvent) => {
-    const task = event.active.data.current?.task as ITask;
+    const { active } = event;
+    const task = active.data.current?.task as ITask;
     setActiveTask(task);
   };
 
@@ -132,8 +137,11 @@ const MemberTaskBoardPage = () => {
       const overIndex = overItems.findIndex((t) => t.slug === overId);
 
       const [movedTask] = activeItems.splice(activeIndex, 1);
+
+      // Clone to prevent strict-mode mutation errors
       const updatedTask = { ...movedTask, status: overContainer };
 
+      // If hovering over an empty column space, drop at the end
       const newOverIndex = overIndex >= 0 ? overIndex : overItems.length;
       overItems.splice(newOverIndex, 0, updatedTask);
 
@@ -165,10 +173,13 @@ const MemberTaskBoardPage = () => {
       (t) => t.slug === overId,
     );
 
-    if (overIndex === -1) overIndex = boardData[overContainer].length;
+    if (overIndex === -1) {
+      overIndex = boardData[overContainer].length;
+    }
 
     let newBoardState = { ...boardData };
 
+    // Handle same-column vertical reordering
     if (activeContainer === overContainer && activeIndex !== overIndex) {
       newBoardState = {
         ...boardData,
@@ -181,12 +192,15 @@ const MemberTaskBoardPage = () => {
       setBoardData(newBoardState);
     }
 
+    //  Find exactly what changed vs the Server
     const payloadTasks: { slug: string; status: TTaskStatus; order: number }[] =
       [];
 
     Object.keys(newBoardState).forEach((statusKey) => {
       newBoardState[statusKey as TTaskStatus].forEach((task, index) => {
         const originalTask = currentTasks?.find((t) => t.slug === task.slug);
+
+        // If the task moved columns OR shifted up/down, add it to the payload!
         if (
           !originalTask ||
           originalTask.status !== statusKey ||
@@ -201,6 +215,7 @@ const MemberTaskBoardPage = () => {
       });
     });
 
+    // Fire API if there are actual changes
     if (payloadTasks.length > 0) {
       try {
         await reorderTasks({ tasks: payloadTasks }).unwrap();
@@ -226,10 +241,27 @@ const MemberTaskBoardPage = () => {
         <div>
           <h2 className="text-xl font-bold text-foreground">Kanban Board</h2>
           <p className="text-sm text-muted-foreground">
-            View project tasks and drag to update statuses.
+            Drag and drop tasks to update priorities and statuses.
           </p>
         </div>
-        {/* We completely removed the "Add Task" and "Archives" buttons here! */}
+        {!project.isDeleted && (
+          <div className="flex items-center gap-3">
+            <Link href={`/manager_workspace/projects/${slug}/tasks/archived`}>
+              <Button
+                variant="outline"
+                size="sm"
+                className="font-semibold text-red-500"
+              >
+                <ArchiveX className="mr-2 h-4 w-4" /> Archives
+              </Button>
+            </Link>
+            <Link href={`/manager_workspace/projects/${slug}/tasks/create`}>
+              <Button size="sm" className="font-semibold">
+                <Plus className="mr-2 h-4 w-4" /> Add Task
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
 
       <div className="px-6 pb-6">
@@ -292,4 +324,4 @@ const MemberTaskBoardPage = () => {
   );
 };
 
-export default MemberTaskBoardPage;
+export default TaskBoardPage;

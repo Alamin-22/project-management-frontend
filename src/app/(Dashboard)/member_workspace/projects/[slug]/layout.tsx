@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   KanbanSquare,
   Users,
+  Settings,
   Loader2,
   ArrowLeft,
   AlertCircle,
@@ -13,7 +14,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { useGetSingleProjectQuery } from "@/Redux/services/projectApi/ProjectApi";
 
-const MemberProjectLayout = ({ children }: { children: React.ReactNode }) => {
+const ProjectWorkspaceLayout = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const pathname = usePathname();
   const params = useParams();
   const slug = params.slug as string;
@@ -27,20 +32,26 @@ const MemberProjectLayout = ({ children }: { children: React.ReactNode }) => {
   const tabs = [
     {
       name: "Overview",
-      href: `/member_workspace/projects/${slug}`,
+      href: `/manager_workspace/projects/${slug}`,
       icon: LayoutDashboard,
       exact: true,
     },
     {
       name: "Task Board",
-      href: `/member_workspace/projects/${slug}/tasks`,
+      href: `/manager_workspace/projects/${slug}/tasks`,
       icon: KanbanSquare,
       exact: false,
     },
     {
       name: "Team",
-      href: `/member_workspace/projects/${slug}/team`,
+      href: `/manager_workspace/projects/${slug}/team`,
       icon: Users,
+      exact: false,
+    },
+    {
+      name: "Settings",
+      href: `/manager_workspace/projects/${slug}/settings`,
+      icon: Settings,
       exact: false,
     },
   ];
@@ -60,7 +71,14 @@ const MemberProjectLayout = ({ children }: { children: React.ReactNode }) => {
       {/* Project Header Banner */}
       <div className="bg-card border-b border-border px-6 py-6">
         <div className="max-w-7xl mx-auto flex items-start gap-4">
-          <Link href="/member_workspace/projects" className="mt-1">
+          <Link
+            href={
+              project.isDeleted
+                ? "/manager_workspace/projects/archived"
+                : "/manager_workspace/projects"
+            }
+            className="mt-1"
+          >
             <Button
               variant="outline"
               size="icon"
@@ -86,10 +104,12 @@ const MemberProjectLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
       </div>
 
+      {/* READ-ONLY WARNING BANNER */}
       {project.isDeleted && (
         <div className="bg-amber-500/10 border-b border-amber-500/20 px-6 py-3 flex items-center justify-center gap-2 text-amber-600 dark:text-amber-500 text-sm font-semibold">
           <AlertCircle className="h-4 w-4" />
-          This workspace is archived and in read-only mode.
+          This workspace is archived and in read-only mode. Go to Settings to
+          restore it.
         </div>
       )}
 
@@ -129,4 +149,4 @@ const MemberProjectLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default MemberProjectLayout;
+export default ProjectWorkspaceLayout;
