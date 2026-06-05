@@ -12,7 +12,7 @@ import Pagination from "@/components/Shared/Pagination/Pagination";
 import { useGetArchivedProjectsQuery } from "@/Redux/services/projectApi/ProjectApi";
 import ProjectCard from "@/components/DashboardRelated/Admin/ProjectRelated/ProjectCard";
 
-const ArchivedProjectsPage = () => {
+const MemberArchivedProjectsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 12;
@@ -32,12 +32,12 @@ const ArchivedProjectsPage = () => {
     <div className="min-h-full flex flex-col">
       <PageHeader
         title="Archived Projects"
-        description="View past projects and reactivate them if necessary."
+        description="View past projects you were assigned to. These workspaces are read-only."
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         placeholder="Search archives by name..."
       >
-        <Link href="/manager_workspace/projects">
+        <Link href="/member_workspace/projects">
           <Button variant="outline" size="sm" className="h-9 font-semibold">
             <ArrowLeft className="mr-2 h-4 w-4" /> Back to Active
           </Button>
@@ -57,11 +57,13 @@ const ArchivedProjectsPage = () => {
         ) : projects.length > 0 ? (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 opacity-80 hover:opacity-100 transition-opacity">
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               {projects.map((project: any) => (
                 <ProjectCard
                   key={project._id}
                   project={project}
-                  baseUrl="/manager_workspace/projects"
+                  // CRITICAL: Point the card links to the member workspace
+                  baseUrl="/member_workspace/projects"
                 />
               ))}
             </div>
@@ -78,7 +80,7 @@ const ArchivedProjectsPage = () => {
           </>
         ) : (
           <div className="mt-12">
-            <QueryNotFoundMessage message="No archived projects found in the system." />
+            <QueryNotFoundMessage message="No archived projects found in your history." />
           </div>
         )}
       </div>
@@ -86,4 +88,4 @@ const ArchivedProjectsPage = () => {
   );
 };
 
-export default ArchivedProjectsPage;
+export default MemberArchivedProjectsPage;

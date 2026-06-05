@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { ArchiveX } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ import Pagination from "@/components/Shared/Pagination/Pagination";
 import { useGetAllProjectsQuery } from "@/Redux/services/projectApi/ProjectApi";
 import ProjectCard from "@/components/DashboardRelated/Admin/ProjectRelated/ProjectCard";
 
-const ProjectsDashboardPage = () => {
+const MemberProjectsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 12;
@@ -31,15 +31,19 @@ const ProjectsDashboardPage = () => {
   return (
     <div className="min-h-full flex flex-col">
       <PageHeader
-        title="Project Workspaces"
-        description="Initialize new projects, assign teams, and monitor overarching deadlines."
+        title="My Projects"
+        description="View and access the active projects you are currently assigned to."
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        placeholder="Search projects by name or ID..."
+        placeholder="Search my projects..."
       >
-        <Link href="/manager_workspace/projects/create">
-          <Button size="sm" className="h-9 font-semibold">
-            <Plus className="mr-2 h-4 w-4" /> New Project
+        <Link href="/member_workspace/projects/archived">
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-9 font-semibold text-muted-foreground"
+          >
+            <ArchiveX className="mr-2 h-4 w-4" /> View Archived
           </Button>
         </Link>
       </PageHeader>
@@ -61,7 +65,7 @@ const ProjectsDashboardPage = () => {
                 <ProjectCard
                   key={project._id}
                   project={project}
-                  baseUrl="/manager_workspace/projects"
+                  baseUrl="/member_workspace/projects"
                 />
               ))}
             </div>
@@ -78,7 +82,7 @@ const ProjectsDashboardPage = () => {
           </>
         ) : (
           <div className="mt-12">
-            <QueryNotFoundMessage message="No projects found. Create a new project to initialize a workspace." />
+            <QueryNotFoundMessage message="You are not assigned to any active projects at this time." />
           </div>
         )}
       </div>
@@ -86,4 +90,4 @@ const ProjectsDashboardPage = () => {
   );
 };
 
-export default ProjectsDashboardPage;
+export default MemberProjectsPage;
