@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import DOMPurify from "isomorphic-dompurify";
 import { format, differenceInDays, startOfDay } from "date-fns";
-import { CalendarDays, Clock, FileText, Activity } from "lucide-react";
+import { CalendarDays, Clock, FileText, Activity, Users } from "lucide-react";
 
 import { useGetSingleProjectQuery } from "@/Redux/services/projectApi/ProjectApi";
 import { Badge } from "@/components/ui/badge";
@@ -38,10 +38,7 @@ const ProjectOverviewPage = () => {
   const today = startOfDay(new Date());
   const daysUntilDeadline = differenceInDays(deadlineDate, today);
 
-  // Critical = Due Today or Overdue (Red)
   const isCritical = daysUntilDeadline <= 0 && !isCompleted;
-
-  // Warning = 1 to 3 days left (Orange)
   const isWarning =
     daysUntilDeadline > 0 && daysUntilDeadline <= 3 && !isCompleted;
 
@@ -69,10 +66,10 @@ const ProjectOverviewPage = () => {
 
         {/* Right Column: Key Details & Quick Actions */}
         <div className="space-y-6">
-          {/* Key Dates Card */}
+          {/* Project Details Card */}
           <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
             <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4">
-              Key Dates
+              Project Details
             </h3>
 
             <div className="space-y-5">
@@ -146,41 +143,54 @@ const ProjectOverviewPage = () => {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          {/* Quick Status Update Card */}
-          <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
-                Current Status
-              </h3>
-              <Activity className="h-4 w-4 text-muted-foreground" />
-            </div>
-
-            <div className="flex flex-col gap-5">
-              <div className="flex items-center">
-                <Badge
-                  variant="secondary"
-                  className={`text-xs font-bold uppercase tracking-widest px-3 py-1 ${
-                    isActive
-                      ? "bg-blue-500/10 text-blue-500 border-blue-500/20"
-                      : isCompleted
-                        ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
-                        : "bg-amber-500/10 text-amber-500 border-amber-500/20"
-                  }`}
-                >
-                  {project.status.replace("_", " ")}
-                </Badge>
+              <div className="flex items-start gap-3">
+                <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500 mt-0.5">
+                  <Users className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground font-medium mb-1">
+                    Assigned Team
+                  </p>
+                  <p className="text-sm font-bold text-foreground">
+                    {project.teamMembers.length}{" "}
+                    {project.teamMembers.length === 1 ? "Member" : "Members"}
+                  </p>
+                </div>
               </div>
+              <div className="flex items-start gap-3">
+                <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-500 mt-0.5">
+                  <Activity className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <p className="text-xs text-muted-foreground font-medium">
+                      Current Status
+                    </p>
+                    <Badge
+                      variant="secondary"
+                      className={`text-[9px] font-bold uppercase tracking-widest px-1.5 py-0 h-4 leading-none ${
+                        isActive
+                          ? "bg-blue-500/10 text-blue-500 border-blue-500/20"
+                          : isCompleted
+                            ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                            : "bg-amber-500/10 text-orange-500 border-orange-500/20"
+                      }`}
+                    >
+                      {project.status.replace("_", " ")}
+                    </Badge>
+                  </div>
 
-              <Button
-                variant="outline"
-                className="w-full text-xs font-bold uppercase tracking-widest"
-                onClick={() => setIsStatusModalOpen(true)}
-              >
-                Update Status
-              </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-7 px-3 text-[10px] font-bold uppercase tracking-widest"
+                    onClick={() => setIsStatusModalOpen(true)}
+                  >
+                    Update Status
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

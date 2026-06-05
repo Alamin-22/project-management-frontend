@@ -56,7 +56,6 @@ const CreateEditProjectForm = ({ project }: CreateEditProjectFormProps) => {
     },
   });
 
-  // Populate data if in Edit Mode
   useEffect(() => {
     if (project) {
       form.reset({
@@ -72,7 +71,7 @@ const CreateEditProjectForm = ({ project }: CreateEditProjectFormProps) => {
   const onSubmit = async (values: any) => {
     try {
       if (isUpdateMode && project) {
-        await updateProject({
+        const response = await updateProject({
           slug: project.slug,
           data: {
             name: values.name,
@@ -89,6 +88,10 @@ const CreateEditProjectForm = ({ project }: CreateEditProjectFormProps) => {
           background: "var(--card)",
           color: "var(--foreground)",
         });
+
+        // Redirect to the overview page using the NEW slug
+        const updatedSlug = response.data.slug;
+        router.push(`/manager_workspace/projects/${updatedSlug}`);
       } else {
         await createProject({
           name: values.name,
