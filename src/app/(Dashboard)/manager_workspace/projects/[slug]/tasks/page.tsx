@@ -31,6 +31,7 @@ import { Button } from "@/components/ui/button";
 
 import KanbanColumn from "@/components/DashboardRelated/Admin/TaskRelated/KanbanColumn";
 import SortableTaskCard from "@/components/DashboardRelated/Admin/TaskRelated/SortableTaskCard";
+import Link from "next/link";
 
 type BoardState = Record<TTaskStatus, ITask[]>;
 
@@ -215,9 +216,11 @@ const TaskBoardPage = () => {
           </p>
         </div>
         {!project.isDeleted && (
-          <Button size="sm" className="font-semibold">
-            <Plus className="mr-2 h-4 w-4" /> Add Task
-          </Button>
+          <Link href={`/manager_workspace/projects/${slug}/tasks/create`}>
+            <Button size="sm" className="font-semibold">
+              <Plus className="mr-2 h-4 w-4" /> Add Task
+            </Button>
+          </Link>
         )}
       </div>
 

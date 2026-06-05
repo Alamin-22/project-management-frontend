@@ -38,7 +38,7 @@ const ProjectWorkspaceLayout = ({
     },
     {
       name: "Task Board",
-      href: `/manager_workspace/projects/${slug}/task-board`,
+      href: `/manager_workspace/projects/${slug}/tasks`,
       icon: KanbanSquare,
       exact: false,
     },

@@ -19,7 +19,9 @@ export const createTaskValidationSchema = z.object({
     .max(100, "Title is too long"),
   description: z.string().min(1, "Task description is required"),
   project: z.string().min(1, "Project reference is required"),
-  assignedMember: z.string().min(1, "Assigned Member is required"),
+  assignedMembers: z
+    .array(z.string())
+    .min(1, "Please select at least one member"),
   priority: z.enum(priorityEnum).optional(),
   dueDate: z
     .string()
@@ -35,7 +37,10 @@ export const createTaskValidationSchema = z.object({
 export const updateTaskValidationSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
-  assignedMember: z.string().optional(),
+  assignedMembers: z
+    .array(z.string())
+    .min(1, "Please select at least one member")
+    .optional(),
   priority: z.enum(priorityEnum).optional(),
   status: z.enum(statusEnum).optional(),
   dueDate: z
