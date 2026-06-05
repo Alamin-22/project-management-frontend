@@ -25,7 +25,6 @@ const KanbanColumn = ({ status, tasks, isArchived }: Props) => {
 
   return (
     <div className="w-87.5 shrink-0 flex flex-col max-h-[70vh]">
-      {/* Column Header */}
       <div className="flex items-center justify-between mb-4 px-1">
         <h3 className="font-bold text-sm uppercase tracking-widest text-foreground flex items-center gap-2">
           <span
@@ -44,7 +43,6 @@ const KanbanColumn = ({ status, tasks, isArchived }: Props) => {
         </Badge>
       </div>
 
-      {/* Droppable Container */}
       <div
         ref={setNodeRef}
         className="flex-1 overflow-y-auto custom-scrollbar rounded-xl bg-muted/30 p-3 "

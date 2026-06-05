@@ -31,14 +31,13 @@ import {
 
 interface CreateEditTaskFormProps {
   task?: ITask;
-  projectSlug: string; // We need this to get the project ID and Team Members
+  projectSlug: string;
 }
 
 const CreateEditTaskForm = ({ task, projectSlug }: CreateEditTaskFormProps) => {
   const router = useRouter();
   const isUpdateMode = !!task;
 
-  // Fetch the project to get the _id and the team members roster
   const { data: projectData, isLoading: isProjectLoading } =
     useGetSingleProjectQuery(projectSlug);
   const project = projectData?.data;
@@ -50,7 +49,6 @@ const CreateEditTaskForm = ({ task, projectSlug }: CreateEditTaskFormProps) => {
 
   const formatForInput = (date: Date) => format(date, "yyyy-MM-dd'T'HH:mm");
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const form = useForm<any>({
     resolver: zodResolver(
       isUpdateMode ? updateTaskValidationSchema : createTaskValidationSchema,
@@ -59,14 +57,13 @@ const CreateEditTaskForm = ({ task, projectSlug }: CreateEditTaskFormProps) => {
       title: "",
       description: "",
       project: "",
-      assignedMember: "",
+      assignedMembers: [],
       priority: TASK_PRIORITY.medium,
       dueDate: formatForInput(new Date()),
       status: TASK_STATUS.todo,
     },
   });
 
-  // Populate data when project loads or in Edit Mode
   useEffect(() => {
     if (project && !isUpdateMode) {
       form.setValue("project", project._id);
@@ -77,16 +74,25 @@ const CreateEditTaskForm = ({ task, projectSlug }: CreateEditTaskFormProps) => {
         title: task.title,
         description: task.description,
         project: task.project,
-        assignedMember:
-          typeof task.assignedMember === "object"
-            ? (task.assignedMember as any)._id
-            : task.assignedMember,
+        assignedMembers:
+          task.assignedMembers?.map((m: any) =>
+            typeof m === "object" ? m._id : m,
+          ) || [],
         priority: task.priority,
         dueDate: formatForInput(new Date(task.dueDate)),
         status: task.status,
       });
     }
   }, [project, task, isUpdateMode, form]);
+
+  const onError = (errors: any) => {
+    const firstErrorKey = Object.keys(errors)[0];
+    const errorElement = document.getElementById(`field-${firstErrorKey}`);
+
+    if (errorElement) {
+      errorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
 
   const onSubmit = async (values: any) => {
     try {
@@ -96,7 +102,7 @@ const CreateEditTaskForm = ({ task, projectSlug }: CreateEditTaskFormProps) => {
           data: {
             title: values.title,
             description: values.description,
-            assignedMember: values.assignedMember,
+            assignedMembers: values.assignedMembers,
             priority: values.priority,
             status: values.status,
             dueDate: new Date(values.dueDate).toISOString(),
@@ -110,14 +116,12 @@ const CreateEditTaskForm = ({ task, projectSlug }: CreateEditTaskFormProps) => {
           background: "var(--card)",
           color: "var(--foreground)",
         });
-
-        router.push(`/manager_workspace/projects/${projectSlug}/task-board`);
       } else {
         await createTask({
           title: values.title,
           description: values.description,
           project: project!._id,
-          assignedMember: values.assignedMember,
+          assignedMembers: values.assignedMembers,
           priority: values.priority,
           dueDate: new Date(values.dueDate).toISOString(),
         }).unwrap();
@@ -129,9 +133,8 @@ const CreateEditTaskForm = ({ task, projectSlug }: CreateEditTaskFormProps) => {
           background: "var(--card)",
           color: "var(--foreground)",
         });
-
-        router.push(`/manager_workspace/projects/${projectSlug}/task-board`);
       }
+      router.push(`/manager_workspace/projects/${projectSlug}/tasks`);
     } catch (error: any) {
       Swal.fire({
         title: "Error",
@@ -163,45 +166,57 @@ const CreateEditTaskForm = ({ task, projectSlug }: CreateEditTaskFormProps) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit, onError)}
+        className="space-y-6"
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <CustomFormField
-            control={form.control}
-            name="title"
-            label="Task Title"
-            placeholder="e.g. Design Homepage UI"
-          />
-          <CustomFormField
-            control={form.control}
-            name="assignedMember"
-            label="Assign To"
-            type="select"
-            options={memberOptions}
-          />
+          <div id="field-title">
+            <CustomFormField
+              control={form.control}
+              name="title"
+              label="Task Title"
+              placeholder="e.g. Design Homepage UI"
+            />
+          </div>
+          <div id="field-assignedMembers">
+            <CustomFormField
+              control={form.control}
+              name="assignedMembers"
+              label="Assign To"
+              type="multi-select"
+              placeholder="Select team members..."
+              options={memberOptions}
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <CustomFormField
-            control={form.control}
-            name="dueDate"
-            label="Due Date"
-            type="datetime-local"
-          />
-          <CustomFormField
-            control={form.control}
-            name="priority"
-            label="Priority Level"
-            type="select"
-            options={[
-              { label: "High Priority", value: TASK_PRIORITY.high },
-              { label: "Medium Priority", value: TASK_PRIORITY.medium },
-              { label: "Low Priority", value: TASK_PRIORITY.low },
-            ]}
-          />
+          <div id="field-dueDate">
+            <CustomFormField
+              control={form.control}
+              name="dueDate"
+              label="Due Date"
+              type="datetime-local"
+            />
+          </div>
+          <div id="field-priority">
+            <CustomFormField
+              control={form.control}
+              name="priority"
+              label="Priority Level"
+              type="select"
+              options={[
+                { label: "High Priority", value: TASK_PRIORITY.high },
+                { label: "Medium Priority", value: TASK_PRIORITY.medium },
+                { label: "Low Priority", value: TASK_PRIORITY.low },
+              ]}
+            />
+          </div>
         </div>
 
         {isUpdateMode && (
-          <div className="w-full md:w-1/2 md:pr-3">
+          <div className="w-full md:w-1/2 md:pr-3" id="field-status">
             <CustomFormField
               control={form.control}
               name="status"
@@ -216,7 +231,7 @@ const CreateEditTaskForm = ({ task, projectSlug }: CreateEditTaskFormProps) => {
           </div>
         )}
 
-        <div className="space-y-2 pt-2">
+        <div className="space-y-2 pt-2" id="field-description">
           <div className="flex items-center justify-between">
             <Label className="font-semibold text-foreground">
               Task Description & Assets

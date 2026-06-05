@@ -5,6 +5,7 @@ import { format } from "date-fns";
 
 import { Badge } from "@/components/ui/badge";
 import { ITask } from "@/Redux/services/taskApi/Task.interface";
+import Image from "next/image";
 
 interface Props {
   task: ITask;
@@ -60,10 +61,31 @@ const SortableTaskCard = ({ task, isArchived, isOverlay = false }: Props) => {
           <GripVertical className="h-4 w-4" />
         </div>
       </div>
+
       <h4 className="font-bold text-sm text-foreground leading-snug mb-3">
         {task.title}
       </h4>
-      <div className="flex items-center justify-between border-t border-border pt-3 mt-3">
+
+      {task.assigneeProfiles && task.assigneeProfiles.length > 0 && (
+        <div className="flex items-center -space-x-2 overflow-hidden mb-3">
+          {task.assigneeProfiles.map((profile, i) => (
+            <Image
+              key={i}
+              className="inline-block h-6 w-6 rounded-full ring-2 ring-card object-cover bg-muted"
+              src={
+                profile.profileImg?.url ||
+                `https://placehold.co/200x200/png?text=U`
+              }
+              width={50}
+              height={50}
+              alt={profile.name}
+              title={`${profile.name} ${profile.designation ? `(${profile.designation})` : ""}`}
+            />
+          ))}
+        </div>
+      )}
+
+      <div className="flex items-center justify-between border-t border-border pt-3 mt-1">
         <Badge
           variant="secondary"
           className={`text-[10px] px-2 py-0 h-5 ${

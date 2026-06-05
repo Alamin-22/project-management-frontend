@@ -1,5 +1,5 @@
 export const TASK_STATUS = {
-  todo: "To-Do",
+  todo: "Todo",
   in_progress: "In Progress",
   completed: "Completed",
 } as const;
@@ -21,7 +21,7 @@ export interface ITask {
   description: string;
 
   project: string;
-  assignedMember: string;
+  assignedMembers: string[];
 
   dueDate: string;
   priority: TTaskPriority;
@@ -43,19 +43,19 @@ export interface ITask {
     deadline: string;
     isDeleted: boolean;
   };
-  assigneeProfile?: {
+  assigneeProfiles?: {
     name: string;
     email: string;
     profileImg?: { url: string; publicId: string };
     designation?: string;
-  };
+  }[];
 }
 
 export interface ICreateTaskPayload {
   title: string;
   description: string;
   project: string;
-  assignedMember: string;
+  assignedMembers: string[];
   priority?: TTaskPriority;
   dueDate: string;
 }
@@ -63,7 +63,7 @@ export interface ICreateTaskPayload {
 export interface IUpdateTaskPayload {
   title?: string;
   description?: string;
-  assignedMember?: string;
+  assignedMembers?: string[];
   priority?: TTaskPriority;
   status?: TTaskStatus;
   dueDate?: string;
