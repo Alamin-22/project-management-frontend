@@ -27,6 +27,7 @@ export interface ITask {
   priority: TTaskPriority;
   priorityWeight: number;
   status: TTaskStatus;
+  order: number;
 
   createdBy: string;
   isDeleted: boolean;

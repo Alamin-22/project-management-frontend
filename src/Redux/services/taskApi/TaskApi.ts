@@ -5,6 +5,7 @@ import {
   ICreateTaskPayload,
   ITask,
   IUpdateTaskPayload,
+  TTaskStatus,
 } from "./Task.interface";
 
 export const TASK_TAGS = {
@@ -141,6 +142,20 @@ export const taskApi = baseApi.injectEndpoints({
         { type: "Tasks", id: slug },
       ],
     }),
+
+    reorderTasks: builder.mutation<
+      IBaseResponse<null>,
+      { tasks: { slug: string; status: TTaskStatus; order: number }[] }
+    >({
+      query: (body) => ({
+        url: `/tasks/reorder`,
+        method: "PATCH",
+        body,
+        isPrivate: true,
+      }),
+
+      invalidatesTags: [TASK_TAGS.LIST, TASK_TAGS.MEMBER_LIST],
+    }),
   }),
   overrideExisting: false,
 });
@@ -155,4 +170,5 @@ export const {
   useDeleteTaskMutation,
   useRestoreTaskMutation,
   usePermanentDeleteTaskMutation,
+  useReorderTasksMutation,
 } = taskApi;
