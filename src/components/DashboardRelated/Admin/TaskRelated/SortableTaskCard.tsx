@@ -1,11 +1,23 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical } from "lucide-react";
+import {
+  GripVertical,
+  MoreVertical,
+  ExternalLink,
+  Activity,
+} from "lucide-react";
 import { format } from "date-fns";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { ITask } from "@/Redux/services/taskApi/Task.interface";
 import { stripHtml } from "@/Utils/stripHtml";
 
@@ -14,6 +26,8 @@ interface Props {
   isArchived: boolean;
   isOverlay?: boolean;
   projectSlug: string;
+  // eslint-disable-next-line no-unused-vars
+  onStatusClick?: (task: ITask) => void;
 }
 
 const SortableTaskCard = ({
@@ -21,7 +35,10 @@ const SortableTaskCard = ({
   isArchived,
   isOverlay = false,
   projectSlug,
+  onStatusClick,
 }: Props) => {
+  const router = useRouter();
+
   const {
     attributes,
     listeners,
@@ -53,7 +70,7 @@ const SortableTaskCard = ({
           : "border-border hover:border-primary/40"
       }`}
     >
-      {/* Header Row: ID and Drag Handle */}
+      {/* Header Row: ID and Actions */}
       <div className="flex items-start justify-between mb-3">
         <Badge
           variant="outline"
@@ -61,26 +78,76 @@ const SortableTaskCard = ({
         >
           {task.taskId}
         </Badge>
-        <div
-          {...attributes}
-          {...listeners}
-          className={`text-muted-foreground/50 p-1 -mr-1 -mt-1 rounded-md ${
-            !isArchived &&
-            "hover:text-foreground hover:bg-muted cursor-grab active:cursor-grabbing"
-          }`}
-        >
-          <GripVertical className="h-4 w-4" />
+
+        {/* Actions Container */}
+        <div className="flex items-center gap-1 -mr-2 -mt-2">
+          {!isOverlay && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7 text-muted-foreground hover:bg-muted"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-44 border-border">
+                <DropdownMenuItem
+                  className="cursor-pointer font-medium"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(
+                      `/manager_workspace/projects/${projectSlug}/tasks/${task.slug}`,
+                    );
+                  }}
+                >
+                  <ExternalLink className="mr-2 h-4 w-4" />
+                  View Details
+                </DropdownMenuItem>
+
+                {!isArchived && onStatusClick && (
+                  <DropdownMenuItem
+                    className="cursor-pointer font-medium"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onStatusClick(task);
+                    }}
+                  >
+                    <Activity className="mr-2 h-4 w-4" />
+                    Update Status
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+
+          {/* Drag Handle */}
+          <div
+            {...attributes}
+            {...listeners}
+            className={`text-muted-foreground/50 p-1 rounded-md ${
+              !isArchived &&
+              "hover:text-foreground hover:bg-muted cursor-grab active:cursor-grabbing"
+            }`}
+          >
+            <GripVertical className="h-4 w-4" />
+          </div>
         </div>
       </div>
 
-      {/* Clickable Title & Description Preview */}
-      <Link
-        href={`/manager_workspace/projects/${projectSlug}/tasks/${task.slug}`}
+      <h4
+        className="font-bold text-sm text-foreground leading-snug mb-1 hover:text-primary transition-colors cursor-pointer"
+        onClick={() =>
+          router.push(
+            `/manager_workspace/projects/${projectSlug}/tasks/${task.slug}`,
+          )
+        }
       >
-        <h4 className="font-bold text-sm text-foreground leading-snug mb-1 hover:text-primary transition-colors cursor-pointer">
-          {task.title}
-        </h4>
-      </Link>
+        {task.title}
+      </h4>
       <p className="text-xs text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
         {plainTextDescription}
       </p>

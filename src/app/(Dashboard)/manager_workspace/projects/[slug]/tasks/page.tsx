@@ -32,6 +32,14 @@ import { Button } from "@/components/ui/button";
 
 import KanbanColumn from "@/components/DashboardRelated/Admin/TaskRelated/KanbanColumn";
 import SortableTaskCard from "@/components/DashboardRelated/Admin/TaskRelated/SortableTaskCard";
+import UpdateTaskStatusModal from "@/components/DashboardRelated/Admin/TaskRelated/UpdateTaskStatusModal";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type BoardState = Record<TTaskStatus, ITask[]>;
 
@@ -60,6 +68,8 @@ const TaskBoardPage = () => {
   const [serverDataRef, setServerDataRef] = useState<ITask[] | undefined>(
     undefined,
   );
+
+  const [statusModalTask, setStatusModalTask] = useState<ITask | null>(null);
 
   const currentTasks = tasksData?.data?.result;
 
@@ -241,6 +251,7 @@ const TaskBoardPage = () => {
                   tasks={tasks}
                   isArchived={project.isDeleted}
                   projectSlug={slug}
+                  onStatusClick={(task) => setStatusModalTask(task)}
                 />
               ),
             )}
@@ -258,6 +269,27 @@ const TaskBoardPage = () => {
           </DragOverlay>
         </DndContext>
       </div>
+
+      <Dialog
+        open={!!statusModalTask}
+        onOpenChange={(open) => !open && setStatusModalTask(null)}
+      >
+        <DialogContent className="max-w-md w-full border-border bg-card">
+          <DialogHeader>
+            <DialogTitle className="text-xl">Update Task Status</DialogTitle>
+            <DialogDescription>
+              Quickly move this task to a new stage on the Kanban board.
+            </DialogDescription>
+          </DialogHeader>
+
+          {statusModalTask && (
+            <UpdateTaskStatusModal
+              task={statusModalTask}
+              closeModal={() => setStatusModalTask(null)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

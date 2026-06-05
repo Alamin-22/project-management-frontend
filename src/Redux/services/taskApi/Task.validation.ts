@@ -43,15 +43,8 @@ export const updateTaskValidationSchema = z.object({
     .optional(),
   priority: z.enum(priorityEnum).optional(),
   status: z.enum(statusEnum).optional(),
-  dueDate: z
-    .string()
-    .refine(
-      (date) => new Date(date) >= new Date(new Date().setHours(0, 0, 0, 0)),
-      {
-        message: "Due date cannot be set in the past",
-      },
-    )
-    .optional(),
+
+  dueDate: z.string().min(1, "Due date cannot be empty").optional(),
 });
 
 export type TTaskFormValues = z.infer<typeof createTaskValidationSchema>;

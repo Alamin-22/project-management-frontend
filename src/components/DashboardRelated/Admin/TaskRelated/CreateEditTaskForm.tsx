@@ -71,16 +71,18 @@ const CreateEditTaskForm = ({ task, projectSlug }: CreateEditTaskFormProps) => {
 
     if (project && isUpdateMode && task) {
       form.reset({
-        title: task.title,
-        description: task.description,
-        project: task.project,
+        title: task.title || "",
+        description: task.description || "",
+        project: task.project || project._id,
         assignedMembers:
           task.assignedMembers?.map((m: any) =>
             typeof m === "object" ? m._id : m,
           ) || [],
-        priority: task.priority,
-        dueDate: formatForInput(new Date(task.dueDate)),
-        status: task.status,
+        priority: task.priority || TASK_PRIORITY.medium,
+        dueDate: task.dueDate
+          ? formatForInput(new Date(task.dueDate))
+          : formatForInput(new Date()),
+        status: task.status || TASK_STATUS.todo,
       });
     }
   }, [project, task, isUpdateMode, form]);

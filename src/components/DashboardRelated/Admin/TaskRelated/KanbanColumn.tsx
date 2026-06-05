@@ -16,17 +16,24 @@ interface Props {
   tasks: ITask[];
   isArchived: boolean;
   projectSlug: string;
+  // eslint-disable-next-line no-unused-vars
+  onStatusClick?: (task: ITask) => void;
 }
 
-const KanbanColumn = ({ status, tasks, isArchived, projectSlug }: Props) => {
+const KanbanColumn = ({
+  status,
+  tasks,
+  isArchived,
+  projectSlug,
+  onStatusClick,
+}: Props) => {
   const { setNodeRef } = useDroppable({
     id: status,
     data: { type: "Column", status },
   });
 
   return (
-    <div className="flex flex-col h-full  border border-border rounded-xl bg-card shadow-sm p-4">
-      {/* Column Header */}
+    <div className="flex flex-col h-full  border border-border rounded-xl bg-card p-4">
       <div className="flex items-center justify-between mb-4 px-1 pb-3 border-b border-border/50">
         <h3 className="font-bold text-sm uppercase tracking-widest text-foreground flex items-center gap-2">
           <span
@@ -62,6 +69,7 @@ const KanbanColumn = ({ status, tasks, isArchived, projectSlug }: Props) => {
                 task={task}
                 isArchived={isArchived}
                 projectSlug={projectSlug}
+                onStatusClick={onStatusClick}
               />
             ))}
           </div>
