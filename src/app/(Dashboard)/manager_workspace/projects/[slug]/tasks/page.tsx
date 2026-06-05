@@ -16,6 +16,7 @@ import {
   DragEndEvent,
 } from "@dnd-kit/core";
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import Link from "next/link";
 
 import { useGetSingleProjectQuery } from "@/Redux/services/projectApi/ProjectApi";
 import {
@@ -31,7 +32,6 @@ import { Button } from "@/components/ui/button";
 
 import KanbanColumn from "@/components/DashboardRelated/Admin/TaskRelated/KanbanColumn";
 import SortableTaskCard from "@/components/DashboardRelated/Admin/TaskRelated/SortableTaskCard";
-import Link from "next/link";
 
 type BoardState = Record<TTaskStatus, ITask[]>;
 
@@ -57,10 +57,10 @@ const TaskBoardPage = () => {
   });
 
   const [activeTask, setActiveTask] = useState<ITask | null>(null);
-
   const [serverDataRef, setServerDataRef] = useState<ITask[] | undefined>(
     undefined,
   );
+
   const currentTasks = tasksData?.data?.result;
 
   if (currentTasks && currentTasks !== serverDataRef) {
@@ -123,8 +123,8 @@ const TaskBoardPage = () => {
         : overItems.length;
 
       const [movedTask] = activeItems.splice(activeIndex, 1);
-      movedTask.status = overContainer;
-      overItems.splice(overIndex, 0, movedTask);
+      const updatedTask = { ...movedTask, status: overContainer };
+      overItems.splice(overIndex, 0, updatedTask);
 
       return {
         ...prev,
@@ -224,7 +224,7 @@ const TaskBoardPage = () => {
         )}
       </div>
 
-      <div className="px-6 pb-6 overflow-x-auto hide-scrollbar">
+      <div className="px-6 pb-6">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCorners}
@@ -232,7 +232,7 @@ const TaskBoardPage = () => {
           onDragOver={onDragOver}
           onDragEnd={onDragEnd}
         >
-          <div className="flex items-start gap-6 min-w-max">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
             {(Object.entries(boardData) as [TTaskStatus, ITask[]][]).map(
               ([status, tasks]) => (
                 <KanbanColumn
@@ -240,6 +240,7 @@ const TaskBoardPage = () => {
                   status={status}
                   tasks={tasks}
                   isArchived={project.isDeleted}
+                  projectSlug={slug}
                 />
               ),
             )}
@@ -251,6 +252,7 @@ const TaskBoardPage = () => {
                 task={activeTask}
                 isArchived={false}
                 isOverlay={true}
+                projectSlug={slug}
               />
             ) : null}
           </DragOverlay>

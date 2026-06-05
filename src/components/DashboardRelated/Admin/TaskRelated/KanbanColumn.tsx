@@ -15,17 +15,19 @@ interface Props {
   status: TTaskStatus;
   tasks: ITask[];
   isArchived: boolean;
+  projectSlug: string;
 }
 
-const KanbanColumn = ({ status, tasks, isArchived }: Props) => {
+const KanbanColumn = ({ status, tasks, isArchived, projectSlug }: Props) => {
   const { setNodeRef } = useDroppable({
     id: status,
     data: { type: "Column", status },
   });
 
   return (
-    <div className="w-87.5 shrink-0 flex flex-col max-h-[70vh]">
-      <div className="flex items-center justify-between mb-4 px-1">
+    <div className="flex flex-col h-full  border border-border rounded-xl bg-card shadow-sm p-4">
+      {/* Column Header */}
+      <div className="flex items-center justify-between mb-4 px-1 pb-3 border-b border-border/50">
         <h3 className="font-bold text-sm uppercase tracking-widest text-foreground flex items-center gap-2">
           <span
             className={`h-2 w-2 rounded-full ${
@@ -43,9 +45,10 @@ const KanbanColumn = ({ status, tasks, isArchived }: Props) => {
         </Badge>
       </div>
 
+      {/* Droppable Container */}
       <div
         ref={setNodeRef}
-        className="flex-1 overflow-y-auto custom-scrollbar rounded-xl bg-muted/30 p-3 "
+        className="flex-1 overflow-y-auto custom-scrollbar min-h-37.5 -mx-2 px-2"
       >
         <SortableContext
           id={status}
@@ -58,6 +61,7 @@ const KanbanColumn = ({ status, tasks, isArchived }: Props) => {
                 key={task.slug}
                 task={task}
                 isArchived={isArchived}
+                projectSlug={projectSlug}
               />
             ))}
           </div>

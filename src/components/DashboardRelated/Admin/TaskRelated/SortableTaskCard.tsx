@@ -2,18 +2,26 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
 import { format } from "date-fns";
+import Link from "next/link";
+import Image from "next/image";
 
 import { Badge } from "@/components/ui/badge";
 import { ITask } from "@/Redux/services/taskApi/Task.interface";
-import Image from "next/image";
+import { stripHtml } from "@/Utils/stripHtml";
 
 interface Props {
   task: ITask;
   isArchived: boolean;
   isOverlay?: boolean;
+  projectSlug: string;
 }
 
-const SortableTaskCard = ({ task, isArchived, isOverlay = false }: Props) => {
+const SortableTaskCard = ({
+  task,
+  isArchived,
+  isOverlay = false,
+  projectSlug,
+}: Props) => {
   const {
     attributes,
     listeners,
@@ -33,16 +41,19 @@ const SortableTaskCard = ({ task, isArchived, isOverlay = false }: Props) => {
     opacity: isDragging && !isOverlay ? 0.4 : 1,
   };
 
+  const plainTextDescription = stripHtml(task.description);
+
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className={`bg-card p-4 rounded-lg border shadow-sm group ${
+      className={`bg-background p-4 rounded-lg border shadow-sm group ${
         isOverlay
           ? "border-primary shadow-lg rotate-3 scale-105"
           : "border-border hover:border-primary/40"
       }`}
     >
+      {/* Header Row: ID and Drag Handle */}
       <div className="flex items-start justify-between mb-3">
         <Badge
           variant="outline"
@@ -53,19 +64,28 @@ const SortableTaskCard = ({ task, isArchived, isOverlay = false }: Props) => {
         <div
           {...attributes}
           {...listeners}
-          className={`text-muted-foreground/50 ${
+          className={`text-muted-foreground/50 p-1 -mr-1 -mt-1 rounded-md ${
             !isArchived &&
-            "hover:text-foreground cursor-grab active:cursor-grabbing"
+            "hover:text-foreground hover:bg-muted cursor-grab active:cursor-grabbing"
           }`}
         >
           <GripVertical className="h-4 w-4" />
         </div>
       </div>
 
-      <h4 className="font-bold text-sm text-foreground leading-snug mb-3">
-        {task.title}
-      </h4>
+      {/* Clickable Title & Description Preview */}
+      <Link
+        href={`/manager_workspace/projects/${projectSlug}/tasks/${task.slug}`}
+      >
+        <h4 className="font-bold text-sm text-foreground leading-snug mb-1 hover:text-primary transition-colors cursor-pointer">
+          {task.title}
+        </h4>
+      </Link>
+      <p className="text-xs text-muted-foreground line-clamp-2 mb-3 leading-relaxed">
+        {plainTextDescription}
+      </p>
 
+      {/* Multi-Avatar Display */}
       {task.assigneeProfiles && task.assigneeProfiles.length > 0 && (
         <div className="flex items-center -space-x-2 overflow-hidden mb-3">
           {task.assigneeProfiles.map((profile, i) => (
@@ -85,6 +105,7 @@ const SortableTaskCard = ({ task, isArchived, isOverlay = false }: Props) => {
         </div>
       )}
 
+      {/* Footer Row: Priority & Date */}
       <div className="flex items-center justify-between border-t border-border pt-3 mt-1">
         <Badge
           variant="secondary"
