@@ -7,7 +7,6 @@ import {
   CalendarDays,
   Clock,
   Edit,
-  MessageSquare,
   Trash2,
   Users,
   AlertCircle,
@@ -34,6 +33,7 @@ import {
 } from "@/components/ui/dialog";
 import UpdateTaskStatusModal from "@/components/DashboardRelated/Admin/TaskRelated/UpdateTaskStatusModal";
 import Image from "next/image";
+import TaskComments from "@/components/DashboardRelated/Admin/CommentRelated/TaskComments";
 
 const TaskDetailsPage = () => {
   const params = useParams();
@@ -197,7 +197,7 @@ const TaskDetailsPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Description & Comments */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
+          <div className="bg-card rounded-xl border border-border p-6 ">
             <h2 className="text-lg font-bold text-foreground mb-4 border-b border-border pb-2">
               Description
             </h2>
@@ -208,22 +208,15 @@ const TaskDetailsPage = () => {
           </div>
 
           {/* Comments Section Placeholder */}
-          <div className="bg-card rounded-xl border border-border p-6 shadow-sm opacity-50">
-            <div className="flex items-center gap-2 border-b border-border pb-4 mb-4">
-              <MessageSquare className="h-5 w-5 text-primary" />
-              <h2 className="text-lg font-bold text-foreground">Discussion</h2>
-            </div>
-            <div className="py-8 text-center text-muted-foreground bg-muted/20 rounded-lg border border-dashed border-border">
-              <p className="text-sm font-medium">
-                Comments module coming next!
-              </p>
-            </div>
+
+          <div className="flex-1">
+            <TaskComments taskSlug={taskSlug} isArchived={task.isDeleted} />
           </div>
         </div>
 
         {/* Right Column: Meta Info */}
         <div className="space-y-6">
-          <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
+          <div className="bg-card rounded-xl border border-border p-6 ">
             <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4">
               Task Details
             </h3>
