@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -55,6 +56,7 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
       name: "",
       email: "",
       contactNo: "",
+      designation: "",
       role: USER_ROLE.team_member,
       password: "",
       confirmPassword: "",
@@ -67,6 +69,7 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
         name: user.profile?.name || "",
         email: user.email || "",
         contactNo: user.profile?.contactNo || "",
+        designation: user.profile?.designation || "",
         role: user.role as TStaffFormValues["role"],
         password: "",
         confirmPassword: "",
@@ -81,6 +84,7 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
         name: values.name,
         contactNo: values.contactNo,
         email: values.email,
+        designation: values.designation,
       },
     };
 
@@ -94,6 +98,7 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
           profile: {
             name: values.name,
             contactNo: values.contactNo,
+            designation: values.designation,
           },
         };
 
@@ -129,7 +134,6 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
         });
       }
       closeModal();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       Swal.fire({
         title: "Error",
@@ -161,34 +165,42 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
           />
           <CustomFormField
             control={form.control}
+            name="designation"
+            label="Designation / Title"
+            placeholder="e.g. Frontend Developer"
+          />
+          <CustomFormField
+            control={form.control}
             name="contactNo"
             label="Contact Number"
             placeholder="+8801..."
           />
-          <CustomFormField
-            control={form.control}
-            name="role"
-            label="System Role"
-            type="select"
-            disabled={isUpdateMode}
-            placeholder="Select a role"
-            options={[
-              ...(isUpdateMode && user?.role === USER_ROLE.super_admin
-                ? [
-                    {
-                      label: "System Kernel (Super Admin)",
-                      value: USER_ROLE.super_admin,
-                    },
-                  ]
-                : []),
-              { label: "Administrator", value: USER_ROLE.admin },
-              { label: "Project Manager", value: USER_ROLE.project_manager },
-              {
-                label: "Team Member / Developer",
-                value: USER_ROLE.team_member,
-              },
-            ]}
-          />
+          <div className="md:col-span-2">
+            <CustomFormField
+              control={form.control}
+              name="role"
+              label="System Role"
+              type="select"
+              disabled={isUpdateMode}
+              placeholder="Select a role"
+              options={[
+                ...(isUpdateMode && user?.role === USER_ROLE.super_admin
+                  ? [
+                      {
+                        label: "System Kernel (Super Admin)",
+                        value: USER_ROLE.super_admin,
+                      },
+                    ]
+                  : []),
+                { label: "Administrator", value: USER_ROLE.admin },
+                { label: "Project Manager", value: USER_ROLE.project_manager },
+                {
+                  label: "Team Member / Developer",
+                  value: USER_ROLE.team_member,
+                },
+              ]}
+            />
+          </div>
         </div>
 
         {/* --- Security Section --- */}

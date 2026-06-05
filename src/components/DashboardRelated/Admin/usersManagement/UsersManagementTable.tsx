@@ -52,7 +52,7 @@ const UsersManagementTable = ({
       <Table>
         <TableHeader className="bg-muted/50 border-b border-border">
           <TableRow className="hover:bg-transparent">
-            <TableHead className="w-80 font-semibold text-muted-foreground">
+            <TableHead className="w-87.5 font-semibold text-muted-foreground">
               <div className="flex items-center gap-3 pl-4">
                 <Badge
                   variant="secondary"
@@ -119,10 +119,15 @@ const UsersManagementTable = ({
                         />
                       </div>
                       <div className="min-w-0">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <span className="truncate font-semibold text-foreground text-sm">
                             {staff.profile?.name || "Pending Profile"}
                           </span>
+                          {staff.profile?.designation && (
+                            <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary whitespace-nowrap">
+                              {staff.profile.designation}
+                            </span>
+                          )}
                           {isSelf && (
                             <Badge
                               variant="outline"

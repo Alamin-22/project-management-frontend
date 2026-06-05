@@ -2,11 +2,12 @@
 
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import { UserMinus, UserPlus, Users } from "lucide-react";
+import { UserMinus, UserPlus, Users, Loader2 } from "lucide-react";
 import Swal from "sweetalert2";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import ReusableBreadcrumb from "@/components/Shared/ReusableBreadcrumb";
 import {
   useGetSingleProjectQuery,
   useUpdateTeamMembersMutation,
@@ -17,22 +18,27 @@ const ProjectTeamPage = () => {
   const params = useParams();
   const slug = params.slug as string;
 
-  const { data: projectData } = useGetSingleProjectQuery(slug, { skip: !slug });
+  const { data: projectData, isLoading: isProjectLoading } =
+    useGetSingleProjectQuery(slug, {
+      skip: !slug,
+    });
   const project = projectData?.data;
+
+  const { data: staffData, isLoading: isStaffLoading } = useGetAllStaffQuery({
+    limit: 100,
+    assignable: true,
+  });
+  const allStaff = staffData?.data?.result || [];
 
   const [updateTeam, { isLoading: isUpdating }] =
     useUpdateTeamMembersMutation();
-
-  const { data: staffData } = useGetAllStaffQuery({
-    role: "team_member",
-    limit: 100,
-  });
-  const allStaff = staffData?.data?.result || [];
 
   const handleUpdateTeam = async (
     memberId: string,
     action: "add" | "remove",
   ) => {
+    if (!memberId) return;
+
     try {
       await updateTeam({
         slug,
@@ -41,7 +47,7 @@ const ProjectTeamPage = () => {
 
       Swal.fire({
         title: "Success",
-        text: `Team member successfully ${action === "add" ? "assigned" : "removed"}.`,
+        text: `Team member successfully ${action === "add" ? "assigned to" : "removed from"} workspace.`,
         icon: "success",
         toast: true,
         position: "top-end",
@@ -60,134 +66,184 @@ const ProjectTeamPage = () => {
     }
   };
 
+  if (isProjectLoading || isStaffLoading) {
+    return (
+      <div className="flex h-[40vh] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   if (!project) return null;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const assignedIds = project.teamMembers.map((m: any) => m._id || m);
+  const assignedIds = project.teamMembers.map((m: any) =>
+    typeof m === "object" ? m._id || m.id : m,
+  );
   const availableStaff = allStaff.filter(
-    (staff) => !assignedIds.includes(staff._id),
+    (staff) => !assignedIds.includes(staff._id || staff.id),
   );
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-6">
-      <div className="bg-card rounded-xl border border-border p-6 shadow-sm flex flex-col h-150">
-        <div className="flex items-center justify-between border-b border-border pb-4 mb-4">
-          <div className="flex items-center gap-2">
-            <Users className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-bold text-foreground">Assigned Team</h2>
-          </div>
-          <Badge variant="secondary">
-            {project.teamMembers.length} Members
-          </Badge>
-        </div>
-
-        <div className="flex-1 overflow-y-auto pr-2 space-y-3">
-          {project.teamMembers.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-muted-foreground">
-              <Users className="h-10 w-10 mb-2 opacity-20" />
-              <p className="text-sm">No members assigned yet.</p>
-            </div>
-          ) : (
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            project.teamMembers.map((member: any, idx) => (
-              <div
-                key={idx}
-                className="flex items-center justify-between p-3 rounded-lg border border-border/50 bg-muted/10 hover:bg-muted/30 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <Image
-                    width={36}
-                    height={36}
-                    className="rounded-full bg-muted border border-border object-cover"
-                    src={
-                      member.profile?.profileImg?.url ||
-                      `https://placehold.co/200x200/png?text=U`
-                    }
-                    alt="Avatar"
-                  />
-                  <div>
-                    <p className="text-sm font-bold text-foreground leading-none">
-                      {member.profile?.name || "Unknown"}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {member.email}
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  disabled={isUpdating}
-                  onClick={() => handleUpdateTeam(member._id, "remove")}
-                  className="text-destructive hover:bg-destructive/10 hover:text-destructive h-8 px-2"
-                >
-                  <UserMinus className="h-4 w-4" />
-                </Button>
-              </div>
-            ))
-          )}
-        </div>
+    <div className="space-y-6">
+      <div className="px-6 pt-2">
+        <ReusableBreadcrumb
+          paths={[
+            { label: "Projects", href: "/manager_workspace/projects" },
+            {
+              label: project.name,
+              href: `/manager_workspace/projects/${slug}`,
+            },
+            { label: "Team Directory" },
+          ]}
+        />
       </div>
 
-      {/* Available Staff to Add */}
-      <div className="bg-card rounded-xl border border-border p-6 shadow-sm flex flex-col h-150">
-        <div className="flex items-center justify-between border-b border-border pb-4 mb-4">
-          <div className="flex items-center gap-2">
-            <UserPlus className="h-5 w-5 text-muted-foreground" />
-            <h2 className="text-lg font-bold text-foreground">
-              Available Staff
-            </h2>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-6">
+        {/* LEFT COLUMN: Currently Assigned Members */}
+        <div className="bg-card rounded-xl border border-border p-6 shadow-sm flex flex-col ">
+          <div className="flex items-center justify-between border-b border-border pb-4 mb-4">
+            <div className="flex items-center gap-2">
+              <Users className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-bold text-foreground">
+                Assigned Team
+              </h2>
+            </div>
+            <Badge variant="secondary">
+              {project.teamMembers.length} Members
+            </Badge>
           </div>
-          <Badge variant="outline" className="text-muted-foreground">
-            {availableStaff.length} Available
-          </Badge>
+
+          <div className="flex-1 overflow-y-auto pr-2 space-y-3 custom-scrollbar">
+            {project.teamMembers.length === 0 ? (
+              <div className="h-full flex flex-col items-center justify-center text-muted-foreground">
+                <Users className="h-10 w-10 mb-2 opacity-20" />
+                <p className="text-sm">
+                  No members assigned to this workspace yet.
+                </p>
+              </div>
+            ) : (
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              project.teamMembers.map((member: any) => {
+                if (typeof member !== "object") return null;
+
+                return (
+                  <div
+                    key={member._id}
+                    className="flex items-center justify-between p-3 rounded-lg border border-border/50 bg-muted/10 hover:bg-muted/30 transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Image
+                        width={36}
+                        height={36}
+                        className="rounded-full bg-muted border border-border object-cover"
+                        src={
+                          member.profile?.profileImg?.url ||
+                          `https://placehold.co/200x200/png?text=U`
+                        }
+                        alt="Avatar"
+                      />
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-bold text-foreground leading-none">
+                            {member.profile?.name || "Unknown"}
+                          </p>
+                          {/* Render the new designation if it exists! */}
+                          {member.profile?.designation && (
+                            <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary">
+                              {member.profile.designation}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {member.email}
+                        </p>
+                      </div>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      disabled={isUpdating}
+                      onClick={() => handleUpdateTeam(member._id, "remove")}
+                      className="text-destructive hover:bg-destructive/10 hover:text-destructive h-8 px-2"
+                      title="Remove from project"
+                    >
+                      <UserMinus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                );
+              })
+            )}
+          </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto pr-2 space-y-3">
-          {availableStaff.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-muted-foreground">
-              <p className="text-sm">
-                All available staff are already assigned.
-              </p>
+        {/* RIGHT COLUMN: Available Staff to Add */}
+        <div className="bg-card rounded-xl border border-border p-6 shadow-sm flex flex-col ">
+          <div className="flex items-center justify-between border-b border-border pb-4 mb-4">
+            <div className="flex items-center gap-2">
+              <UserPlus className="h-5 w-5 text-muted-foreground" />
+              <h2 className="text-lg font-bold text-foreground">
+                Available Staff
+              </h2>
             </div>
-          ) : (
-            availableStaff.map((staff) => (
-              <div
-                key={staff._id}
-                className="flex items-center justify-between p-3 rounded-lg border border-border/50 bg-background hover:border-primary/30 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <Image
-                    width={36}
-                    height={36}
-                    className="rounded-full bg-muted border border-border object-cover"
-                    src={
-                      staff.profile?.profileImg?.url ||
-                      `https://placehold.co/200x200/png?text=U`
-                    }
-                    alt="Avatar"
-                  />
-                  <div>
-                    <p className="text-sm font-bold text-foreground leading-none">
-                      {staff.profile?.name || "Unknown"}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {staff.email}
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={isUpdating}
-                  onClick={() => handleUpdateTeam(staff._id, "add")}
-                  className="h-8 px-3 text-xs font-bold"
-                >
-                  Assign
-                </Button>
+            <Badge variant="outline" className="text-muted-foreground">
+              {availableStaff.length} Available
+            </Badge>
+          </div>
+
+          <div className="flex-1 overflow-y-auto pr-2 space-y-3 custom-scrollbar">
+            {availableStaff.length === 0 ? (
+              <div className="h-full flex flex-col items-center justify-center text-muted-foreground">
+                <p className="text-sm">
+                  All available team members are already assigned.
+                </p>
               </div>
-            ))
-          )}
+            ) : (
+              availableStaff.map((staff) => (
+                <div
+                  key={staff._id}
+                  className="flex items-center justify-between p-3 rounded-lg border border-border/50 bg-background hover:border-primary/30 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <Image
+                      width={36}
+                      height={36}
+                      className="rounded-full bg-muted border border-border object-cover"
+                      src={
+                        staff.profile?.profileImg?.url ||
+                        `https://placehold.co/200x200/png?text=U`
+                      }
+                      alt="Avatar"
+                    />
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-bold text-foreground leading-none">
+                          {staff.profile?.name || "Unknown"}
+                        </p>
+                        {staff.profile?.designation && (
+                          <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary">
+                            {staff.profile.designation}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {staff.email}
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={isUpdating}
+                    onClick={() => handleUpdateTeam(staff._id, "add")}
+                    className="h-8 px-3 text-xs font-bold"
+                  >
+                    Assign
+                  </Button>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -28,6 +28,7 @@ export interface IProfile {
     url?: string;
     publicId?: string;
   };
+  designation?: string;
 
   isDeleted?: boolean;
   createdAt?: string;
@@ -40,6 +41,7 @@ export interface IManageStaffPayload {
   profile: {
     name: string;
     contactNo: string;
+    designation: string;
   };
 }
 
@@ -48,6 +50,7 @@ export interface IUpdateProfileArgs {
   data: Partial<{
     name: string;
     contactNo: string;
+    designation: string;
     profileImg: { url: string; publicId: string };
   }>;
 }

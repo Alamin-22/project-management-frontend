@@ -8,12 +8,14 @@ export type TStaffFormValues = {
   role?: keyof typeof USER_ROLE | "";
   password?: string;
   confirmPassword?: string;
+  designation?: string;
 };
 
 const baseStaffSchema = z.object({
   name: z.string().min(1, "Full Name is required"),
   email: z.string().email("Invalid email address"),
   contactNo: z.string().min(1, "Contact number is required"),
+  designation: z.string().min(1, "Designation is required"),
   role: z.enum([
     USER_ROLE.super_admin,
     USER_ROLE.admin,
@@ -37,6 +39,7 @@ export const updateStaffFormSchema = baseStaffSchema
     role: baseStaffSchema.shape.role.optional().or(z.literal("")),
     password: z.string().min(6).max(20).optional().or(z.literal("")),
     confirmPassword: z.string().optional().or(z.literal("")),
+    designation: z.string().min(1, "Designation is required").optional().or(z.literal("")),
   })
   .refine(
     (data) => {
