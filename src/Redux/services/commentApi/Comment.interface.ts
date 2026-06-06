@@ -15,6 +15,8 @@ export interface IComment {
     };
   };
   content: string;
+  parentComment?: string | null;
+  replies?: IComment[];
   createdAt: string;
   updatedAt: string;
 }

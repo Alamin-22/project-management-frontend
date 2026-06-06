@@ -19,15 +19,14 @@ const commentApi = baseApi.injectEndpoints({
       ],
     }),
 
-    // Add a new comment
     addComment: builder.mutation<
       IBaseResponse<IComment>,
-      { taskSlug: string; content: string }
+      { taskSlug: string; content: string; parentComment?: string }
     >({
-      query: ({ taskSlug, content }) => ({
+      query: ({ taskSlug, content, parentComment }) => ({
         url: `/comments/task/${taskSlug}`,
         method: "POST",
-        body: { content },
+        body: { content, parentComment },
         isPrivate: true,
       }),
       invalidatesTags: (_result, _error, arg) => [

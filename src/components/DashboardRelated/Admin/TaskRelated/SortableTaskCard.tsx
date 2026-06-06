@@ -61,6 +61,7 @@ const SortableTaskCard = ({
   };
 
   const plainTextDescription = stripHtml(task.description);
+
   const taskDetailUrl = `${baseUrl}/${projectSlug}/tasks/${task.slug}`;
 
   return (
@@ -141,11 +142,7 @@ const SortableTaskCard = ({
 
       <h4
         className="font-bold text-sm text-foreground leading-snug mb-1 hover:text-primary transition-colors cursor-pointer"
-        onClick={() =>
-          router.push(
-            `/manager_workspace/projects/${projectSlug}/tasks/${task.slug}`,
-          )
-        }
+        onClick={() => router.push(taskDetailUrl)}
       >
         {task.title}
       </h4>
