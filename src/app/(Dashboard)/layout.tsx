@@ -1,3 +1,4 @@
+"use client";
 import { useSocketNotifications } from "@/components/Shared/Notification/useSocketNotifications";
 import { PropsWithChildren } from "react";
 

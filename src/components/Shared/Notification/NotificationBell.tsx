@@ -27,17 +27,16 @@ const NotificationBell = () => {
 
   const handleOpenChange = (isOpen: boolean) => {
     if (isOpen && unreadCount > 0) {
-      // Fire the mutation silently in the background when they open the dropdown
+      // call mark as read api silently
       markAsRead();
     }
   };
 
-  const handleNotificationClick = (notif: INotification) => {
-    // If you want to route them to the specific project/task, you can use the payload here!
-    if (notif.payload?.projectId) {
-      // example: router.push(`/manager_workspace/projects/${notif.payload.projectId}`);
-    } else if (notif.link) {
-      router.push(notif.link);
+  const handleNotificationClick = (notifi: INotification) => {
+    if (notifi.payload?.projectId) {
+      // router.push(`/manager_workspace/projects/${notifi.payload.projectId}`);
+    } else if (notifi.link) {
+      router.push(notifi.link);
     }
   };
 

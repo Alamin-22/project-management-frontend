@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import QueryNotFoundMessage from "@/components/Shared/QueryNotFoundMessage";
 import Link from "next/link";
 import { differenceInHours } from "date-fns";
+import NotificationBell from "@/components/Shared/Notification/NotificationBell";
 
 const Chart = dynamic(
   () => import("react-apexcharts").then((mod) => mod.default),
@@ -41,16 +42,20 @@ const GlobalDashboardPage = () => {
   return (
     <div className="p-6 space-y-6">
       <PageHeader title="Global Workspace Insights">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => refetch()}
-          className="h-9 w-9 p-0"
-        >
-          <RefreshCcw
-            className={`w-4 h-4 ${isFetching ? "animate-spin" : ""}`}
-          />
-        </Button>
+        <div className="flex items-center gap-3">
+          <NotificationBell />
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => refetch()}
+            className="h-9 w-9 p-0"
+          >
+            <RefreshCcw
+              className={`w-4 h-4 ${isFetching ? "animate-spin" : ""}`}
+            />
+          </Button>
+        </div>
       </PageHeader>
 
       <ProjectStatsGrid metrics={summary?.kpis} isLoading={isLoading} />

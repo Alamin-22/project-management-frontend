@@ -1,5 +1,9 @@
-import { baseApi } from "../../api/baseApi";
+import baseApi from "@/Redux/api/baseApi";
 import { INotification } from "./Notification.interface";
+
+export const NOTIFICATIONS_TAGS = {
+  LIST: "Notifications",
+} as const;
 
 export const NotificationApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -11,14 +15,14 @@ export const NotificationApi = baseApi.injectEndpoints({
         url: "/notifications/me",
         method: "GET",
       }),
-      providesTags: ["Notifications"],
+      providesTags: [NOTIFICATIONS_TAGS.LIST],
     }),
     markNotificationsAsRead: builder.mutation<void, void>({
       query: () => ({
         url: "/notifications/mark-as-read",
         method: "PATCH",
       }),
-      invalidatesTags: ["Notifications"],
+      invalidatesTags: [NOTIFICATIONS_TAGS.LIST],
     }),
   }),
 });

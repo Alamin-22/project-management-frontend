@@ -109,6 +109,7 @@ const baseApi = createApi({
     "TaskComments",
     "Dashboard",
     "AuditLog",
+    "Notifications",
   ],
   endpoints: () => ({}),
 });

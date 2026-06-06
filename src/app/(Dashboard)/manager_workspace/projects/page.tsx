@@ -11,6 +11,7 @@ import QueryNotFoundMessage from "@/components/Shared/QueryNotFoundMessage";
 import Pagination from "@/components/Shared/Pagination/Pagination";
 import { useGetAllProjectsQuery } from "@/Redux/services/projectApi/ProjectApi";
 import ProjectCard from "@/components/DashboardRelated/Admin/ProjectRelated/ProjectCard";
+import NotificationBell from "@/components/Shared/Notification/NotificationBell";
 
 const ProjectsDashboardPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,11 +38,15 @@ const ProjectsDashboardPage = () => {
         onSearchChange={setSearchQuery}
         placeholder="Search projects by name or ID..."
       >
-        <Link href="/manager_workspace/projects/create">
-          <Button size="sm" className="h-9 font-semibold">
-            <Plus className="mr-2 h-4 w-4" /> New Project
-          </Button>
-        </Link>
+        <div className="flex items-center gap-3">
+          <NotificationBell />
+
+          <Link href="/manager_workspace/projects/create">
+            <Button size="sm" className="h-9 font-semibold">
+              <Plus className="mr-2 h-4 w-4" /> New Project
+            </Button>
+          </Link>
+        </div>
       </PageHeader>
 
       <div className="p-6 flex-1">

@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import { useDispatch } from "react-redux";
@@ -20,13 +21,12 @@ export const useSocketNotifications = () => {
   useEffect(() => {
     if (!userId || !userRole) return;
 
-    // Strip /api/v1 to get the base server URL for Socket.io
+    // Strip /api/v1 to get the base server URL for Socket
     const baseUrl =
       process.env.NEXT_PUBLIC_API_BASE_URL?.replace("/api/v1", "") ||
       "http://localhost:5000";
 
     if (!socketRef.current) {
-      // Connect to the global namespace
       socketRef.current = io(baseUrl, {
         path: "/socket.io/",
         withCredentials: true,
@@ -38,12 +38,11 @@ export const useSocketNotifications = () => {
     const socketInstance = socketRef.current;
 
     const onConnect = () => {
-      // Tell the backend who we are so it puts us in the right room
+      // providing the data to connect to correct room
       socketInstance.emit("authenticate", { userId, role: userRole });
     };
 
     const onNewNotification = (newNotif: INotification) => {
-      // 1. Show a toast popup on the screen
       toast(newNotif.title + "\n" + newNotif.message, {
         icon: "🔔",
         style: {
@@ -53,7 +52,7 @@ export const useSocketNotifications = () => {
         },
       });
 
-      // 2. Silently update the Redux cache so the Bell icon increments instantly
+      // Silently update the Redux cache so the Bell icon increments instantly
       dispatch(
         NotificationApi.util.updateQueryData(
           "getMyNotifications",
@@ -82,7 +81,7 @@ export const useSocketNotifications = () => {
     };
   }, [userId, userRole, dispatch]);
 
-  // Handle hard logout cleanup
+  // Handle hard logout
   useEffect(() => {
     return () => {
       if (socketRef.current) {
