@@ -49,26 +49,26 @@ const AuditLogsPage = () => {
     isFetching,
   } = useGetAllLogsQuery(queryParams);
 
-  usePageTitle("System Audit Logs | Admin Panel");
+  usePageTitle("System Audit Logs | Manager Workspace");
 
   const logs = auditData?.data?.result;
   const meta = auditData?.data?.meta;
   const startIndex = (currentPage - 1) * limit;
 
   return (
-    <section>
+    <>
       <PageHeader
         title="Security Audit Logs"
         searchQuery={localSearchQuery}
         onSearchChange={handleLocalSearchChange}
         placeholder="Search operator email, resource, or action..."
       >
-        <div className="flex items-center gap-3 px-4 py-2 bg-indigo-50 border border-indigo-100 rounded-xl shadow-sm">
+        <div className="flex items-center gap-3 px-4 py-2 bg-indigo-50/50 border border-indigo-100 rounded-xl ">
           <div className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col  sm:flex">
             <span className="text-[10px] font-black uppercase tracking-widest text-indigo-400 leading-none">
               Security Protocol
             </span>
@@ -79,30 +79,33 @@ const AuditLogsPage = () => {
           <ShieldCheck className="h-4 w-4 text-indigo-500 ml-1" />
         </div>
       </PageHeader>
-
-      <AuditLogTable
-        logs={logs}
-        isLoading={isLoading}
-        startIndex={startIndex}
-      />
-
-      {meta && meta.totalPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={meta?.totalPages || 1}
-          onPageChange={setCurrentPage}
-        />
-      )}
-
-      {isFetching && !isLoading && (
-        <div className="fixed bottom-6 right-6 flex items-center gap-3 bg-white/90 backdrop-blur px-4 py-2 rounded-full border border-slate-200 shadow-xl z-50">
-          <Activity className="h-3.5 w-3.5 text-indigo-500 animate-pulse" />
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-            Refreshing Data...
-          </span>
+      <section className="p-6 space-y-6">
+        <div className="bg-card rounded-2xl border border-border  overflow-hidden">
+          <AuditLogTable
+            logs={logs}
+            isLoading={isLoading}
+            startIndex={startIndex}
+          />
         </div>
-      )}
-    </section>
+
+        {meta && meta.totalPages > 1 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={meta?.totalPages || 1}
+            onPageChange={setCurrentPage}
+          />
+        )}
+
+        {isFetching && !isLoading && (
+          <div className="fixed bottom-6 right-6 flex items-center gap-3 bg-background/90 backdrop-blur px-4 py-2 rounded-full border border-border  z-50">
+            <Activity className="h-3.5 w-3.5 text-indigo-500 animate-pulse" />
+            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+              Refreshing Data...
+            </span>
+          </div>
+        )}
+      </section>
+    </>
   );
 };
 

@@ -54,7 +54,7 @@ const AuditLogDetailsModal = ({ log }: { log: IAuditLog }) => {
           },
           {
             label: "Admin Role",
-            value: log.role,
+            value: log.role.replace("_", " "),
             icon: User,
             color: "text-emerald-500",
           },
@@ -67,15 +67,15 @@ const AuditLogDetailsModal = ({ log }: { log: IAuditLog }) => {
         ].map((item, i) => (
           <div
             key={i}
-            className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm"
+            className="bg-card p-4 rounded-2xl border border-border shadow-sm"
           >
             <div className="flex items-center gap-2 mb-2">
               <item.icon className={`w-3.5 h-3.5 ${item.color}`} />
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+              <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
                 {item.label}
               </span>
             </div>
-            <p className="text-xs font-mono font-bold text-slate-700 truncate bg-slate-50 px-2 py-1 rounded-lg">
+            <p className="text-xs font-mono font-bold text-foreground truncate bg-muted px-2 py-1 rounded-lg">
               {item.value || "N/A"}
             </p>
           </div>
@@ -83,23 +83,23 @@ const AuditLogDetailsModal = ({ log }: { log: IAuditLog }) => {
       </div>
 
       {/* 2. USER AGENT */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group">
-        <div className="absolute top-0 left-0 w-1.5 h-full bg-slate-100 group-hover:bg-indigo-50 transition-colors" />
+      <div className="bg-card p-6 rounded-2xl border border-border shadow-sm relative overflow-hidden group">
+        <div className="absolute top-0 left-0 w-1.5 h-full bg-muted group-hover:bg-primary/50 transition-colors" />
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-2.5">
-            <Monitor className="w-4 h-4 text-slate-500" />
-            <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest">
+            <Monitor className="w-4 h-4 text-muted-foreground" />
+            <span className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">
               Client User Agent
             </span>
           </div>
           <Badge
             variant="outline"
-            className="text-[10px] font-mono font-bold text-slate-400"
+            className="text-[10px] font-mono font-bold text-muted-foreground"
           >
             {format(new Date(log.createdAt), "PPP")}
           </Badge>
         </div>
-        <p className="text-[12px] text-slate-600 leading-relaxed italic bg-slate-50/50 p-4 rounded-xl border border-slate-100 font-mono break-all">
+        <p className="text-[12px] text-foreground leading-relaxed italic bg-muted/50 p-4 rounded-xl border border-border font-mono break-all">
           {log.userAgent}
         </p>
       </div>
@@ -108,8 +108,8 @@ const AuditLogDetailsModal = ({ log }: { log: IAuditLog }) => {
       <div className="space-y-4">
         <div className="flex items-center justify-between px-1">
           <div className="flex items-center gap-2.5">
-            <Terminal className="w-4 h-4 text-indigo-500" />
-            <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest">
+            <Terminal className="w-4 h-4 text-primary" />
+            <span className="text-[11px] font-black text-muted-foreground uppercase tracking-widest">
               Inbound Payload
             </span>
           </div>
@@ -117,18 +117,18 @@ const AuditLogDetailsModal = ({ log }: { log: IAuditLog }) => {
             variant="outline"
             size="sm"
             onClick={handleCopy}
-            className={`h-8 gap-2 rounded-lg font-bold text-[10px] uppercase ${isCopied ? "text-emerald-600" : ""}`}
+            className={`h-8 gap-2 rounded-lg font-bold text-[10px] uppercase ${isCopied ? "text-emerald-600 border-emerald-200 bg-emerald-50" : ""}`}
           >
             {isCopied ? (
               <Check className="w-3 h-3" />
             ) : (
               <Copy className="w-3 h-3" />
-            )}{" "}
+            )}
             {isCopied ? "Copied" : "Copy JSON"}
           </Button>
         </div>
 
-        <div className="relative overflow-hidden rounded-2xl border border-slate-800 bg-[#1e1e1e] shadow-2xl">
+        <div className="relative overflow-hidden rounded-2xl border border-slate-800 bg-[#1e1e1e] shadow-xl">
           <div className="w-full h-10 bg-[#2d2d2d] border-b border-[#404040] flex items-center px-5 gap-2">
             <div className="w-3 h-3 rounded-full bg-[#ff5f56]" />
             <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
@@ -139,7 +139,7 @@ const AuditLogDetailsModal = ({ log }: { log: IAuditLog }) => {
             </span>
           </div>
 
-          <div className="p-2">
+          <div className="p-2 custom-scrollbar">
             <SyntaxHighlighter
               language="json"
               style={vscDarkPlus}

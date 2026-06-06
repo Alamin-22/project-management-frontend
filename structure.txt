@@ -48,6 +48,7 @@
 │   │   │   │   │       │   ├── page.tsx
 │   │   │   │   │       │   └── [taskSlug]
 │   │   │   │   │       └── team
+│   │   │   │   │           ├── analytics
 │   │   │   │   │           └── page.tsx
 │   │   │   │   ├── settings
 │   │   │   │   │   ├── master-access
@@ -71,6 +72,7 @@
 │   │   │               │   ├── page.tsx
 │   │   │               │   └── [taskSlug]
 │   │   │               └── team
+│   │   │                   ├── analytics
 │   │   │                   └── page.tsx
 │   │   ├── favicon.ico
 │   │   ├── globals.css
@@ -88,9 +90,7 @@
 │   │   ├── DashboardRelated
 │   │   │   ├── Admin
 │   │   │   │   ├── Analytical
-│   │   │   │   │   ├── AnalyticsStatsGrid.tsx
-│   │   │   │   │   ├── RestockQueueCard.tsx
-│   │   │   │   │   └── WarehouseStatsCard.tsx
+│   │   │   │   │   └── ProjectStatsGrid.tsx
 │   │   │   │   ├── AuditLogs
 │   │   │   │   │   ├── AuditLogDetailsModal.tsx
 │   │   │   │   │   └── AuditLogTable.tsx
@@ -197,6 +197,9 @@
 │   │   │   │   ├── Comment.interface.ts
 │   │   │   │   ├── Comment.validation.ts
 │   │   │   │   └── CommentApi.ts
+│   │   │   ├── dashboardApi
+│   │   │   │   ├── Dashboard.interface.ts
+│   │   │   │   └── DashboardApi.ts
 │   │   │   ├── projectApi
 │   │   │   │   ├── Project.interface.ts
 │   │   │   │   ├── Project.validation.ts
