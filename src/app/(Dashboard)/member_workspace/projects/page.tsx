@@ -11,6 +11,7 @@ import QueryNotFoundMessage from "@/components/Shared/QueryNotFoundMessage";
 import Pagination from "@/components/Shared/Pagination/Pagination";
 import { useGetAllProjectsQuery } from "@/Redux/services/projectApi/ProjectApi";
 import ProjectCard from "@/components/DashboardRelated/Admin/ProjectRelated/ProjectCard";
+import NotificationBell from "@/components/Shared/Notification/NotificationBell";
 
 const MemberProjectsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,15 +38,19 @@ const MemberProjectsPage = () => {
         onSearchChange={setSearchQuery}
         placeholder="Search my projects..."
       >
-        <Link href="/member_workspace/projects/archived">
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-9 font-semibold text-muted-foreground"
-          >
-            <ArchiveX className="mr-2 h-4 w-4" /> View Archived
-          </Button>
-        </Link>
+        <div className="flex items-center gap-3">
+          <NotificationBell />
+
+          <Link href="/member_workspace/projects/archived">
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-9 font-semibold text-muted-foreground"
+            >
+              <ArchiveX className="mr-2 h-4 w-4" /> View Archived
+            </Button>
+          </Link>
+        </div>
       </PageHeader>
 
       <div className="p-6 flex-1">

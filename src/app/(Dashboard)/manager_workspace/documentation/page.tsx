@@ -9,6 +9,7 @@ import {
   Activity,
   AlertTriangle,
 } from "lucide-react";
+import NotificationBell from "@/components/Shared/Notification/NotificationBell";
 
 interface CardSectionProps {
   title: string;
@@ -24,7 +25,9 @@ const ManagerDocumentationPage = () => {
       <PageHeader
         title="Manager Operations Manual"
         description="A comprehensive guide to managing the project lifecycle, team productivity, and system security."
-      />
+      >
+        <NotificationBell />
+      </PageHeader>
 
       {/* 1. ONBOARDING & WORKFLOW */}
       <CardSection

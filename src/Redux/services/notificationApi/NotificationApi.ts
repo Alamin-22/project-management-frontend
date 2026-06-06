@@ -14,6 +14,7 @@ export const NotificationApi = baseApi.injectEndpoints({
       query: () => ({
         url: "/notifications/me",
         method: "GET",
+        isPrivate: true,
       }),
       providesTags: [NOTIFICATIONS_TAGS.LIST],
     }),
@@ -21,6 +22,7 @@ export const NotificationApi = baseApi.injectEndpoints({
       query: () => ({
         url: "/notifications/mark-as-read",
         method: "PATCH",
+        isPrivate: true,
       }),
       invalidatesTags: [NOTIFICATIONS_TAGS.LIST],
     }),

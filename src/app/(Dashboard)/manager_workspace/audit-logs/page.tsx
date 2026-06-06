@@ -11,6 +11,7 @@ import { usePageTitle } from "@/hooks/usePageTitle";
 import useDebounce from "@/Utils/useDebounce";
 import { useGetAllLogsQuery } from "@/Redux/services/auditApi/AuditLogApi";
 import { IQueryParams } from "@/app/types/common";
+import NotificationBell from "@/components/Shared/Notification/NotificationBell";
 
 const AuditLogsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -63,20 +64,24 @@ const AuditLogsPage = () => {
         onSearchChange={handleLocalSearchChange}
         placeholder="Search operator email, resource, or action..."
       >
-        <div className="flex items-center gap-3 px-4 py-2 bg-indigo-50/50 border border-indigo-100 rounded-xl ">
-          <div className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+        <div className="flex items-center gap-3">
+          <NotificationBell />
+
+          <div className="flex items-center gap-3 px-4 py-2 bg-indigo-50/50 border border-indigo-100 rounded-xl ">
+            <div className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+            </div>
+            <div className="flex flex-col  sm:flex">
+              <span className="text-[10px] font-black uppercase tracking-widest text-indigo-400 leading-none">
+                Security Protocol
+              </span>
+              <span className="text-xs font-bold text-indigo-700">
+                Live Monitoring Active
+              </span>
+            </div>
+            <ShieldCheck className="h-4 w-4 text-indigo-500 ml-1" />
           </div>
-          <div className="flex flex-col  sm:flex">
-            <span className="text-[10px] font-black uppercase tracking-widest text-indigo-400 leading-none">
-              Security Protocol
-            </span>
-            <span className="text-xs font-bold text-indigo-700">
-              Live Monitoring Active
-            </span>
-          </div>
-          <ShieldCheck className="h-4 w-4 text-indigo-500 ml-1" />
         </div>
       </PageHeader>
       <section>

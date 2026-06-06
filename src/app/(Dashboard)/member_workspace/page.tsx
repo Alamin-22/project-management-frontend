@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ApexOptions } from "apexcharts";
+import NotificationBell from "@/components/Shared/Notification/NotificationBell";
 
 const Chart = dynamic(
   () => import("react-apexcharts").then((mod) => mod.default),
@@ -103,6 +104,7 @@ const MemberDashboardPage = () => {
       <PageHeader
         title={`Welcome back, ${user?.profile?.name?.split(" ")[0] || "Team Member"}!`}
       >
+        <NotificationBell />
         <Button
           variant="outline"
           size="sm"

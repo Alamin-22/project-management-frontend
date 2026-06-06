@@ -11,6 +11,8 @@ import QueryNotFoundMessage from "@/components/Shared/QueryNotFoundMessage";
 import Pagination from "@/components/Shared/Pagination/Pagination";
 import { useGetArchivedProjectsQuery } from "@/Redux/services/projectApi/ProjectApi";
 import ProjectCard from "@/components/DashboardRelated/Admin/ProjectRelated/ProjectCard";
+import { IProject } from "@/Redux/services/projectApi/Project.interface";
+import NotificationBell from "@/components/Shared/Notification/NotificationBell";
 
 const ArchivedProjectsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,11 +39,15 @@ const ArchivedProjectsPage = () => {
         onSearchChange={setSearchQuery}
         placeholder="Search archives by name..."
       >
-        <Link href="/manager_workspace/projects">
-          <Button variant="outline" size="sm" className="h-9 font-semibold">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Active
-          </Button>
-        </Link>
+        <div className="flex items-center gap-3">
+          <NotificationBell />
+
+          <Link href="/manager_workspace/projects">
+            <Button variant="outline" size="sm" className="h-9 font-semibold">
+              <ArrowLeft className="mr-2 h-4 w-4" /> Back to Active
+            </Button>
+          </Link>
+        </div>
       </PageHeader>
 
       <div className="p-6 flex-1">
@@ -57,7 +63,7 @@ const ArchivedProjectsPage = () => {
         ) : projects.length > 0 ? (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 opacity-80 hover:opacity-100 transition-opacity">
-              {projects.map((project: any) => (
+              {projects.map((project: IProject) => (
                 <ProjectCard
                   key={project._id}
                   project={project}

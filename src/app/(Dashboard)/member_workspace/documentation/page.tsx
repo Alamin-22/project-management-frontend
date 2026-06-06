@@ -4,6 +4,7 @@ import React from "react";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import PageHeader from "@/components/DashboardRelated/PageHeader";
 import { Kanban, Activity, Target, Clock, Lock } from "lucide-react";
+import NotificationBell from "@/components/Shared/Notification/NotificationBell";
 
 interface CardSectionProps {
   title: string;
@@ -19,7 +20,9 @@ const MemberDocumentationPage = () => {
       <PageHeader
         title="Member Operations Manual"
         description="A guide to managing your tasks, tracking project progress, and staying productive."
-      />
+      >
+        <NotificationBell />
+      </PageHeader>
 
       {/* 1. GETTING STARTED */}
       <CardSection

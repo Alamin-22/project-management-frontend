@@ -16,6 +16,7 @@ import {
 import PageHeader from "@/components/DashboardRelated/PageHeader";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { useAppState } from "@/Provider/StateProvider";
+import NotificationBell from "@/components/Shared/Notification/NotificationBell";
 
 interface SettingItem {
   title: string;
@@ -145,7 +146,9 @@ const GlobalSettingsPage = () => {
         <PageHeader
           title="Control Center"
           description="Centralized configuration hub for system security and administrative logs."
-        />
+        >
+          <NotificationBell />
+        </PageHeader>
       </div>
 
       <div className="max-w-6xl mx-auto px-6 space-y-12">

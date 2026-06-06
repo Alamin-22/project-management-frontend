@@ -4,6 +4,7 @@ import Link from "next/link";
 import { UserCircle, ChevronRight, ShieldCheck, Activity } from "lucide-react";
 import PageHeader from "@/components/DashboardRelated/PageHeader";
 import { usePageTitle } from "@/hooks/usePageTitle";
+import NotificationBell from "@/components/Shared/Notification/NotificationBell";
 
 const MemberSettingsPage = () => {
   usePageTitle("Account Settings");
@@ -53,7 +54,9 @@ const MemberSettingsPage = () => {
         <PageHeader
           title="Account Settings"
           description="Manage your security credentials and personal information."
-        />
+        >
+          <NotificationBell />
+        </PageHeader>
       </div>
 
       <div className="max-w-4xl mx-auto px-6 space-y-12">
