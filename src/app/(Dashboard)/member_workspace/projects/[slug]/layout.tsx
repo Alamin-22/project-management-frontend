@@ -46,7 +46,7 @@ const MemberProjectWorkspaceLayout = ({
       name: "Team",
       href: `/member_workspace/projects/${slug}/team`,
       icon: Users,
-      exact: false,
+      exact: true,
     },
     {
       name: "Team Analytics",
@@ -119,7 +119,7 @@ const MemberProjectWorkspaceLayout = ({
             {tabs.map((tab) => {
               const isActive = tab.exact
                 ? pathname === tab.href
-                : pathname.startsWith(tab.href);
+                : pathname === tab.href || pathname.startsWith(`${tab.href}/`);
 
               return (
                 <Link
