@@ -1,110 +1,125 @@
-# Professional Inventory Management System (IMS)
-
-### Full-Stack Enterprise Resource Planning & POS Control Center
-
-A high-density, modular Management System designed to bridge the gap between retail Point of Sale (POS) operations and back-office financial auditing. This system provides real-time inventory intelligence, role-based access control, and automated ledger synchronization.
 
 ---
 
-## 🌐 Deployment & Repository Links
+# Smart Project & Task Collaboration System
 
-| Component             | Live Demo (Vercel)                                                         | Repository Link                                                              |
-| :-------------------- | :------------------------------------------------------------------------- | :--------------------------------------------------------------------------- |
-| **Frontend Terminal** | [View Live Demo](https://www.google.com/search?q=INSERT_FRONTEND_URL_HERE) | [Client Repo](https://github.com/Alamin-22/Inventory-Management-Client)  |
-| **Backend Engine**    | [API Gateway](https://www.google.com/search?q=INSERT_BACKEND_URL_HERE)     | [Server Repo](https://github.com/Alamin-22/Inventory-Management-server) |
+### Enterprise-Grade Project Lifecycle & Team Productivity Engine
+
+A full-stack, project-centric management ecosystem designed to streamline task execution, team collaboration, and workflow transparency. This system empowers managers to oversee project lifecycles from initialization to completion while providing team members with an intuitive, status-driven task execution environment.
+
+---
+
+## 🌐 Deployment & Access
+
+| Component             | Live Application (Render)                                                                  | Repository Link                                                                                    |
+| --------------------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| **Project Workspace** | [Access Dashboard](https://www.google.com/search?q=https://your-frontend-url.onrender.com) | [Client Repository](https://github.com/Alamin-22/project-management-frontend) |
+| **API Gateway**       | [API Service](https://www.google.com/search?q=https://your-backend-url.onrender.com)       | [Server Repository](https://github.com/Alamin-22/project-management-backend) |
+
+> **Deployment Note:** This project is hosted on Render's free-tier infrastructure. If the application has been inactive, the container may take **30–60 seconds** to "wake up" upon your first request. Please be patient during the initial load.
 
 ---
 
 ## 🎯 Project Purpose
 
-The core objective of this IMS is to provide small-to-medium businesses with a unified platform to:
+The system provides a unified operational command center for teams to:
 
-- **Prevent Stock Outs**: Real-time monitoring and priority restock queues.
-- **Audit Financials**: Every transaction (Sale/Refund/Manual Collection) is logged in a permanent, non-editable ledger.
-- **Streamline POS**: A high-speed checkout interface designed for rapid "Terminal" style operation.
-- **Security & Accountability**: Detailed Audit Logs track which staff member performed which action.
+- **Centralize Lifecycle Management**: Projects serve as the root container for all tasks, team assignments, and analytical data.
+- **Enforce Operational Integrity**: Role-Based Access Control (RBAC) ensures Team Members only interact with tasks assigned to them, while PMs maintain full oversight.
+- **Audit & Accountability**: A hardened system-wide audit log records every status change, deletion, and reorder event.
+- **Visualize Productivity**: Real-time KPI tracking and Team Analytics offer deep visibility into workload distribution and bottlenecks.
 
 ---
 
-## 🚀 Core Modules
+## 🚀 Core Features
 
-- **Point of Sale (POS)**: Dynamic cart logic with instant stock validation and multi-method payment support.
-- **Business Intelligence Dashboard**: Real-time analytics showing Month-over-Month (MoM) revenue, daily sales volume, and inventory health.
-- **Financial Audit Trail**: A sophisticated ledger system that links every financial movement to a specific Order ID.
-- **Inventory Management**: Advanced product tracking with support for variants, SKUs, and categorized stock-level alerts.
-- **Staff Control (RBAC)**: Comprehensive user management with granular permissions for Super Admins, Admins, and Managers.
+- **Project-Centric Kanban**: Drag-and-drop task boards with permission-locked status updates.
+- **Role-Based Workflows**: Custom views for Managers (Global Analytics/Logs) vs. Team Members (Personal Tasks).
+- **Intelligent Validation**: Automated conflict handling (duplicate title prevention, deadline date enforcement, reassignment locks).
+- **Rich Task Context**: Built-in Rich-Text editing and comment threads for seamless collaboration.
+- **System Health & Security**: Live security monitoring, audit trail analysis, and Master Key override protocols.
 
 ---
 
 ## 🛠️ Technical Stack
 
-### **Frontend (Terminal)**
+### **Frontend**
 
 - **Framework**: Next.js 16 (App Router)
-- **Styling**: Tailwind CSS v4 (High-Density UI Architecture)
-- **State Management**: Redux Toolkit (RTK Query for cached API syncing)
-- **Forms**: React Hook Form + Zod (Strict Schema Validation)
+- **Styling**: Tailwind CSS & Radix UI
+- **Data Fetching**: Redux Toolkit (RTK Query)
+- **Validation**: React Hook Form + Zod
 
-### **Backend (Engine)**
+### **Backend**
 
 - **Runtime**: Node.js & Express.js
-- **Language**: TypeScript (Strict Type Safety)
-- **Database**: MongoDB (Mongoose ODM)
-- **Security**: JWT (Stateless Authentication) & Bcrypt (Password Hashing)
+- **Database**: MongoDB (Mongoose)
+- **Security**: JWT Stateless Auth & Bcrypt
 
 ---
 
 ## ⚙️ Environment Configuration
 
-### **Frontend (inventory-management-client)**
-
-Create a `.env.local` file in the client root:
+Create a `.env` file in the root of both client and server:
 
 ```env
-PORT=3000
-NODE_ENV=production
-NEXT_PUBLIC_CLIENT_SITE_URL=http://localhost:3000
-NEXT_PUBLIC_API_BASE_URL=http://localhost:5000/api/v1
-INTERNAL_SERVER_API=http://localhost:5000/api/v1
+# Frontend (.env.local)
+NEXT_PUBLIC_API_BASE_URL=https://your-api-url.onrender.com/api/v1
+
+# Backend (.env)
+PORT=5000
+MONGODB_URI=your_mongodb_atlas_connection_string
+JWT_SECRET=your_super_secret_key
+
 ```
+
+---
 
 ## 📦 Local Installation Guide
 
-### **1. Prerequisites**
-
-- Node.js (v24.x or higher)
-- MongoDB Atlas Account or Local MongoDB Instance
-
-### **2. Server Setup**
+### **1. Server Setup**
 
 ```bash
-cd inventory-management-server
+git clone <server-repo-url>
+cd project-name-server
 npm install
-# Configure your .env file as shown above
-npm run build
+# Update .env with MongoDB URI & Secrets
 npm run start:dev
+
 ```
 
-### **3. Client Setup**
+### **2. Client Setup**
 
 ```bash
-cd inventory-management-client
+git clone <client-repo-url>
+cd project-name-client
 npm install
-# Configure your .env.local as shown above
+# Update .env.local with your backend API URL
 npm run dev
+
 ```
 
 ---
 
-## 📑 Versioning & Changelog
+## 🔐 Demo Credentials
 
-This project is currently in **Beta Testing Phase**.
+Use these credentials to evaluate the role-based functionality:
 
-- **Current Version**: `1.0.0-beta.1`
-- **Status**: Production Ready for Demo Evaluation.
-- Detailed iteration notes can be found in the `CHANGELOG.md` of the respective repositories.
+- **Manager/PM**: `manager@smartproject.com` | `123456`
+- **Team Member**: `member@smartproject.com` | `123456`
 
 ---
 
-**Developed by Md. Al Amin Mollik. All rights reserved.**
-_Focused on scalability, security, and operational transparency._
+## 📑 Versioning & Documentation
+
+- **Version**: `1.0.0`
+- **Documentation**: A full _Manager Operations Manual_ is integrated directly into the dashboard under the `Manager Workspace > Documentation` tab.
+
+---
+
+**Developed by Md. Al Amin Mollik.**
+
+_Scalable. Secure. Project-Centric._
+
+---
+

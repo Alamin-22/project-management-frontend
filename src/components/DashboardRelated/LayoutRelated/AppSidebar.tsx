@@ -74,12 +74,13 @@ const AppSidebar = ({ links }: { links: TNavLink[] }) => {
             className="flex items-center gap-2 active:scale-95 transition-all"
           >
             <div className="overflow-hidden transition-all duration-300 group-data-[collapsible=icon]:w-0 group-data-[collapsible=icon]:opacity-0">
-              <div className="flex items-center gap-3">
-                <p className="text-lg font-bold tracking-tight text-sidebar-foreground">
-                  Project {"   "}
-                  <span className="text-primary">Management</span>
-                </p>
-              </div>
+              <Image
+                src="/Assets/logo/logo.png"
+                alt="Logo"
+                width={100}
+                height={40}
+                priority
+              />
             </div>
 
             <div className="hidden group-data-[collapsible=icon]:block">
@@ -176,7 +177,10 @@ const AppSidebar = ({ links }: { links: TNavLink[] }) => {
           ) : (
             <div className="relative shrink-0">
               <Image
-                src={user?.profile?.profileImg?.url || `https://placehold.co/200x200/png?text=U`}
+                src={
+                  user?.profile?.profileImg?.url ||
+                  `https://placehold.co/200x200/png?text=U`
+                }
                 alt="User"
                 width={32}
                 height={32}

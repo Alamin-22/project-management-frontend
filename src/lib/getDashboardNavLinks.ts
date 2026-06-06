@@ -35,6 +35,11 @@ export const ManagerNavLinks: TNavLink[] = [
     icon: "solar:history-bold-duotone",
   },
   {
+    href: "/manager_workspace/documentation",
+    label: "Documentations",
+    icon: "solar:book-bold-duotone",
+  },
+  {
     href: "/manager_workspace/settings",
     label: "System Settings",
     icon: "solar:settings-bold-duotone",
@@ -59,6 +64,11 @@ export const MemberNavLinks: TNavLink[] = [
     icon: "solar:archive-bold-duotone",
   },
   { heading: "Account" },
+  {
+    href: "/member_workspace/documentation",
+    label: "Documentations",
+    icon: "solar:book-bold-duotone",
+  },
   {
     href: "/member_workspace/settings",
     label: "Profile Settings",
