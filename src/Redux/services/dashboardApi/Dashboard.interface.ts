@@ -85,6 +85,7 @@ export interface ITeamMemberPerformance {
   memberId: string;
   name: string;
   totalTasks: number;
+  todoTasks: number;
+  inProgressTasks: number;
   completedTasks: number;
-  pendingTasks: number;
 }
