@@ -7,7 +7,7 @@ import {
   ChevronRight,
   ShieldCheck,
   KeyRound,
-  Warehouse,
+  LayoutTemplate,
   Users2,
   FileSearch,
   Activity,
@@ -42,26 +42,26 @@ const GlobalSettingsPage = () => {
 
   const SETTINGS_MENU: SettingSection[] = [
     {
-      category: "Operations & Logistics",
+      category: "Workspace Configuration",
       items: [
         {
-          title: "Warehouse Defaults",
+          title: "Workspace Preferences",
           description:
-            "Global restock thresholds and brand metadata configurations.",
-          icon: Warehouse,
+            "Global project defaults, notification rules, and workspace metadata.",
+          icon: LayoutTemplate,
           href: "#",
           color: "text-slate-400",
-          bg: "bg-slate-50",
+          bg: "bg-muted",
           status: "Coming Soon",
         },
         {
           title: "System Audit Logs",
           description:
-            "Monitor real-time system interactions and ledger updates.",
+            "Monitor real-time system interactions, task updates, and security events.",
           icon: FileSearch,
-          href: "/admin_dashboard_private/audit-logs",
+          href: "/manager_workspace/audit-logs",
           color: "text-emerald-600",
-          bg: "bg-emerald-50",
+          bg: "bg-emerald-500/10",
         },
       ],
     },
@@ -69,12 +69,12 @@ const GlobalSettingsPage = () => {
       category: "Organization & Personnel",
       items: [
         {
-          title: "Staff Management",
-          description: "Manage administrative accounts and system permissions.",
+          title: "Team Management",
+          description: "Manage member accounts, roles, and system permissions.",
           icon: Users2,
-          href: "/admin_dashboard_private/users",
+          href: "/manager_workspace/users",
           color: "text-blue-600",
-          bg: "bg-blue-50",
+          bg: "bg-blue-500/10",
         },
         {
           title: "My Profile",
@@ -83,7 +83,7 @@ const GlobalSettingsPage = () => {
           icon: UserCircle,
           href: "#",
           color: "text-slate-400",
-          bg: "bg-slate-50",
+          bg: "bg-muted",
           status: "Under Maintenance",
         },
       ],
@@ -96,9 +96,9 @@ const GlobalSettingsPage = () => {
           description:
             "Change your password and manage account security sessions.",
           icon: ShieldCheck,
-          href: "/admin_dashboard_private/settings/security",
+          href: "/manager_workspace/settings/security",
           color: "text-rose-600",
-          bg: "bg-rose-50",
+          bg: "bg-rose-500/10",
         },
         ...(isSuperAdmin
           ? [
@@ -107,9 +107,9 @@ const GlobalSettingsPage = () => {
                 description:
                   "Critical: Manage primary owner access and core reset protocols.",
                 icon: KeyRound,
-                href: "/admin_dashboard_private/settings/master-access",
+                href: "/manager_workspace/settings/master-access",
                 color: "text-orange-600",
-                bg: "bg-orange-50",
+                bg: "bg-orange-500/10",
                 isCritical: true,
                 ownerOnly: true,
               },
@@ -120,8 +120,8 @@ const GlobalSettingsPage = () => {
           description: "Database indexing and API health monitoring.",
           icon: Activity,
           href: "#",
-          color: "text-slate-300",
-          bg: "bg-slate-50",
+          color: "text-slate-400",
+          bg: "bg-muted",
           status: "Restricted",
         },
       ],
@@ -131,8 +131,8 @@ const GlobalSettingsPage = () => {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <ServerCrash className="w-10 h-10 text-slate-200 animate-pulse" />
-        <div className="text-center font-black text-slate-400 uppercase text-[10px] tracking-[0.3em]">
+        <ServerCrash className="w-10 h-10 text-muted-foreground animate-pulse" />
+        <div className="text-center font-black text-muted-foreground uppercase text-[10px] tracking-[0.3em]">
           Syncing System State...
         </div>
       </div>
@@ -141,19 +141,21 @@ const GlobalSettingsPage = () => {
 
   return (
     <div className="min-h-screen pb-20">
-      <PageHeader
-        title="Control Center"
-        description="Centralized configuration hub for system security and administrative logs."
-      />
+      <div className="p-6">
+        <PageHeader
+          title="Control Center"
+          description="Centralized configuration hub for system security and administrative logs."
+        />
+      </div>
 
-      <div className="max-w-6xl mx-auto p-6 space-y-12">
+      <div className="max-w-6xl mx-auto px-6 space-y-12">
         {SETTINGS_MENU.map((section) => (
           <div key={section.category} className="space-y-5">
             <div className="flex items-center gap-4">
-              <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-slate-400 whitespace-nowrap">
+              <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-muted-foreground whitespace-nowrap">
                 {section.category}
               </h2>
-              <div className="h-px w-full bg-slate-100" />
+              <div className="h-px w-full bg-border" />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -161,11 +163,11 @@ const GlobalSettingsPage = () => {
                 <Link
                   key={item.title}
                   href={item.href}
-                  className={`group relative flex items-start gap-6 p-6 bg-white border border-slate-200 rounded-3xl transition-all ${
+                  className={`group relative flex items-start gap-6 p-6 bg-card border rounded-3xl transition-all ${
                     item.href === "#"
-                      ? "opacity-50 cursor-default"
-                      : "hover:border-indigo-600 hover:shadow-2xl hover:shadow-indigo-100 hover:-translate-y-1 active:scale-[0.98]"
-                  } ${item.isCritical ? "border-orange-200 bg-orange-50/20" : ""}`}
+                      ? "opacity-50 cursor-default border-border"
+                      : "border-border hover:border-primary/50 hover:shadow-lg hover:-translate-y-1 active:scale-[0.98]"
+                  } ${item.isCritical ? "border-orange-500/30 bg-orange-500/5" : ""}`}
                 >
                   <div
                     className={`shrink-0 w-16 h-16 ${item.bg} ${item.color} rounded-2xl flex items-center justify-center group-hover:scale-105 transition-all duration-300 shadow-sm`}
@@ -175,11 +177,11 @@ const GlobalSettingsPage = () => {
 
                   <div className="flex-1 pr-8">
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-black text-slate-800 text-[11px] uppercase tracking-wider">
+                      <h3 className="font-black text-foreground text-[11px] uppercase tracking-wider">
                         {item.title}
                       </h3>
                       {item.status && (
-                        <span className="text-[8px] font-black bg-slate-100 text-slate-400 px-2 py-0.5 rounded-full uppercase tracking-tighter">
+                        <span className="text-[8px] font-black bg-muted text-muted-foreground px-2 py-0.5 rounded-full uppercase tracking-tighter">
                           {item.status}
                         </span>
                       )}
@@ -189,13 +191,13 @@ const GlobalSettingsPage = () => {
                         </span>
                       )}
                     </div>
-                    <p className="text-[11px] font-medium text-slate-500 leading-relaxed">
+                    <p className="text-[11px] font-medium text-muted-foreground leading-relaxed">
                       {item.description}
                     </p>
                   </div>
 
                   {item.href !== "#" && (
-                    <div className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-200 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all">
+                    <div className="absolute right-6 top-1/2 -translate-y-1/2 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all">
                       <ChevronRight className="w-5 h-5" />
                     </div>
                   )}

@@ -79,8 +79,8 @@ const AuditLogsPage = () => {
           <ShieldCheck className="h-4 w-4 text-indigo-500 ml-1" />
         </div>
       </PageHeader>
-      <section className="p-6 space-y-6">
-        <div className="bg-card rounded-2xl border border-border  overflow-hidden">
+      <section>
+        <div className="bg-card overflow-hidden">
           <AuditLogTable
             logs={logs}
             isLoading={isLoading}

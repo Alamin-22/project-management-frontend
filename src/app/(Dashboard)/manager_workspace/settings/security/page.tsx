@@ -12,23 +12,25 @@ const PasswordChangingPage = () => {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-slate-50/30 pb-20">
-      <PageHeader
-        title="Security & Access"
-        description="Update your authentication credentials and manage account protection."
-      >
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => router.back()}
-          className="gap-2 text-slate-500 hover:text-slate-900"
+    <div className="min-h-screen bg-muted/20 pb-20">
+      <div className="p-6">
+        <PageHeader
+          title="Security & Access"
+          description="Update your authentication credentials and manage account protection."
         >
-          <ArrowLeft className="h-4 w-4" /> Back
-        </Button>
-      </PageHeader>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => router.back()}
+            className="gap-2 text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" /> Back
+          </Button>
+        </PageHeader>
+      </div>
 
-      <div className=" p-6 mt-4">
-        <div className=" animate-in fade-in slide-in-from-bottom-3 duration-500">
+      <div className="px-6 mt-4">
+        <div className="animate-in fade-in slide-in-from-bottom-3 duration-500 max-w-xl mx-auto">
           <ChangePasswordForm />
         </div>
       </div>
