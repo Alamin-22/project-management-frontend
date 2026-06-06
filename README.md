@@ -1,125 +1,112 @@
+# Smart Project & Task Collaboration System (Frontend Workspace)
+
+### High-Density Interactive Project Management Client
+
+This repository contains the frontend client for the Smart Project Management System. Built with a focus on seamless user experience and strict operational role enforcement, it delivers a high-performance interactive workspace featuring drag-and-drop Kanban boards, real-time analytic dashboards, and professional rich-text documentation.
 
 ---
 
-# Smart Project & Task Collaboration System
+## 🌐 Live Application & Repositories
 
-### Enterprise-Grade Project Lifecycle & Team Productivity Engine
+| Component              | Live Application                                                               | GitHub Repository                                                             |
+| :--------------------- | :----------------------------------------------------------------------------- | :---------------------------------------------------------------------------- |
+| **Frontend Workspace** | [Access Live Dashboard](https://project-management-frontend-3we9.onrender.com) | [Client Repository](https://github.com/Alamin-22/project-management-frontend) |
+| **Backend API Engine** | [API Gateway](https://project-management-backend-l2ru.onrender.com/api/v1)     | [Server Repository](https://github.com/Alamin-22/project-management-backend)  |
 
-A full-stack, project-centric management ecosystem designed to streamline task execution, team collaboration, and workflow transparency. This system empowers managers to oversee project lifecycles from initialization to completion while providing team members with an intuitive, status-driven task execution environment.
-
----
-
-## 🌐 Deployment & Access
-
-| Component             | Live Application (Render)                                                                  | Repository Link                                                                                    |
-| --------------------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| **Project Workspace** | [Access Dashboard](https://www.google.com/search?q=https://your-frontend-url.onrender.com) | [Client Repository](https://github.com/Alamin-22/project-management-frontend) |
-| **API Gateway**       | [API Service](https://www.google.com/search?q=https://your-backend-url.onrender.com)       | [Server Repository](https://github.com/Alamin-22/project-management-backend) |
-
-> **Deployment Note:** This project is hosted on Render's free-tier infrastructure. If the application has been inactive, the container may take **30–60 seconds** to "wake up" upon your first request. Please be patient during the initial load.
-
----
-
-## 🎯 Project Purpose
-
-The system provides a unified operational command center for teams to:
-
-- **Centralize Lifecycle Management**: Projects serve as the root container for all tasks, team assignments, and analytical data.
-- **Enforce Operational Integrity**: Role-Based Access Control (RBAC) ensures Team Members only interact with tasks assigned to them, while PMs maintain full oversight.
-- **Audit & Accountability**: A hardened system-wide audit log records every status change, deletion, and reorder event.
-- **Visualize Productivity**: Real-time KPI tracking and Team Analytics offer deep visibility into workload distribution and bottlenecks.
-
----
-
-## 🚀 Core Features
-
-- **Project-Centric Kanban**: Drag-and-drop task boards with permission-locked status updates.
-- **Role-Based Workflows**: Custom views for Managers (Global Analytics/Logs) vs. Team Members (Personal Tasks).
-- **Intelligent Validation**: Automated conflict handling (duplicate title prevention, deadline date enforcement, reassignment locks).
-- **Rich Task Context**: Built-in Rich-Text editing and comment threads for seamless collaboration.
-- **System Health & Security**: Live security monitoring, audit trail analysis, and Master Key override protocols.
-
----
-
-## 🛠️ Technical Stack
-
-### **Frontend**
-
-- **Framework**: Next.js 16 (App Router)
-- **Styling**: Tailwind CSS & Radix UI
-- **Data Fetching**: Redux Toolkit (RTK Query)
-- **Validation**: React Hook Form + Zod
-
-### **Backend**
-
-- **Runtime**: Node.js & Express.js
-- **Database**: MongoDB (Mongoose)
-- **Security**: JWT Stateless Auth & Bcrypt
-
----
-
-## ⚙️ Environment Configuration
-
-Create a `.env` file in the root of both client and server:
-
-```env
-# Frontend (.env.local)
-NEXT_PUBLIC_API_BASE_URL=https://your-api-url.onrender.com/api/v1
-
-# Backend (.env)
-PORT=5000
-MONGODB_URI=your_mongodb_atlas_connection_string
-JWT_SECRET=your_super_secret_key
-
-```
-
----
-
-## 📦 Local Installation Guide
-
-### **1. Server Setup**
-
-```bash
-git clone <server-repo-url>
-cd project-name-server
-npm install
-# Update .env with MongoDB URI & Secrets
-npm run start:dev
-
-```
-
-### **2. Client Setup**
-
-```bash
-git clone <client-repo-url>
-cd project-name-client
-npm install
-# Update .env.local with your backend API URL
-npm run dev
-
-```
+> **Note on Cold Starts:** The backend API is hosted on Render's free tier. If the application has been inactive, logging in or fetching initial data may take **30–60 seconds** as the server container wakes up.
 
 ---
 
 ## 🔐 Demo Credentials
 
-Use these credentials to evaluate the role-based functionality:
+Use these credentials to evaluate the Role-Based Access Control (RBAC) and customized dashboard views:
 
-- **Manager/PM**: `manager@smartproject.com` | `123456`
-- **Team Member**: `member@smartproject.com` | `123456`
-
----
-
-## 📑 Versioning & Documentation
-
-- **Version**: `1.0.0`
-- **Documentation**: A full _Manager Operations Manual_ is integrated directly into the dashboard under the `Manager Workspace > Documentation` tab.
+- **Manager / Admin**: `manager@smartproject.com` | `admin123456`
+- **Team Member**: `member@smartproject.com` | `member123456`
 
 ---
 
-**Developed by Md. Al Amin Mollik.**
+## 🎯 Core Features & UI Architecture
 
-_Scalable. Secure. Project-Centric._
+- **Role-Based Workspaces**: Distinct routing and UI layouts for Project Managers (Global scope, Team management) vs. Team Members (Personal task scope).
+- **Advanced Task Board**: Fully interactive Kanban interface using `@dnd-kit` with client-side drag-and-drop validation that prevents unauthorized status changes.
+- **Rich Document Editor**: Integrated `Tiptap` editor allowing for professional formatting and media attachments inside task descriptions.
+- **Real-Time Analytics**: Visual KPI metrics and progress bars rendered via `ApexCharts` to monitor team workload and deadline risks.
+- **State Management**: Centralized API caching and state synchronization using Redux Toolkit (RTK Query).
 
 ---
+
+## 🛠️ Technical Stack (Frontend)
+
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript (Strict Mode)
+- **Styling**: Tailwind CSS v4 & ShadCn
+- **Data Fetching & State**: Redux Toolkit & RTK Query
+- **Forms & Validation**: React Hook Form + Zod
+- **Complex UI Integrations**: `@dnd-kit` (Drag & Drop), `@tiptap/react` (Rich Text Editor)
+
+---
+
+## ⚙️ Environment Configuration
+
+Create a `.env.local` file in the root directory of the frontend project.
+
+```env
+# Point this to your local backend during development, or the live Render API for production
+NEXT_PUBLIC_API_BASE_URL=[https://project-management-backend-l2ru.onrender.com/api/v1](https://project-management-backend-l2ru.onrender.com/api/v1)
+
+or for local
+
+PORT=3000
+NODE_ENV=production
+NEXT_PUBLIC_CLIENT_SITE_URL= http://localhost:3000
+NEXT_PUBLIC_API_BASE_URL= http://localhost:5000/api/v1
+INTERNAL_SERVER_API= http://localhost:5000/api/v1
+```
+
+
+
+## 📦 Local Installation & Development
+
+### 1. Prerequisites
+
+- Node.js (v20+ recommended)
+- The Backend API running locally (or simply use the live API URL in your `.env.local`)
+
+### 2. Setup Guide
+
+```bash
+# Clone the frontend repository
+git clone https://github.com/Alamin-22/project-management-frontend
+cd project-management-frontend
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+
+```
+
+Navigate to `http://localhost:3000` to view the application.
+
+---
+
+## 🚀 Production Deployment Notes
+
+This project is configured for deployment as a Static Site on platforms like Render .
+
+- **Build Command**: `npm install && npm run build`
+- **Publish Directory**: `.next`
+- **Important Note**: Because this project utilizes Tailwind CSS v4, `@tailwindcss/postcss` must be installed as a standard dependency (not just a devDependency) for cloud build environments to correctly compile the `globals.css` file.
+
+---
+
+## 📑 Internal Documentation
+
+A full **Operations Manual** detailing system logic, audit restrictions, and project workflows is integrated directly into the application. Once logged in, navigate to the `Documentation` Page.
+
+---
+
+**Developed by Md. Al Amin Mollik.** _Scalable. Secure. Project-Centric._
 
