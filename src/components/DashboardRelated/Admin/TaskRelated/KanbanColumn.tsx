@@ -18,6 +18,7 @@ interface Props {
   projectSlug: string;
   // eslint-disable-next-line no-unused-vars
   onStatusClick?: (task: ITask) => void;
+  baseUrl?: string;
 }
 
 const KanbanColumn = ({
@@ -26,6 +27,7 @@ const KanbanColumn = ({
   isArchived,
   projectSlug,
   onStatusClick,
+  baseUrl = "/manager_workspace/projects",
 }: Props) => {
   const { setNodeRef } = useDroppable({
     id: status,
@@ -70,6 +72,7 @@ const KanbanColumn = ({
                 isArchived={isArchived}
                 projectSlug={projectSlug}
                 onStatusClick={onStatusClick}
+                baseUrl={baseUrl}
               />
             ))}
           </div>

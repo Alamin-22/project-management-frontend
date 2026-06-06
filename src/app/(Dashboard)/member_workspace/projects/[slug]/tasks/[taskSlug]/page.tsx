@@ -6,24 +6,18 @@ import {
   ArrowLeft,
   CalendarDays,
   Clock,
-  Edit,
-  Trash2,
   Users,
   AlertCircle,
   Activity,
 } from "lucide-react";
 import { format } from "date-fns";
 import DOMPurify from "isomorphic-dompurify";
-import Swal from "sweetalert2";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import ReusableBreadcrumb from "@/components/Shared/ReusableBreadcrumb";
 import { useGetSingleProjectQuery } from "@/Redux/services/projectApi/ProjectApi";
-import {
-  useGetSingleTaskQuery,
-  useDeleteTaskMutation,
-} from "@/Redux/services/taskApi/TaskApi";
+import { useGetSingleTaskQuery } from "@/Redux/services/taskApi/TaskApi";
 import {
   Dialog,
   DialogContent,
@@ -35,7 +29,7 @@ import UpdateTaskStatusModal from "@/components/DashboardRelated/Admin/TaskRelat
 import Image from "next/image";
 import TaskComments from "@/components/DashboardRelated/Admin/CommentRelated/TaskComments";
 
-const TaskDetailsPage = () => {
+const MemberTaskDetailsPage = () => {
   const params = useParams();
   const projectSlug = params.slug as string;
   const taskSlug = params.taskSlug as string;
@@ -51,42 +45,7 @@ const TaskDetailsPage = () => {
   });
   const task = taskData?.data;
 
-  const [deleteTask] = useDeleteTaskMutation();
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
-
-  const handleDelete = async () => {
-    const result = await Swal.fire({
-      title: "Archive Task?",
-      text: "This will remove the task from the board. You can restore it from settings later.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, archive it",
-      cancelButtonText: "Cancel",
-      background: "var(--card)",
-      color: "var(--foreground)",
-    });
-
-    if (result.isConfirmed) {
-      try {
-        await deleteTask(taskSlug).unwrap();
-        Swal.fire({
-          title: "Archived!",
-          text: "The task has been archived.",
-          icon: "success",
-          background: "var(--card)",
-          color: "var(--foreground)",
-        });
-        router.push(`/manager_workspace/projects/${projectSlug}/tasks`);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        Swal.fire(
-          "Error",
-          error?.data?.message || "Failed to archive task",
-          "error",
-        );
-      }
-    }
-  };
 
   if (isLoading || !task || !project) {
     return (
@@ -112,14 +71,14 @@ const TaskDetailsPage = () => {
       <div className="space-y-2">
         <ReusableBreadcrumb
           paths={[
-            { label: "Projects", href: "/manager_workspace/projects" },
+            { label: "My Projects", href: "/member_workspace/projects" },
             {
               label: project.name,
-              href: `/manager_workspace/projects/${projectSlug}`,
+              href: `/member_workspace/projects/${projectSlug}`,
             },
             {
               label: "Task Board",
-              href: `/manager_workspace/projects/${projectSlug}/tasks`,
+              href: `/member_workspace/projects/${projectSlug}/tasks`,
             },
             { label: task.taskId },
           ]}
@@ -158,7 +117,7 @@ const TaskDetailsPage = () => {
             </div>
           </div>
 
-          {/* Action Buttons (Disabled if task or project is archived) */}
+          {/* Action Buttons: ONLY Status Update is allowed for Members */}
           {!project.isDeleted && (
             <div className="flex items-center gap-2">
               <Button
@@ -168,26 +127,6 @@ const TaskDetailsPage = () => {
                 disabled={task.isDeleted}
               >
                 <Activity className="h-4 w-4 mr-2" /> Update Status
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  router.push(
-                    `/manager_workspace/projects/${projectSlug}/tasks/${taskSlug}/edit`,
-                  )
-                }
-                disabled={task.isDeleted}
-              >
-                <Edit className="h-4 w-4 mr-2" /> Edit Task
-              </Button>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={handleDelete}
-                disabled={task.isDeleted}
-              >
-                <Trash2 className="h-4 w-4 mr-2" /> Archive
               </Button>
             </div>
           )}
@@ -206,8 +145,6 @@ const TaskDetailsPage = () => {
               dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
             />
           </div>
-
-          {/* Comments Section Placeholder */}
 
           <div className="flex-1">
             <TaskComments taskSlug={taskSlug} isArchived={task.isDeleted} />
@@ -323,4 +260,4 @@ const TaskDetailsPage = () => {
   );
 };
 
-export default TaskDetailsPage;
+export default MemberTaskDetailsPage;

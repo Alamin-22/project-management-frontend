@@ -28,6 +28,7 @@ interface Props {
   projectSlug: string;
   // eslint-disable-next-line no-unused-vars
   onStatusClick?: (task: ITask) => void;
+  baseUrl?: string;
 }
 
 const SortableTaskCard = ({
@@ -36,6 +37,7 @@ const SortableTaskCard = ({
   isOverlay = false,
   projectSlug,
   onStatusClick,
+  baseUrl = "/manager_workspace/projects",
 }: Props) => {
   const router = useRouter();
 
@@ -59,6 +61,7 @@ const SortableTaskCard = ({
   };
 
   const plainTextDescription = stripHtml(task.description);
+  const taskDetailUrl = `${baseUrl}/${projectSlug}/tasks/${task.slug}`;
 
   return (
     <div
@@ -99,9 +102,7 @@ const SortableTaskCard = ({
                   className="cursor-pointer font-medium"
                   onClick={(e) => {
                     e.stopPropagation();
-                    router.push(
-                      `/manager_workspace/projects/${projectSlug}/tasks/${task.slug}`,
-                    );
+                    router.push(taskDetailUrl);
                   }}
                 >
                   <ExternalLink className="mr-2 h-4 w-4" />

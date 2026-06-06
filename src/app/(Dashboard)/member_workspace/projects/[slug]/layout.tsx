@@ -6,7 +6,6 @@ import {
   LayoutDashboard,
   KanbanSquare,
   Users,
-  Settings,
   Loader2,
   ArrowLeft,
   AlertCircle,
@@ -14,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useGetSingleProjectQuery } from "@/Redux/services/projectApi/ProjectApi";
 
-const ProjectWorkspaceLayout = ({
+const MemberProjectWorkspaceLayout = ({
   children,
 }: {
   children: React.ReactNode;
@@ -32,26 +31,20 @@ const ProjectWorkspaceLayout = ({
   const tabs = [
     {
       name: "Overview",
-      href: `/manager_workspace/projects/${slug}`,
+      href: `/member_workspace/projects/${slug}`,
       icon: LayoutDashboard,
       exact: true,
     },
     {
       name: "Task Board",
-      href: `/manager_workspace/projects/${slug}/tasks`,
+      href: `/member_workspace/projects/${slug}/tasks`,
       icon: KanbanSquare,
       exact: false,
     },
     {
       name: "Team",
-      href: `/manager_workspace/projects/${slug}/team`,
+      href: `/member_workspace/projects/${slug}/team`,
       icon: Users,
-      exact: false,
-    },
-    {
-      name: "Settings",
-      href: `/manager_workspace/projects/${slug}/settings`,
-      icon: Settings,
       exact: false,
     },
   ];
@@ -74,8 +67,8 @@ const ProjectWorkspaceLayout = ({
           <Link
             href={
               project.isDeleted
-                ? "/manager_workspace/projects/archived"
-                : "/manager_workspace/projects"
+                ? "/member_workspace/projects/archived"
+                : "/member_workspace/projects"
             }
             className="mt-1"
           >
@@ -108,8 +101,7 @@ const ProjectWorkspaceLayout = ({
       {project.isDeleted && (
         <div className="bg-amber-500/10 border-b border-amber-500/20 px-6 py-3 flex items-center justify-center gap-2 text-amber-600 dark:text-amber-500 text-sm font-semibold">
           <AlertCircle className="h-4 w-4" />
-          This workspace is archived and in read-only mode. Go to Settings to
-          restore it.
+          This workspace is archived and in read-only mode.
         </div>
       )}
 
@@ -149,4 +141,4 @@ const ProjectWorkspaceLayout = ({
   );
 };
 
-export default ProjectWorkspaceLayout;
+export default MemberProjectWorkspaceLayout;
