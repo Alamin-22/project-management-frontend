@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
 import Swal from "sweetalert2";
 
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import {
   TASK_STATUS,
   TTaskStatus,
 } from "@/Redux/services/taskApi/Task.interface";
+import { useAppState } from "@/Provider/StateProvider";
 
 interface Props {
   task: ITask;
@@ -20,10 +21,17 @@ interface Props {
 }
 
 const UpdateTaskStatusModal = ({ task, closeModal }: Props) => {
+  const { user } = useAppState();
   const [selectedStatus, setSelectedStatus] = useState<TTaskStatus>(
     task.status,
   );
   const [updateTask, { isLoading }] = useUpdateTaskMutation();
+
+  const isAssigned = task.assignedMembers?.some(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (m: any) => m === user?._id || m?._id === user?._id,
+  );
+  const canEdit = user?.role !== "team_member" || isAssigned;
 
   const handleUpdate = async () => {
     if (selectedStatus === task.status) {
@@ -58,6 +66,26 @@ const UpdateTaskStatusModal = ({ task, closeModal }: Props) => {
       );
     }
   };
+
+  if (!canEdit) {
+    return (
+      <div className="flex flex-col items-center justify-center p-6 text-center space-y-4">
+        <div className="h-12 w-12 rounded-full bg-destructive/10 flex items-center justify-center">
+          <AlertCircle className="h-6 w-6 text-destructive" />
+        </div>
+        <div>
+          <h3 className="font-bold text-lg text-foreground">Access Denied</h3>
+          <p className="text-sm text-muted-foreground mt-1">
+            You can only update the status of tasks that are specifically
+            assigned to you.
+          </p>
+        </div>
+        <Button variant="outline" onClick={closeModal} className="w-full mt-2">
+          Close
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 pt-4">

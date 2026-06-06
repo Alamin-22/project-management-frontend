@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import toast from "react-hot-toast";
 import {
   DndContext,
   DragOverlay,
@@ -38,6 +39,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { useAppState } from "@/Provider/StateProvider";
 
 type BoardState = Record<TTaskStatus, ITask[]>;
 
@@ -45,12 +48,21 @@ const MemberTaskBoardPage = () => {
   const params = useParams();
   const slug = params.slug as string;
 
+  const { user } = useAppState();
+  const [filter, setFilter] = useState<"mine" | "all">("mine");
+
   const { data: projectData, isLoading: isProjectLoading } =
     useGetSingleProjectQuery(slug, { skip: !slug });
   const project = projectData?.data;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const queryParams: any = { project: project?._id, limit: 500, sort: "order" };
+  if (filter === "mine" && user?._id) {
+    queryParams.assignedMembers = user._id;
+  }
+
   const { data: tasksData, isLoading: isTasksLoading } = useGetAllTasksQuery(
-    { project: project?._id, limit: 500, sort: "order" },
+    queryParams,
     { skip: !project?._id },
   );
 
@@ -105,15 +117,27 @@ const MemberTaskBoardPage = () => {
     ) as TTaskStatus;
   };
 
+  const checkPermission = (task: ITask) => {
+    const isAssigned = task.assignedMembers?.includes(user?.id || "");
+    return user?.role !== "team_member" || isAssigned;
+  };
+
   const onDragStart = (event: DragStartEvent) => {
     const { active } = event;
     const task = active.data.current?.task as ITask;
+
+    if (!checkPermission(task)) {
+      toast.error("Access Denied: You can only move your own tasks.");
+    }
     setActiveTask(task);
   };
 
   const onDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
     if (!over) return;
+
+    const task = active.data.current?.task as ITask;
+    if (!checkPermission(task)) return; // Prevent dragover snap
 
     const activeId = String(active.id);
     const overId = String(over.id);
@@ -148,9 +172,14 @@ const MemberTaskBoardPage = () => {
   };
 
   const onDragEnd = async (event: DragEndEvent) => {
+    const task = activeTask;
     setActiveTask(null);
+
     const { active, over } = event;
-    if (!over) return;
+    if (!over || !task) return;
+
+    // Reject the drop if they aren't authorized (it snaps back instantly)
+    if (!checkPermission(task)) return;
 
     const activeId = String(active.id);
     const overId = String(over.id);
@@ -234,7 +263,26 @@ const MemberTaskBoardPage = () => {
             Drag and drop tasks to update priorities and statuses.
           </p>
         </div>
-        {/* REMOVED: "Archives" and "Add Task" buttons */}
+
+        {/* TASK FILTER TOGGLE */}
+        <div className="flex items-center bg-card border border-border p-1 rounded-lg shadow-sm">
+          <Button
+            variant={filter === "mine" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setFilter("mine")}
+            className="text-xs font-bold"
+          >
+            My Tasks
+          </Button>
+          <Button
+            variant={filter === "all" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setFilter("all")}
+            className="text-xs font-bold"
+          >
+            All Tasks
+          </Button>
+        </div>
       </div>
 
       <div className="px-6 pb-6">
