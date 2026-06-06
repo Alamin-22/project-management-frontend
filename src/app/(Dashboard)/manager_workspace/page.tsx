@@ -1,132 +1,143 @@
-// "use client";
+"use client";
 
-// import { useState } from "react";
-// import { CalendarDays, RefreshCcw } from "lucide-react";
-// import PageHeader from "@/components/DashboardRelated/PageHeader";
-// import { Button } from "@/components/ui/button";
-// import {
-//   useGetDashboardSummaryQuery,
-//   useGetRestockQueueQuery,
-// } from "@/Redux/services/analyticalApi/AnalyticsApi";
-// import { RestockQueueCard } from "@/components/DashboardRelated/Admin/Analytical/RestockQueueCard";
-// import { WarehouseStatsCard } from "@/components/DashboardRelated/Admin/Analytical/WarehouseStatsCard";
-// import { AnalyticsStatsGrid } from "@/components/DashboardRelated/Admin/Analytical/AnalyticsStatsGrid";
+import dynamic from "next/dynamic";
+import { RefreshCcw, AlertTriangle, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import PageHeader from "@/components/DashboardRelated/PageHeader";
+import { ProjectStatsGrid } from "@/components/DashboardRelated/Admin/Analytical/ProjectStatsGrid";
+import { useGetGlobalDashboardQuery } from "@/Redux/services/dashboardApi/DashboardApi";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ApexOptions } from "apexcharts";
 
-// const DashboardAnalyticsPage = () => {
-//   const currentYear = new Date().getFullYear();
+const Chart = dynamic(
+  () => import("react-apexcharts").then((mod) => mod.default),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-62.5 w-full animate-pulse bg-muted rounded-xl" />
+    ),
+  },
+);
 
-//   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
-//   const [selectedYear, setSelectedYear] = useState(currentYear);
+const GlobalDashboardPage = () => {
+  const {
+    data: res,
+    isLoading,
+    isFetching,
+    refetch,
+  } = useGetGlobalDashboardQuery();
+  const summary = res?.data;
 
-//   const years = Array.from({ length: 4 }, (_, i) => currentYear - i);
+  const statusOptions: ApexOptions = {
+    chart: { type: "donut" },
+    labels: summary?.charts.taskStatusDistribution.map((i) => i._id) || [],
+    colors: ["#fbbf24", "#3b82f6", "#10b981"],
+    dataLabels: { enabled: true },
+    legend: { position: "bottom" },
+  };
 
-//   const {
-//     data: summaryRes,
-//     isLoading: isSumLoading,
-//     isFetching: isSumFetching,
-//     refetch,
-//   } = useGetDashboardSummaryQuery({ year: selectedYear, month: selectedMonth });
-
-//   const { data: restockRes, isLoading: isRestockLoading } =
-//     useGetRestockQueueQuery();
-
-//   const summary = summaryRes?.data;
-//   const restockQueue = restockRes?.data || [];
-
-//   return (
-//     <>
-//       <PageHeader
-//         title="Business Intelligence"
-//         placeholder="Search insights..."
-//       >
-//         <div className="flex items-center gap-3">
-//           <div className="flex items-center bg-white border border-slate-200 rounded-xl px-2 py-1 gap-1 shadow-sm">
-//             <CalendarDays className="w-3.5 h-3.5 text-slate-400 ml-1" />
-
-//             <select
-//               value={selectedMonth}
-//               onChange={(e) => setSelectedMonth(Number(e.target.value))}
-//               className="text-[10px] font-black uppercase outline-none bg-transparent cursor-pointer px-1 py-1 hover:text-indigo-600 transition-colors"
-//             >
-//               {Array.from({ length: 12 }, (_, i) => (
-//                 <option key={i + 1} value={i + 1}>
-//                   {new Date(0, i).toLocaleString("en", { month: "short" })}
-//                 </option>
-//               ))}
-//             </select>
-
-//             <div className="w-px h-3 bg-slate-200 mx-1" />
-
-//             <select
-//               value={selectedYear}
-//               onChange={(e) => setSelectedYear(Number(e.target.value))}
-//               className="text-[10px] font-black uppercase outline-none bg-transparent cursor-pointer px-1 py-1 hover:text-indigo-600 transition-colors"
-//             >
-//               {years.map((year) => (
-//                 <option key={year} value={year}>
-//                   {year}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-
-//           <Button
-//             variant="outline"
-//             size="sm"
-//             onClick={() => refetch()}
-//             className="h-9 w-9 p-0 border-slate-200 rounded-xl"
-//             title="Reload Analytics"
-//           >
-//             <RefreshCcw
-//               className={`w-4 h-4 ${isSumFetching ? "animate-spin text-indigo-600" : "text-slate-500"}`}
-//             />
-//           </Button>
-//         </div>
-//       </PageHeader>
-
-//       <section className="space-y-6 p-5">
-//         <AnalyticsStatsGrid
-//           metrics={
-//             summary
-//               ? {
-//                   netRevenue: summary.netRevenue,
-//                   grossSales: summary.grossSales,
-//                   orderCount: summary.orderCount,
-//                 }
-//               : undefined
-//           }
-//           isLoading={isSumLoading}
-//         />
-
-//         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-//           <div className="lg:col-span-8">
-//             <RestockQueueCard
-//               items={restockQueue}
-//               isLoading={isRestockLoading}
-//             />
-//           </div>
-
-//           <div className="lg:col-span-4">
-//             <WarehouseStatsCard
-//               alerts={summary?.inventoryAlerts}
-//               debtors={summary?.topDebtors}
-//               isLoading={isSumLoading}
-//             />
-//           </div>
-//         </div>
-//       </section>
-//     </>
-//   );
-// };
-
-// export default DashboardAnalyticsPage;
-
-const DashboardPage = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <p className="text-5xl text-red-500">this is the dashabord page</p>
+    <div className="p-6 space-y-6">
+      <PageHeader title="Global Workspace Insights">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => refetch()}
+          className="h-9 w-9 p-0"
+        >
+          <RefreshCcw
+            className={`w-4 h-4 ${isFetching ? "animate-spin" : ""}`}
+          />
+        </Button>
+      </PageHeader>
+
+      <ProjectStatsGrid metrics={summary?.kpis} isLoading={isLoading} />
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Status Distribution Chart */}
+        <Card className="col-span-1 border-border rounded-2xl ">
+          <CardHeader>
+            <CardTitle className="text-xs uppercase tracking-widest text-muted-foreground">
+              Task Status Distribution
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {summary && (
+              <Chart
+                options={statusOptions}
+                series={summary.charts.taskStatusDistribution.map(
+                  (i) => i.count,
+                )}
+                type="donut"
+                height={250}
+              />
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Priority & Workload Widgets */}
+        <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* High Priority Tasks Widget */}
+          <Card className="border-border rounded-2xl  ">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-xs uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 text-rose-500" />
+                High Priority Tasks
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 ">
+              {summary?.widgets.highPriorityTasks.map((t) => (
+                <div
+                  key={t._id}
+                  className="flex justify-between items-center border-b border-border/50 pb-3 last:border-0 last:pb-0"
+                >
+                  <div className="flex flex-col">
+                    <span className="text-sm font-bold text-foreground">
+                      {t.title}
+                    </span>
+                    <span className="text-[10px] text-muted-foreground font-medium">
+                      Due: {new Date(t.dueDate).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <span className="text-[10px] bg-rose-50 text-rose-600 px-2 py-1 rounded-md font-bold uppercase tracking-wider">
+                    {t.project.name}
+                  </span>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          {/* Member Workload Widget */}
+          <Card className="border-border rounded-2xl ">
+            <CardHeader>
+              <CardTitle className="text-xs uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                <Users className="w-4 h-4 text-indigo-500" />
+                Member Workload
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {summary?.widgets.memberWorkloadSummary.map((m) => (
+                <div
+                  key={m.memberId}
+                  className="flex justify-between items-center border-b border-border/50 pb-3 last:border-0 last:pb-0"
+                >
+                  <p className="text-xs font-bold text-foreground">{m.name}</p>
+                  <div className="flex gap-3 text-[10px] font-bold">
+                    <span className="text-blue-500 bg-blue-50 px-2 py-0.5 rounded">
+                      {m.pendingTasks} Pending
+                    </span>
+                    <span className="text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded">
+                      {m.completedTasks} Done
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default DashboardPage;
+export default GlobalDashboardPage;

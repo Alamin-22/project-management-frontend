@@ -54,9 +54,9 @@ export const MemberNavLinks: TNavLink[] = [
     icon: "solar:folder-with-files-bold-duotone",
   },
   {
-    href: "/member_workspace/tasks",
-    label: "My Tasks",
-    icon: "solar:clipboard-list-bold-duotone",
+    href: "/member_workspace/projects/archived",
+    label: "Archived Projects",
+    icon: "solar:archive-bold-duotone",
   },
   { heading: "Account" },
   {
