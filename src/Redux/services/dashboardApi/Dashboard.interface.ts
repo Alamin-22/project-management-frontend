@@ -80,3 +80,11 @@ export interface IMemberWorkloadResponse {
     dueDate: string;
   }>;
 }
+
+export interface ITeamMemberPerformance {
+  memberId: string;
+  name: string;
+  totalTasks: number;
+  completedTasks: number;
+  pendingTasks: number;
+}

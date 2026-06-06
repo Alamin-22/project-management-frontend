@@ -3,6 +3,7 @@ import {
   IGlobalDashboardResponse,
   IProjectOverviewResponse,
   IMemberWorkloadResponse,
+  ITeamMemberPerformance,
 } from "./Dashboard.interface";
 
 export const DASHBOARD_TAGS = {
@@ -52,6 +53,20 @@ const dashboardApi = baseApi.injectEndpoints({
         { type: DASHBOARD_TAGS.MEMBER.type, id: arg.memberId },
       ],
     }),
+
+    getProjectTeamPerformance: builder.query<
+      IBaseResponse<ITeamMemberPerformance[]>,
+      string
+    >({
+      query: (slug) => ({
+        url: `/dashboard/project/${slug}/team-analytics`,
+        method: "GET",
+        isPrivate: true,
+      }),
+      providesTags: (_res, _err, slug) => [
+        { type: DASHBOARD_TAGS.MEMBER.type, id: slug },
+      ],
+    }),
   }),
 });
 
@@ -59,4 +74,5 @@ export const {
   useGetGlobalDashboardQuery,
   useGetProjectDashboardQuery,
   useGetMemberProjectWorkloadQuery,
+  useGetProjectTeamPerformanceQuery,
 } = dashboardApi;

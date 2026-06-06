@@ -10,6 +10,7 @@ import {
   Loader2,
   ArrowLeft,
   AlertCircle,
+  Activity,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGetSingleProjectQuery } from "@/Redux/services/projectApi/ProjectApi";
@@ -46,6 +47,12 @@ const ProjectWorkspaceLayout = ({
       name: "Team",
       href: `/manager_workspace/projects/${slug}/team`,
       icon: Users,
+      exact: false,
+    },
+    {
+      name: "Team Analytics",
+      href: `/manager_workspace/projects/${slug}/team/analytics`,
+      icon: Activity,
       exact: false,
     },
     {
