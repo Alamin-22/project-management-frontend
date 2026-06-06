@@ -64,7 +64,7 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
 
         <div className="relative z-10 flex justify-between items-start mb-4">
           <div className="space-y-1 pr-2 pointer-events-none">
-            <h3 className="font-bold text-lg leading-tight text-foreground group-hover:text-primary transition-colors line-clamp-1">
+            <h3 className="font-bold text-lg leading-tight text-foreground group-hover:text-primary transition-colors line-clamp-1 ">
               {project.name}
             </h3>
             <p className="text-xs text-muted-foreground flex items-center gap-1.5">

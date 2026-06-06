@@ -153,7 +153,7 @@ const TaskComments = ({ taskSlug, isArchived }: TaskCommentsProps) => {
                       comment.author.profile?.name || "User",
                     )
                   }
-                  className="text-xs font-semibold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
+                  className="text-xs font-semibold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 cursor-pointer"
                 >
                   <Reply className="h-3 w-3" /> Reply
                 </button>
