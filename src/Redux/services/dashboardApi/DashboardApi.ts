@@ -4,6 +4,7 @@ import {
   IProjectOverviewResponse,
   IMemberWorkloadResponse,
   ITeamMemberPerformance,
+  IMemberGlobalDashboardResponse,
 } from "./Dashboard.interface";
 
 export const DASHBOARD_TAGS = {
@@ -67,6 +68,18 @@ const dashboardApi = baseApi.injectEndpoints({
         { type: DASHBOARD_TAGS.MEMBER.type, id: slug },
       ],
     }),
+
+    getMemberGlobalDashboard: builder.query<
+      IBaseResponse<IMemberGlobalDashboardResponse>,
+      void
+    >({
+      query: () => ({
+        url: `/dashboard/member-global`,
+        method: "GET",
+        isPrivate: true,
+      }),
+      providesTags: [DASHBOARD_TAGS.MEMBER],
+    }),
   }),
 });
 
@@ -75,4 +88,5 @@ export const {
   useGetProjectDashboardQuery,
   useGetMemberProjectWorkloadQuery,
   useGetProjectTeamPerformanceQuery,
+  useGetMemberGlobalDashboardQuery,
 } = dashboardApi;

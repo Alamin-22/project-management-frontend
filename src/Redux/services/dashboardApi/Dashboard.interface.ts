@@ -89,3 +89,36 @@ export interface ITeamMemberPerformance {
   inProgressTasks: number;
   completedTasks: number;
 }
+
+export interface IMemberGlobalDashboardResponse {
+  kpis: {
+    totalTasks: number;
+    todoTasks: number;
+    inProgressTasks: number;
+    completedTasks: number;
+    overdueTasks: number;
+  };
+  widgets: {
+    upcomingTasks: Array<{
+      _id: string;
+      title: string;
+      slug: string;
+      status: string;
+      priority: string;
+      dueDate: string;
+      project: {
+        _id: string;
+        name: string;
+        slug: string;
+        projectId: string;
+      };
+    }>;
+    activeProjects: Array<{
+      _id: string;
+      name: string;
+      slug: string;
+      projectId: string;
+      status: string;
+    }>;
+  };
+}
