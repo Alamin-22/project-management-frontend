@@ -5,7 +5,6 @@ import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Send, MessageSquare, Loader2, Reply, X } from "lucide-react";
 import Swal from "sweetalert2";
-
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -19,6 +18,7 @@ import {
   TCommentFormValues,
 } from "@/Redux/services/commentApi/Comment.validation";
 import CommentItem from "./CommentItem";
+import QueryNotFoundMessage from "@/components/Shared/QueryNotFoundMessage";
 
 interface TaskCommentsProps {
   taskSlug: string;
@@ -122,12 +122,7 @@ const TaskComments = ({ taskSlug, isArchived }: TaskCommentsProps) => {
             </div>
           ))
         ) : comments.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-center py-8">
-            <MessageSquare className="h-12 w-12 text-muted-foreground/20 mb-3" />
-            <p className="text-sm font-medium text-muted-foreground">
-              No comments yet. Be the first to start the discussion!
-            </p>
-          </div>
+          <QueryNotFoundMessage message="No comments yet. Be the first to start the discussion!" />
         ) : (
           comments.map((comment) => (
             <CommentItem
@@ -140,7 +135,7 @@ const TaskComments = ({ taskSlug, isArchived }: TaskCommentsProps) => {
         )}
       </div>
 
-      {/* Input Area */}
+      {/* input section */}
       <div className="shrink-0 pt-4 border-t border-border mt-auto">
         {isArchived ? (
           <div className="bg-muted/50 rounded-lg p-3 text-center text-sm text-muted-foreground font-medium border border-dashed border-border">

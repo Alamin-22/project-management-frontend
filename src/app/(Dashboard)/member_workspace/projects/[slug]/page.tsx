@@ -4,7 +4,6 @@ import { useParams } from "next/navigation";
 import DOMPurify from "isomorphic-dompurify";
 import { format, differenceInDays, startOfDay } from "date-fns";
 import { CalendarDays, Clock, FileText, Activity, Users } from "lucide-react";
-
 import { useGetSingleProjectQuery } from "@/Redux/services/projectApi/ProjectApi";
 import { Badge } from "@/components/ui/badge";
 
@@ -33,7 +32,7 @@ const MemberProjectOverviewPage = () => {
   return (
     <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 px-6">
       <div className="xl:col-span-2 space-y-6">
-        <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
+        <div className="bg-card rounded-xl border border-border p-6 shadow-xs">
           <div className="flex items-center gap-2 border-b border-border pb-4 mb-4">
             <FileText className="h-5 w-5 text-primary" />
             <h2 className="text-lg font-bold text-foreground">
@@ -50,9 +49,9 @@ const MemberProjectOverviewPage = () => {
         </div>
       </div>
 
-      {/* Right Column: Key Details (Read Only) */}
+      {/* right container */}
       <div className="space-y-6">
-        <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
+        <div className="bg-card rounded-xl border border-border p-6 shadow-xs">
           <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4">
             Project Details
           </h3>
@@ -104,7 +103,6 @@ const MemberProjectOverviewPage = () => {
                     )}
                   </p>
 
-                  {/* Urgency Badges */}
                   {isCritical && (
                     <Badge
                       variant="outline"

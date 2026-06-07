@@ -2,35 +2,32 @@
 
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import { Users, Loader2 } from "lucide-react";
-
+import { Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import ReusableBreadcrumb from "@/components/Shared/ReusableBreadcrumb";
 import { useGetSingleProjectQuery } from "@/Redux/services/projectApi/ProjectApi";
+import LogoLoader from "@/components/Shared/Loader/LogoLoader";
+import QueryNotFoundMessage from "@/components/Shared/QueryNotFoundMessage";
 
 const MemberProjectTeamPage = () => {
   const params = useParams();
-  const slug = params.slug as string;
+  const slug = params.slug;
 
   const { data: projectData, isLoading: isProjectLoading } =
-    useGetSingleProjectQuery(slug, {
+    useGetSingleProjectQuery(slug as string, {
       skip: !slug,
     });
   const project = projectData?.data;
 
   if (isProjectLoading) {
-    return (
-      <div className="flex h-[40vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <LogoLoader />;
   }
 
   if (!project) return null;
 
   return (
     <div className="space-y-6">
-      <div className="px-6 pt-2">
+      <div className="px-6">
         <ReusableBreadcrumb
           paths={[
             { label: "My Projects", href: "/member_workspace/projects" },
@@ -43,9 +40,8 @@ const MemberProjectTeamPage = () => {
         />
       </div>
 
-      {/* Single centered column for read-only view */}
       <div className="max-w-3xl mx-auto px-6">
-        <div className="bg-card rounded-xl border border-border p-6 shadow-sm flex flex-col ">
+        <div className="bg-card rounded-xl border border-border p-6 shadow-xs flex flex-col ">
           <div className="flex items-center justify-between border-b border-border pb-4 mb-4">
             <div className="flex items-center gap-2">
               <Users className="h-5 w-5 text-primary" />
@@ -59,21 +55,16 @@ const MemberProjectTeamPage = () => {
           </div>
 
           <div className="flex-1 overflow-y-auto pr-2 space-y-3 custom-scrollbar">
-            {project.teamMembers.length === 0 ? (
-              <div className="h-full py-12 flex flex-col items-center justify-center text-muted-foreground">
-                <Users className="h-10 w-10 mb-2 opacity-20" />
-                <p className="text-sm">
-                  No members are currently assigned to this workspace.
-                </p>
-              </div>
+            {project.teamMembers.length === 1 ? (
+              <QueryNotFoundMessage message="No members are currently assigned to this workspace." />
             ) : (
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              project.teamMembers.map((member: any) => {
+              project?.teamMembers?.map((member: any, idx) => {
                 if (typeof member !== "object") return null;
 
                 return (
                   <div
-                    key={member._id}
+                    key={idx}
                     className="flex items-center justify-between p-3 rounded-lg border border-border/50 bg-muted/10 hover:bg-muted/30 transition-colors"
                   >
                     <div className="flex items-center gap-3">

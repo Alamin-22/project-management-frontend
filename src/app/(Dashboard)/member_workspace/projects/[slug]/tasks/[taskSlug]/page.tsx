@@ -28,6 +28,7 @@ import {
 import UpdateTaskStatusModal from "@/components/DashboardRelated/Admin/TaskRelated/UpdateTaskStatusModal";
 import Image from "next/image";
 import TaskComments from "@/components/DashboardRelated/Admin/CommentRelated/TaskComments";
+import LogoLoader from "@/components/Shared/Loader/LogoLoader";
 
 const MemberTaskDetailsPage = () => {
   const params = useParams();
@@ -48,18 +49,13 @@ const MemberTaskDetailsPage = () => {
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
 
   if (isLoading || !task || !project) {
-    return (
-      <div className="flex h-[60vh] items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
-      </div>
-    );
+    return <LogoLoader />;
   }
 
   const sanitizedDescription = DOMPurify.sanitize(task.description);
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-6">
-      {/* WARNING BANNER */}
+    <div className="max-w-5xl mx-auto px-6 space-y-6">
       {task.isDeleted && (
         <div className="bg-amber-500/10 border border-amber-500/20 px-6 py-3 rounded-lg flex items-center gap-2 text-amber-600 dark:text-amber-500 text-sm font-semibold">
           <AlertCircle className="h-4 w-4 shrink-0" />
@@ -67,7 +63,6 @@ const MemberTaskDetailsPage = () => {
         </div>
       )}
 
-      {/* Header & Breadcrumbs */}
       <div className="space-y-2">
         <ReusableBreadcrumb
           paths={[
@@ -117,7 +112,7 @@ const MemberTaskDetailsPage = () => {
             </div>
           </div>
 
-          {/* Action Buttons: ONLY Status Update is allowed for Members */}
+          {/* only status update is allowed for member */}
           {!project.isDeleted && (
             <div className="flex items-center gap-2">
               <Button
@@ -134,7 +129,7 @@ const MemberTaskDetailsPage = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column: Description & Comments */}
+        {/* left container */}
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-card rounded-xl border border-border p-6 ">
             <h2 className="text-lg font-bold text-foreground mb-4 border-b border-border pb-2">
@@ -151,7 +146,7 @@ const MemberTaskDetailsPage = () => {
           </div>
         </div>
 
-        {/* Right Column: Meta Info */}
+        {/* right container */}
         <div className="space-y-6">
           <div className="bg-card rounded-xl border border-border p-6 ">
             <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4">
@@ -170,13 +165,13 @@ const MemberTaskDetailsPage = () => {
                   <div className="space-y-2">
                     {task.assigneeProfiles &&
                     task.assigneeProfiles.length > 0 ? (
-                      task.assigneeProfiles.map((profile, i) => (
+                      task?.assigneeProfiles?.map((profile, idx) => (
                         <div
-                          key={i}
+                          key={idx}
                           className="flex items-center gap-2 bg-muted/30 p-1.5 rounded-md border border-border/50"
                         >
                           <Image
-                            key={i}
+                            key={idx}
                             className="inline-block h-6 w-6 rounded-full ring-2 ring-card object-cover bg-muted"
                             src={
                               profile.profileImg?.url ||
@@ -240,7 +235,7 @@ const MemberTaskDetailsPage = () => {
 
       {/* Status Update Modal */}
       <Dialog open={isStatusModalOpen} onOpenChange={setIsStatusModalOpen}>
-        <DialogContent className="max-w-md w-full border-border bg-card">
+        <DialogContent className="max-w-md! w-full border-border bg-card">
           <DialogHeader>
             <DialogTitle className="text-xl">Update Task Status</DialogTitle>
             <DialogDescription>
