@@ -1,6 +1,8 @@
 export interface INotificationPayloadData {
   projectId?: string;
+  projectSlug?: string;
   taskId?: string;
+  taskSlug?: string;
   meta?: string;
 }
 

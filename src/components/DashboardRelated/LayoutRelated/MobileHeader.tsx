@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { USER_ROLE } from "@/Redux/services/userApi/User.interface";
 import ThemeToggle from "@/components/Shared/ThemeToggle";
+import NotificationBell from "@/components/Shared/Notification/NotificationBell";
 
 const MobileHeader = () => {
   const { user, loading, isAuthError, handleLogOut } = useAppState();
@@ -43,6 +44,7 @@ const MobileHeader = () => {
 
       <div className="flex items-center gap-2">
         <ThemeToggle />
+        <NotificationBell />
 
         {showSkeletons ? (
           <Skeleton className="h-8 w-8 rounded-full" />
@@ -52,7 +54,8 @@ const MobileHeader = () => {
               <button className="relative h-8 w-8 overflow-hidden rounded-full border border-border outline-none active:scale-95 transition-transform">
                 <Image
                   src={
-                    user?.profile?.profileImg?.url || `https://placehold.co/200x200/png?text=U`
+                    user?.profile?.profileImg?.url ||
+                    `https://placehold.co/200x200/png?text=U`
                   }
                   alt="Profile"
                   fill

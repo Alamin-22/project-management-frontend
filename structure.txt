@@ -131,9 +131,6 @@
 │   │   │   ├── NotFoundPage.tsx
 │   │   │   ├── Notification
 │   │   │   │   ├── NotificationBell.tsx
-│   │   │   │   ├── ServiceWorkerRegistry.tsx
-│   │   │   │   ├── usePolitePushPrompt.tsx
-│   │   │   │   ├── usePushNotifications.ts
 │   │   │   │   └── useSocketNotifications.ts
 │   │   │   ├── Pagination
 │   │   │   │   └── Pagination.tsx
@@ -212,6 +209,9 @@
 │   │   │   ├── dashboardApi
 │   │   │   │   ├── Dashboard.interface.ts
 │   │   │   │   └── DashboardApi.ts
+│   │   │   ├── notificationApi
+│   │   │   │   ├── Notification.interface.ts
+│   │   │   │   └── NotificationApi.ts
 │   │   │   ├── projectApi
 │   │   │   │   ├── Project.interface.ts
 │   │   │   │   ├── Project.validation.ts

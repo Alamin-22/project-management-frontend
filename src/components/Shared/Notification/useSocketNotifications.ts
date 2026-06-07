@@ -6,7 +6,6 @@ import type { AppDispatch } from "@/Redux/store";
 import { NotificationApi } from "@/Redux/services/notificationApi/NotificationApi";
 import { INotification } from "@/Redux/services/notificationApi/Notification.interface";
 import { useAppState } from "@/Provider/StateProvider";
-import toast from "react-hot-toast";
 
 export const useSocketNotifications = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -43,15 +42,6 @@ export const useSocketNotifications = () => {
     };
 
     const onNewNotification = (newNotif: INotification) => {
-      toast(newNotif.title + "\n" + newNotif.message, {
-        icon: "🔔",
-        style: {
-          borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
-        },
-      });
-
       // Silently update the Redux cache so the Bell icon increments instantly
       dispatch(
         NotificationApi.util.updateQueryData(
