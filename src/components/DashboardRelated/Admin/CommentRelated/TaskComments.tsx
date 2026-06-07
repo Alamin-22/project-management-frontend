@@ -3,21 +3,13 @@
 import { useState, useRef } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { formatDistanceToNow } from "date-fns";
 import { Send, MessageSquare, Loader2, Reply, X } from "lucide-react";
-import Image from "next/image";
 import Swal from "sweetalert2";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import {
   useGetTaskCommentsQuery,
   useAddCommentMutation,
@@ -26,7 +18,7 @@ import {
   commentValidationSchema,
   TCommentFormValues,
 } from "@/Redux/services/commentApi/Comment.validation";
-import { IComment } from "@/Redux/services/commentApi/Comment.interface";
+import CommentItem from "./CommentItem";
 
 interface TaskCommentsProps {
   taskSlug: string;
@@ -98,80 +90,14 @@ const TaskComments = ({ taskSlug, isArchived }: TaskCommentsProps) => {
     }
   };
 
-  // Recursive Component to render nested threads
-  const CommentNode = ({
-    comment,
-    depth = 0,
-  }: {
-    comment: IComment;
-    depth?: number;
-  }) => {
-    return (
-      <div
-        className={`group ${depth > 0 ? "ml-4 md:ml-12 mt-4 border-l-2 border-border/50 pl-4" : "mt-6"}`}
-      >
-        <div className="flex gap-3 md:gap-4">
-          <Image
-            src={
-              comment.author.profile?.profileImg?.url ||
-              `https://placehold.co/200x200/png?text=U`
-            }
-            alt={comment.author.profile?.name || "User"}
-            width={40}
-            height={40}
-            className="h-8 w-8 md:h-10 md:w-10 rounded-full object-cover ring-2 ring-background shrink-0 bg-muted"
-          />
-          <div className="flex-1 space-y-1.5">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm font-bold text-foreground leading-none">
-                {comment.author.profile?.name || "Unknown User"}
-              </span>
-              {comment.author.profile?.designation && (
-                <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded-sm leading-none hidden sm:inline-block">
-                  {comment.author.profile.designation}
-                </span>
-              )}
-              <span className="text-xs text-muted-foreground ml-auto">
-                {formatDistanceToNow(new Date(comment.createdAt), {
-                  addSuffix: true,
-                })}
-              </span>
-            </div>
-
-            {/* Comment Bubble Style */}
-            <div className="text-sm text-foreground/90 bg-muted/30 p-3 rounded-lg rounded-tl-none border border-border/50">
-              <p className="whitespace-pre-wrap">{comment.content}</p>
-            </div>
-
-            {/* Action Bar */}
-            {!isArchived && (
-              <div className="flex items-center gap-4 pt-1">
-                <button
-                  onClick={() =>
-                    handleReplyClick(
-                      comment._id,
-                      comment.author.profile?.name || "User",
-                    )
-                  }
-                  className="text-xs font-semibold text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 cursor-pointer"
-                >
-                  <Reply className="h-3 w-3" /> Reply
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Recursively render child replies */}
-        {comment.replies && comment.replies.length > 0 && (
-          <div className="space-y-2">
-            {comment.replies.map((reply) => (
-              <CommentNode key={reply._id} comment={reply} depth={depth + 1} />
-            ))}
-          </div>
-        )}
-      </div>
-    );
+  // Keyboard Event Handler
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (!isSubmitting && content?.trim()) {
+        form.handleSubmit(onSubmit)();
+      }
+    }
   };
 
   return (
@@ -204,7 +130,12 @@ const TaskComments = ({ taskSlug, isArchived }: TaskCommentsProps) => {
           </div>
         ) : (
           comments.map((comment) => (
-            <CommentNode key={comment._id} comment={comment} />
+            <CommentItem
+              key={comment._id}
+              comment={comment}
+              isArchived={isArchived}
+              onReplyClick={handleReplyClick}
+            />
           ))
         )}
       </div>
@@ -216,10 +147,10 @@ const TaskComments = ({ taskSlug, isArchived }: TaskCommentsProps) => {
             Commenting is disabled for archived tasks.
           </div>
         ) : (
-          <div className="bg-muted/30 p-1 md:p-2 rounded-xl border border-border/50 transition-all focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20">
-            {/* Reply Indicator */}
+          <div className="relative bg-background border border-input rounded-xl focus-within:ring-1 focus-within:ring-primary focus-within:border-primary transition-all">
+            {/* reply indicator */}
             {replyingTo && (
-              <div className="flex items-center justify-between bg-background px-3 py-1.5 rounded-t-lg border-b border-border text-xs font-medium text-muted-foreground mb-2 mx-1 mt-1">
+              <div className="flex items-center justify-between bg-muted/50 px-4 py-2 border-b border-border text-xs font-medium text-muted-foreground rounded-t-xl">
                 <span className="flex items-center gap-1.5">
                   <Reply className="h-3.5 w-3.5 text-primary" />
                   Replying to{" "}
@@ -229,7 +160,7 @@ const TaskComments = ({ taskSlug, isArchived }: TaskCommentsProps) => {
                 </span>
                 <button
                   onClick={cancelReply}
-                  className="hover:text-foreground transition-colors p-0.5"
+                  className="hover:text-foreground transition-colors p-1 bg-background/50 rounded-full hover:bg-background"
                 >
                   <X className="h-3.5 w-3.5" />
                 </button>
@@ -239,29 +170,29 @@ const TaskComments = ({ taskSlug, isArchived }: TaskCommentsProps) => {
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="relative flex items-end gap-2 px-1 pb-1"
+                className="relative flex items-end gap-2 p-2"
               >
                 <FormField
                   control={form.control}
                   name="content"
                   render={({ field }) => (
-                    <FormItem className="flex-1">
+                    <FormItem className="flex-1 m-0">
                       <FormControl>
                         <Textarea
                           placeholder={
                             replyingTo
                               ? "Write your reply..."
-                              : "Write an update, ask a question, or share progress..."
+                              : "Write an update, ask a question... (Shift+Enter for new line)"
                           }
-                          className="resize-none min-h-12.5 max-h-37.5 border-0 focus-visible:ring-0 bg-transparent px-3 py-2 text-sm shadow-none"
+                          className="min-h-12.5 max-h-50 w-full resize-none border-0 bg-transparent px-3 py-3 text-sm focus-visible:ring-0  scrollbar-thin"
                           {...field}
+                          onKeyDown={handleKeyDown}
                           ref={(e) => {
                             field.ref(e);
                             inputRef.current = e;
                           }}
                         />
                       </FormControl>
-                      <FormMessage className="text-xs px-3 pb-1" />
                     </FormItem>
                   )}
                 />
@@ -270,9 +201,9 @@ const TaskComments = ({ taskSlug, isArchived }: TaskCommentsProps) => {
                   type="submit"
                   size="icon"
                   disabled={isSubmitting || !content?.trim()}
-                  className={`h-10 w-10 shrink-0 rounded-lg mb-1 mr-1 transition-all ${
+                  className={`h-10 w-10 shrink-0 rounded-lg transition-all self-end mb-1 mr-1 ${
                     content?.trim()
-                      ? "bg-primary text-primary-foreground shadow-md hover:scale-105"
+                      ? "bg-primary text-primary-foreground hover:scale-105"
                       : "bg-muted text-muted-foreground"
                   }`}
                 >

@@ -2,7 +2,7 @@
 
 ### High-Density Interactive Project Management Client
 
-This repository contains the frontend client for the Smart Project Management System. Built with a focus on seamless user experience and strict operational role enforcement, it delivers a high-performance interactive workspace featuring drag-and-drop Kanban boards, real-time analytic dashboards, and professional rich-text documentation.
+This repository contains the frontend client for the Smart Project Management System. Built with a focus on seamless user experience and strict operational role enforcement, it delivers a high-performance interactive workspace featuring drag-and-drop task boards, real-time WebSocket notifications, analytic dashboards, and professional rich-text documentation.
 
 ---
 
@@ -29,7 +29,8 @@ Use these credentials to evaluate the Role-Based Access Control (RBAC) and custo
 ## 🎯 Core Features & UI Architecture
 
 - **Role-Based Workspaces**: Distinct routing and UI layouts for Project Managers (Global scope, Team management) vs. Team Members (Personal task scope).
-- **Advanced Task Board**: Fully interactive Kanban interface using `@dnd-kit` with client-side drag-and-drop validation that prevents unauthorized status changes.
+- **Real-Time Notification Engine**: Instantaneous updates via `Socket.io` for task assignments, status changes, and threaded comments. Features dynamic UI bell increments and toast alerts without requiring page reloads.
+- **Advanced Task Board**: Fully interactive task interface using `@dnd-kit` with client-side drag-and-drop validation that prevents unauthorized status changes.
 - **Rich Document Editor**: Integrated `Tiptap` editor allowing for professional formatting and media attachments inside task descriptions.
 - **Real-Time Analytics**: Visual KPI metrics and progress bars rendered via `ApexCharts` to monitor team workload and deadline risks.
 - **State Management**: Centralized API caching and state synchronization using Redux Toolkit (RTK Query).
@@ -38,12 +39,13 @@ Use these credentials to evaluate the Role-Based Access Control (RBAC) and custo
 
 ## 🛠️ Technical Stack (Frontend)
 
-- **Framework**: Next.js 16 (App Router)
-- **Language**: TypeScript (Strict Mode)
-- **Styling**: Tailwind CSS v4 & ShadCn
+- **Framework**: Next.js 16
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS v4 & ShadCn UI
 - **Data Fetching & State**: Redux Toolkit & RTK Query
+- **Real-Time Events**: Socket.io-client
 - **Forms & Validation**: React Hook Form + Zod
-- **Complex UI Integrations**: `@dnd-kit` (Drag & Drop), `@tiptap/react` (Rich Text Editor)
+- **Complex UI Integrations**: `@dnd-kit` (Drag & Drop), `@tiptap/react` (Rich Text Editor), `React Hot Toast` (Alerts)
 
 ---
 
@@ -52,19 +54,18 @@ Use these credentials to evaluate the Role-Based Access Control (RBAC) and custo
 Create a `.env.local` file in the root directory of the frontend project.
 
 ```env
-# Point this to your local backend during development, or the live Render API for production
-NEXT_PUBLIC_API_BASE_URL=[https://project-management-backend-l2ru.onrender.com/api/v1](https://project-management-backend-l2ru.onrender.com/api/v1)
-
-or for local
-
+# Define the environment
+NODE_ENV=development
 PORT=3000
-NODE_ENV=production
-NEXT_PUBLIC_CLIENT_SITE_URL= http://localhost:3000
-NEXT_PUBLIC_API_BASE_URL= http://localhost:5000/api/v1
-INTERNAL_SERVER_API= http://localhost:5000/api/v1
+
+# Client URL
+NEXT_PUBLIC_CLIENT_SITE_URL=http://localhost:3000
+
+# API URLs (Toggle comment based on environment)
+# NEXT_PUBLIC_API_BASE_URL=http://localhost:5000/api/v1
+NEXT_PUBLIC_API_BASE_URL=[https://project-management-backend-l2ru.onrender.com/api/v1](https://project-management-backend-l2ru.onrender.com/api/v1)
+INTERNAL_SERVER_API=[https://project-management-backend-l2ru.onrender.com/api/v1](https://project-management-backend-l2ru.onrender.com/api/v1)
 ```
-
-
 
 ## 📦 Local Installation & Development
 
@@ -85,20 +86,16 @@ npm install
 
 # Start the development server
 npm run dev
-
 ```
 
 Navigate to `http://localhost:3000` to view the application.
 
----
-
 ## 🚀 Production Deployment Notes
 
-This project is configured for deployment as a Static Site on platforms like Render .
+This project is configured for deployment as a Node Web Service (or Static Site) on platforms like Render.
 
 - **Build Command**: `npm install && npm run build`
-- **Publish Directory**: `.next`
-- **Important Note**: Because this project utilizes Tailwind CSS v4, `@tailwindcss/postcss` must be installed as a standard dependency (not just a devDependency) for cloud build environments to correctly compile the `globals.css` file.
+- **Start Command**: `npm run start`
 
 ---
 
@@ -109,4 +106,3 @@ A full **Operations Manual** detailing system logic, audit restrictions, and pro
 ---
 
 **Developed by Md. Al Amin Mollik.** _Scalable. Secure. Project-Centric._
-

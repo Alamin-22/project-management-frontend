@@ -50,16 +50,14 @@ const MemberSettingsPage = () => {
 
   return (
     <div className="min-h-screen pb-20">
-      <div className="p-6">
-        <PageHeader
-          title="Account Settings"
-          description="Manage your security credentials and personal information."
-        >
-          <NotificationBell />
-        </PageHeader>
-      </div>
+      <PageHeader
+        title="Account Settings"
+        description="Manage your security credentials and personal information."
+      >
+        <NotificationBell />
+      </PageHeader>
 
-      <div className="max-w-4xl mx-auto px-6 space-y-12">
+      <div className="px-6 space-y-12 mt-10">
         {SETTINGS_MENU.map((section) => (
           <div key={section.category} className="space-y-5">
             <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-muted-foreground">

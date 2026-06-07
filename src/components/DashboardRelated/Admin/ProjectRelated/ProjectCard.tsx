@@ -45,10 +45,10 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
   const today = startOfDay(new Date());
   const daysUntilDeadline = differenceInDays(deadlineDate, today);
 
-  // Critical = Due Today or Overdue (Red)
+  // Critical = Due Today or Overdue
   const isCritical = daysUntilDeadline <= 0 && !isCompleted;
 
-  // Warning = 1 to 3 days left (Orange)
+  // Warning = 1 to 3 days left
   const isWarning =
     daysUntilDeadline > 0 && daysUntilDeadline <= 3 && !isCompleted;
 
@@ -59,11 +59,12 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
       <div className="group relative bg-card border border-border/60 hover:border-primary/50 rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300 h-full flex flex-col overflow-hidden">
         <Link
           href={`${baseUrl}/${project.slug}`}
-          className="absolute inset-0 z-0"
+          className="absolute inset-0 z-10"
+          aria-label={`View details for ${project.name}`}
         />
 
-        <div className="relative z-10 flex justify-between items-start mb-4">
-          <div className="space-y-1 pr-2 pointer-events-none">
+        <div className="relative flex justify-between items-start mb-4">
+          <div className="space-y-1 pr-2 relative z-0 pointer-events-none">
             <h3 className="font-bold text-lg leading-tight text-foreground group-hover:text-primary transition-colors line-clamp-1 ">
               {project.name}
             </h3>
@@ -73,7 +74,7 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
             </p>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 relative z-20">
             <Badge
               variant="secondary"
               className={`shrink-0 text-[10px] font-bold uppercase tracking-wider mr-1 ${
@@ -124,15 +125,14 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
           </div>
         </div>
 
-        {/* Description */}
-        <div className="relative z-10 pointer-events-none flex-1">
+        <div className="relative z-0 pointer-events-none flex-1">
           <div
             className="text-sm text-muted-foreground line-clamp-2 mb-6 prose prose-sm dark:prose-invert max-w-none *:m-0"
             dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
           />
         </div>
 
-        <div className="relative z-10 pointer-events-none pt-4 border-t border-border/50 grid grid-cols-2 gap-4 mt-auto">
+        <div className="relative z-0 pointer-events-none pt-4 border-t border-border/50 grid grid-cols-2 gap-4 mt-auto">
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-1">
               <Calendar className="h-3 w-3" /> Deadline

@@ -92,36 +92,42 @@ const NotificationBell = () => {
             </div>
           ) : notifications.length > 0 ? (
             <div className="flex flex-col">
-              {notifications.map((notif) => (
-                <DropdownMenuItem
-                  key={notif._id}
-                  onClick={() => handleNotificationClick(notif)}
-                  className={`flex flex-col items-start p-4 border-b border-gray-100 dark:border-slate-800/50 last:border-0 rounded-none outline-none transition-colors cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-900 ${
-                    !notif.isRead
-                      ? "bg-blue-50/40 dark:bg-blue-500/5"
-                      : "bg-white dark:bg-slate-950"
-                  }`}
-                >
-                  <div className="flex w-full justify-between items-start mb-1.5">
-                    <p className="font-semibold text-gray-900 dark:text-slate-100 text-sm leading-tight">
-                      {notif.title}
+              {notifications.map((notif) => {
+                const isClickable = !!(
+                  notif.payload?.projectSlug || notif.link
+                );
+
+                return (
+                  <DropdownMenuItem
+                    key={notif._id}
+                    onClick={() => handleNotificationClick(notif)}
+                    className={`flex flex-col items-start p-4 border-b border-gray-100 dark:border-slate-800/50 last:border-0 rounded-none outline-none transition-colors ${
+                      isClickable
+                        ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-900"
+                        : "cursor-default"
+                    } ${!notif.isRead ? "bg-blue-50/40 dark:bg-blue-500/5" : "bg-white dark:bg-slate-950"}`}
+                  >
+                    <div className="flex w-full justify-between items-start mb-1.5">
+                      <p className="font-semibold text-gray-900 dark:text-slate-100 text-sm leading-tight">
+                        {notif.title}
+                      </p>
+                      {!notif.isRead && (
+                        <div className="h-2 w-2 rounded-full bg-blue-500 mt-1 shrink-0 shadow-sm" />
+                      )}
+                    </div>
+
+                    <p className="text-gray-600 dark:text-slate-400 text-sm line-clamp-2 w-full leading-snug">
+                      {notif.message}
                     </p>
-                    {!notif.isRead && (
-                      <div className="h-2 w-2 rounded-full bg-blue-500 mt-1 shrink-0 shadow-sm" />
-                    )}
-                  </div>
 
-                  <p className="text-gray-600 dark:text-slate-400 text-sm line-clamp-2 w-full leading-snug">
-                    {notif.message}
-                  </p>
-
-                  <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-2.5 font-medium">
-                    {formatDistanceToNow(new Date(notif.createdAt), {
-                      addSuffix: true,
-                    })}
-                  </p>
-                </DropdownMenuItem>
-              ))}
+                    <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-2.5 font-medium">
+                      {formatDistanceToNow(new Date(notif.createdAt), {
+                        addSuffix: true,
+                      })}
+                    </p>
+                  </DropdownMenuItem>
+                );
+              })}
             </div>
           ) : (
             <div className="p-10 flex flex-col items-center justify-center text-center bg-white dark:bg-slate-950 h-full">

@@ -6,7 +6,6 @@ import {
   LayoutDashboard,
   KanbanSquare,
   Users,
-  Loader2,
   ArrowLeft,
   AlertCircle,
   Activity,
@@ -14,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useGetSingleProjectQuery } from "@/Redux/services/projectApi/ProjectApi";
 import NotificationBell from "@/components/Shared/Notification/NotificationBell";
+import LogoLoader from "@/components/Shared/Loader/LogoLoader";
 
 const MemberProjectWorkspaceLayout = ({
   children,
@@ -58,20 +58,15 @@ const MemberProjectWorkspaceLayout = ({
   ];
 
   if (isLoading) {
-    return (
-      <div className="flex h-[60vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <LogoLoader />;
   }
 
   if (!project) return null;
 
   return (
     <div className="flex flex-col min-h-full">
-      {/* Project Header Banner */}
-      <div className="bg-card border-b border-border px-6 py-6">
-        <div className="max-w-7xl mx-auto flex items-start  justify-between">
+      <div className="bg-card border-b border-border px-6 py-3">
+        <div className="max-w-7xl mx-auto flex items-start  justify-between ">
           <div className="flex items-start gap-4">
             <Link
               href={
@@ -90,8 +85,8 @@ const MemberProjectWorkspaceLayout = ({
               </Button>
             </Link>
 
-            <div>
-              <div className="flex items-center gap-3 mb-2">
+            <div className="">
+              <div className="flex items-center gap-3 mb-0.5">
                 <span className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold tracking-widest uppercase">
                   {project.status.replace("_", " ")}
                 </span>
@@ -109,7 +104,6 @@ const MemberProjectWorkspaceLayout = ({
         </div>
       </div>
 
-      {/* READ-ONLY WARNING BANNER */}
       {project.isDeleted && (
         <div className="bg-amber-500/10 border-b border-amber-500/20 px-6 py-3 flex items-center justify-center gap-2 text-amber-600 dark:text-amber-500 text-sm font-semibold">
           <AlertCircle className="h-4 w-4" />
@@ -117,7 +111,7 @@ const MemberProjectWorkspaceLayout = ({
         </div>
       )}
 
-      {/* Navigation Tabs */}
+      {/* tabs */}
       <div className="bg-card border-b border-border sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-6">
           <nav className="flex items-center gap-6 overflow-x-auto hide-scrollbar">
@@ -145,7 +139,6 @@ const MemberProjectWorkspaceLayout = ({
         </div>
       </div>
 
-      {/* Tab Content Area */}
       <div className="flex-1 bg-muted/20">
         <div className="max-w-7xl mx-auto py-6">{children}</div>
       </div>

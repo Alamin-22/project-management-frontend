@@ -100,7 +100,7 @@ const MemberDashboardPage = () => {
   ];
 
   return (
-    <div className="p-6 space-y-6">
+    <>
       <PageHeader
         title={`Welcome back, ${user?.profile?.name?.split(" ")[0] || "Team Member"}!`}
       >
@@ -116,149 +116,150 @@ const MemberDashboardPage = () => {
           />
         </Button>
       </PageHeader>
-
-      {/* KPI GRID */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-        {kpiCards.map((card, i) => (
-          <Card key={i} className="border-border rounded-2xl shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <div className="p-2 bg-muted rounded-xl">
-                  <card.icon className={`w-5 h-5 ${card.color}`} />
+      <div className="p-6 space-y-6">
+        {/* KPI GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+          {kpiCards.map((card, i) => (
+            <Card key={i} className="border-border rounded-2xl">
+              <CardContent className="p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="p-2 bg-muted rounded-xl">
+                    <card.icon className={`w-5 h-5 ${card.color}`} />
+                  </div>
                 </div>
-              </div>
-              <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-1">
-                {card.title}
-              </p>
-              <h2 className="text-2xl font-black font-mono tracking-tight">
-                {card.value}
-              </h2>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-1">
+                  {card.title}
+                </p>
+                <h2 className="text-2xl font-black font-mono tracking-tight">
+                  {card.value}
+                </h2>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* DONUT CHART */}
-        <Card className="col-span-1 border-border rounded-2xl shadow-sm">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xs uppercase tracking-widest text-muted-foreground">
-              My Task Distribution
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {(kpis?.totalTasks || 0) > 0 ? (
-              <Chart
-                options={chartOptions}
-                series={[
-                  kpis?.todoTasks || 0,
-                  kpis?.inProgressTasks || 0,
-                  kpis?.completedTasks || 0,
-                ]}
-                type="donut"
-                height={250}
-              />
-            ) : (
-              <div className="h-62.5 flex items-center justify-center text-xs text-muted-foreground italic">
-                No tasks assigned yet.
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* WIDGETS */}
-        <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* UPCOMING DEADLINES */}
-          <Card className="border-border rounded-2xl shadow-sm">
-            <CardHeader className="pb-3 flex flex-row items-center justify-between">
-              <CardTitle className="text-xs uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                <Clock className="w-4 h-4 text-indigo-500" /> My Upcoming
-                Deadlines
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* DONUT CHART */}
+          <Card className="col-span-1 border-border rounded-2xl">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xs uppercase tracking-widest text-muted-foreground">
+                My Task Distribution
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 p-4 pt-0">
-              {summary?.widgets.upcomingTasks &&
-              summary.widgets.upcomingTasks.length > 0 ? (
-                summary.widgets.upcomingTasks.map((t) => (
-                  <Link
-                    key={t._id}
-                    href={`/member_workspace/projects/${t.project?.slug}/tasks/${t.slug}`}
-                    className="group flex flex-col p-3 rounded-xl border border-transparent hover:border-border hover:bg-muted/30 transition-all "
-                  >
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="text-sm font-bold text-foreground truncate group-hover:text-primary transition-colors">
-                        {t.title}
-                      </span>
-                      <Badge
-                        className={`text-[9px] font-bold border ml-2 shrink-0 ${getDeadlineStyle(t.dueDate)}`}
-                      >
-                        {new Date(t.dueDate).toLocaleDateString()}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center justify-between mt-1">
-                      <span className="text-[10px] text-muted-foreground font-medium truncate">
-                        {t.project?.name}
-                      </span>
-                      <span
-                        className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md ${t.status === TASK_STATUS.in_progress ? "bg-blue-100 text-blue-700" : "bg-amber-100 text-amber-700"}`}
-                      >
-                        {t.status}
-                      </span>
-                    </div>
-                  </Link>
-                ))
+            <CardContent>
+              {(kpis?.totalTasks || 0) > 0 ? (
+                <Chart
+                  options={chartOptions}
+                  series={[
+                    kpis?.todoTasks || 0,
+                    kpis?.inProgressTasks || 0,
+                    kpis?.completedTasks || 0,
+                  ]}
+                  type="donut"
+                  height={250}
+                />
               ) : (
-                <div className="flex flex-col items-center justify-center py-8 text-muted-foreground/50">
-                  <Inbox className="h-8 w-8 mb-2 opacity-50" />
-                  <p className="text-xs font-medium">
-                    You have no pending tasks!
-                  </p>
+                <div className="h-62.5 flex items-center justify-center text-xs text-muted-foreground italic">
+                  No tasks assigned yet.
                 </div>
               )}
             </CardContent>
           </Card>
 
-          {/* ACTIVE PROJECTS */}
-          <Card className="border-border rounded-2xl shadow-sm">
-            <CardHeader className="pb-3 flex flex-row items-center justify-between">
-              <CardTitle className="text-xs uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                <Target className="w-4 h-4 text-emerald-500" /> My Active
-                Projects
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2 p-4 pt-0">
-              {summary?.widgets.activeProjects &&
-              summary.widgets.activeProjects.length > 0 ? (
-                summary.widgets.activeProjects.map((p) => (
-                  <Link
-                    key={p._id}
-                    href={`/member_workspace/projects/${p.slug}`}
-                    className="group flex items-center justify-between p-3 rounded-xl border border-border/50 hover:border-primary/50 hover:bg-muted/30 transition-all"
-                  >
-                    <div>
-                      <p className="text-sm font-bold group-hover:text-primary transition-colors">
-                        {p.name}
-                      </p>
-                      <p className="text-[10px] text-muted-foreground font-medium mt-0.5">
-                        ID: {p.projectId}
-                      </p>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                  </Link>
-                ))
-              ) : (
-                <div className="flex flex-col items-center justify-center py-8 text-muted-foreground/50">
-                  <Inbox className="h-8 w-8 mb-2 opacity-50" />
-                  <p className="text-xs font-medium">
-                    Not assigned to any projects
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          {/* WIDGETS */}
+          <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* UPCOMING DEADLINES */}
+            <Card className="border-border rounded-2xl">
+              <CardHeader className="pb-3 flex flex-row items-center justify-between">
+                <CardTitle className="text-xs uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-indigo-500" /> My Upcoming
+                  Deadlines
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 p-4 pt-0">
+                {summary?.widgets.upcomingTasks &&
+                summary.widgets.upcomingTasks.length > 0 ? (
+                  summary.widgets.upcomingTasks.map((t) => (
+                    <Link
+                      key={t._id}
+                      href={`/member_workspace/projects/${t.project?.slug}/tasks/${t.slug}`}
+                      className="group flex flex-col p-3 rounded-xl border border-transparent hover:border-border hover:bg-muted/30 transition-all "
+                    >
+                      <div className="flex justify-between items-start mb-1">
+                        <span className="text-sm font-bold text-foreground truncate group-hover:text-primary transition-colors">
+                          {t.title}
+                        </span>
+                        <Badge
+                          className={`text-[9px] font-bold border ml-2 shrink-0 ${getDeadlineStyle(t.dueDate)}`}
+                        >
+                          {new Date(t.dueDate).toLocaleDateString()}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center justify-between mt-1">
+                        <span className="text-[10px] text-muted-foreground font-medium truncate">
+                          {t.project?.name}
+                        </span>
+                        <span
+                          className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md ${t.status === TASK_STATUS.in_progress ? "bg-blue-100 text-blue-700" : "bg-amber-100 text-amber-700"}`}
+                        >
+                          {t.status}
+                        </span>
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-8 text-muted-foreground/50">
+                    <Inbox className="h-8 w-8 mb-2 opacity-50" />
+                    <p className="text-xs font-medium">
+                      You have no pending tasks!
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* ACTIVE PROJECTS */}
+            <Card className="border-border rounded-2xl">
+              <CardHeader className="pb-3 flex flex-row items-center justify-between">
+                <CardTitle className="text-xs uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                  <Target className="w-4 h-4 text-emerald-500" /> My Active
+                  Projects
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 p-4 pt-0">
+                {summary?.widgets.activeProjects &&
+                summary.widgets.activeProjects.length > 0 ? (
+                  summary.widgets.activeProjects.map((p) => (
+                    <Link
+                      key={p._id}
+                      href={`/member_workspace/projects/${p.slug}`}
+                      className="group flex items-center justify-between p-3 rounded-xl border border-border/50 hover:border-primary/50 hover:bg-muted/30 transition-all"
+                    >
+                      <div>
+                        <p className="text-sm font-bold group-hover:text-primary transition-colors">
+                          {p.name}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground font-medium mt-0.5">
+                          ID: {p.projectId}
+                        </p>
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </Link>
+                  ))
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-8 text-muted-foreground/50">
+                    <Inbox className="h-8 w-8 mb-2 opacity-50" />
+                    <p className="text-xs font-medium">
+                      Not assigned to any projects
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
