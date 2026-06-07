@@ -77,7 +77,7 @@ const ChangePasswordForm = () => {
 
   return (
     <div className="w-full bg-card border border-border rounded-3xl overflow-hidden shadow-sm">
-      {/* Visual Header */}
+      {/* warning */}
       <div className="bg-muted/30 p-8 border-b border-border flex items-center gap-5">
         <div className="h-12 w-12 bg-card rounded-2xl flex items-center justify-center text-primary shadow-sm border border-border">
           <LockKeyhole className="h-6 w-6" />
