@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,8 @@ import FormCard from "@/Utils/FormCard";
 import ReusableBreadcrumb from "@/components/Shared/ReusableBreadcrumb";
 import CreateEditTaskForm from "@/components/DashboardRelated/Admin/TaskRelated/CreateEditTaskForm";
 import { useGetSingleProjectQuery } from "@/Redux/services/projectApi/ProjectApi";
+import LogoLoader from "@/components/Shared/Loader/LogoLoader";
+import QueryNotFoundMessage from "@/components/Shared/QueryNotFoundMessage";
 
 const CreateTaskPage = () => {
   const params = useParams();
@@ -21,23 +23,17 @@ const CreateTaskPage = () => {
   const project = data?.data;
 
   if (isLoading) {
-    return (
-      <div className="flex h-[60vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <LogoLoader />;
   }
 
   if (!project) {
     return (
-      <div className="flex h-[60vh] items-center justify-center text-muted-foreground font-medium">
-        Project workspace could not be found.
-      </div>
+      <QueryNotFoundMessage message="Project workspace could not be found." />
     );
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="max-w-5xl mx-auto ">
       <div className="mb-6 space-y-2">
         <ReusableBreadcrumb
           paths={[

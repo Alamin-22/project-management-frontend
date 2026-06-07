@@ -74,7 +74,7 @@ const SortableTaskCard = ({
           : "border-border hover:border-primary/40"
       }`}
     >
-      {/* Header Row: ID and Actions */}
+      {/* header*/}
       <div className="flex items-start justify-between mb-3">
         <Badge
           variant="outline"
@@ -83,7 +83,6 @@ const SortableTaskCard = ({
           {task.taskId}
         </Badge>
 
-        {/* Actions Container */}
         <div className="flex items-center gap-1 -mr-2 -mt-2">
           {!isOverlay && (
             <DropdownMenu>
@@ -150,7 +149,7 @@ const SortableTaskCard = ({
         {plainTextDescription}
       </p>
 
-      {/* Multi-Avatar Display */}
+      {/* Multi Avatar Display */}
       {task.assigneeProfiles && task.assigneeProfiles.length > 0 && (
         <div className="flex items-center -space-x-2 overflow-hidden mb-3">
           {task.assigneeProfiles.map((profile, i) => (
@@ -170,7 +169,6 @@ const SortableTaskCard = ({
         </div>
       )}
 
-      {/* Footer Row: Priority & Date */}
       <div className="flex items-center justify-between border-t border-border pt-3 mt-1">
         <Badge
           variant="secondary"

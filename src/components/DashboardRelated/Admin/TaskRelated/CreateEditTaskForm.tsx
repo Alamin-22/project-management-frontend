@@ -27,6 +27,7 @@ import {
   TASK_PRIORITY,
   TASK_STATUS,
 } from "@/Redux/services/taskApi/Task.interface";
+import LogoLoader from "@/components/Shared/Loader/LogoLoader";
 
 interface CreateEditTaskFormProps {
   task?: ITask;
@@ -132,11 +133,7 @@ const CreateEditTaskForm = ({ task, projectSlug }: CreateEditTaskFormProps) => {
   };
 
   if (isProjectLoading) {
-    return (
-      <div className="flex py-12 items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-      </div>
-    );
+    return <LogoLoader />;
   }
 
   const memberOptions =

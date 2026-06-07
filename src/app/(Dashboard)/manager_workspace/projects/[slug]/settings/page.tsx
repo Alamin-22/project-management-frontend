@@ -21,6 +21,7 @@ import {
   useRestoreProjectMutation,
   usePermanentDeleteProjectMutation,
 } from "@/Redux/services/projectApi/ProjectApi";
+import LogoLoader from "@/components/Shared/Loader/LogoLoader";
 
 const ProjectSettingsPage = () => {
   const params = useParams();
@@ -152,17 +153,13 @@ const ProjectSettingsPage = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex h-[60vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <LogoLoader />;
   }
 
   if (!project) return null;
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-6">
+    <div className="px-6 space-y-6">
       <div className="space-y-2">
         <ReusableBreadcrumb
           paths={[
@@ -197,14 +194,12 @@ const ProjectSettingsPage = () => {
         </div>
       </div>
 
-      {/* Conditional Rendering based on Archive State */}
       {!project.isDeleted ? (
         <>
           <FormCard title="Edit Project Details">
             <CreateEditProjectForm project={project} />
           </FormCard>
-
-          {/*  ACTIVE: DANGER ZONE  */}
+          {/* warning */}
           <div className="mt-12 mb-8">
             <h2 className="text-lg font-bold text-destructive mb-4 flex items-center gap-2">
               <AlertTriangle className="h-5 w-5" /> Danger Zone
@@ -234,7 +229,7 @@ const ProjectSettingsPage = () => {
           </div>
         </>
       ) : (
-        /*  ARCHIVED: RESTORE & DELETE  */
+        /*  archived: restore & delete  */
         <div className="mt-6 mb-8 space-y-6">
           <div className="border border-emerald-500/30 rounded-xl p-6 bg-emerald-500/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>

@@ -55,7 +55,7 @@ const MemberTaskDetailsPage = () => {
   const sanitizedDescription = DOMPurify.sanitize(task.description);
 
   return (
-    <div className="max-w-5xl mx-auto px-6 space-y-6">
+    <div className="px-6 space-y-6">
       {task.isDeleted && (
         <div className="bg-amber-500/10 border border-amber-500/20 px-6 py-3 rounded-lg flex items-center gap-2 text-amber-600 dark:text-amber-500 text-sm font-semibold">
           <AlertCircle className="h-4 w-4 shrink-0" />

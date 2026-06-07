@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import ReusableBreadcrumb from "@/components/Shared/ReusableBreadcrumb";
 import CreateEditTaskForm from "@/components/DashboardRelated/Admin/TaskRelated/CreateEditTaskForm";
 import { useGetSingleProjectQuery } from "@/Redux/services/projectApi/ProjectApi";
 import { useGetSingleTaskQuery } from "@/Redux/services/taskApi/TaskApi";
+import LogoLoader from "@/components/Shared/Loader/LogoLoader";
 
 const EditTaskPage = () => {
   const params = useParams();
@@ -27,17 +28,13 @@ const EditTaskPage = () => {
   const task = taskData?.data;
 
   if (isProjectLoading || isTaskLoading) {
-    return (
-      <div className="flex h-[60vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <LogoLoader />;
   }
 
   if (!project || !task) return null;
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="px-6">
       <div className="mb-6 space-y-2">
         <ReusableBreadcrumb
           paths={[
