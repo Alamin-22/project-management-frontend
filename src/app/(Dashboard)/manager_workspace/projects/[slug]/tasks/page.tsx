@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { ArchiveX, Loader2, Plus } from "lucide-react";
+import { ArchiveX, Plus } from "lucide-react";
 import {
   DndContext,
   DragOverlay,
@@ -29,7 +29,6 @@ import {
   TTaskStatus,
 } from "@/Redux/services/taskApi/Task.interface";
 import { Button } from "@/components/ui/button";
-
 import KanbanColumn from "@/components/DashboardRelated/Admin/TaskRelated/KanbanColumn";
 import SortableTaskCard from "@/components/DashboardRelated/Admin/TaskRelated/SortableTaskCard";
 import UpdateTaskStatusModal from "@/components/DashboardRelated/Admin/TaskRelated/UpdateTaskStatusModal";
@@ -40,6 +39,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import LogoLoader from "@/components/Shared/Loader/LogoLoader";
 
 type BoardState = Record<TTaskStatus, ITask[]>;
 
@@ -138,7 +138,7 @@ const TaskBoardPage = () => {
 
       const [movedTask] = activeItems.splice(activeIndex, 1);
 
-      // Clone to prevent strict-mode mutation errors
+      // clone to prevent mutation errors
       const updatedTask = { ...movedTask, status: overContainer };
 
       // If hovering over an empty column space, drop at the end
@@ -179,7 +179,7 @@ const TaskBoardPage = () => {
 
     let newBoardState = { ...boardData };
 
-    // Handle same-column vertical reordering
+    // Handle same column vertical reordering
     if (activeContainer === overContainer && activeIndex !== overIndex) {
       newBoardState = {
         ...boardData,
@@ -215,7 +215,7 @@ const TaskBoardPage = () => {
       });
     });
 
-    // Fire API if there are actual changes
+    // fire api if there are actual changes
     if (payloadTasks.length > 0) {
       try {
         await reorderTasks({ tasks: payloadTasks }).unwrap();
@@ -226,20 +226,16 @@ const TaskBoardPage = () => {
   };
 
   if (isProjectLoading || isTasksLoading) {
-    return (
-      <div className="flex h-[40vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <LogoLoader />;
   }
 
   if (!project) return null;
 
   return (
     <div className="space-y-6">
-      <div className="px-6 pt-2 flex items-center justify-between">
+      <div className="px-6 flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-foreground">Kanban Board</h2>
+          <h2 className="text-xl font-bold text-foreground">Tasks Board</h2>
           <p className="text-sm text-muted-foreground">
             Drag and drop tasks to update priorities and statuses.
           </p>
@@ -304,11 +300,11 @@ const TaskBoardPage = () => {
         open={!!statusModalTask}
         onOpenChange={(open) => !open && setStatusModalTask(null)}
       >
-        <DialogContent className="max-w-md w-full border-border bg-card">
+        <DialogContent className="max-w-md! w-full border-border bg-card">
           <DialogHeader>
             <DialogTitle className="text-xl">Update Task Status</DialogTitle>
             <DialogDescription>
-              Quickly move this task to a new stage on the Kanban board.
+              Quickly move this task to a new stage on the tasks board.
             </DialogDescription>
           </DialogHeader>
 

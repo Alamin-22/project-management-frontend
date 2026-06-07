@@ -43,7 +43,6 @@ const UserManagementToolbar = ({
 }: UserManagementToolbarProps) => {
   return (
     <div className="flex items-center gap-3">
-      {/* --- Filter Badges Container --- */}
       <div className="flex items-center gap-2">
         {selectedStatus && (
           <Badge

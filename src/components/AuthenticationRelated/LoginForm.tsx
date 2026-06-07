@@ -68,19 +68,22 @@ const LoginForm = () => {
     }
   };
 
-  const handleDemoLogin = () => {
+  const handleDemoLogin = (role: "manager" | "member") => {
     const options = {
       shouldValidate: true,
       shouldDirty: true,
       shouldTouch: true,
     };
 
-    form.setValue("email", "manager@smartproject.com", options);
-    form.setValue("password", "admin123456", options);
-
-    toast.success(
-      "Demo credentials loaded! Click 'Sign In to Workspace' to proceed.",
-    );
+    if (role === "manager") {
+      form.setValue("email", "manager@smartproject.com", options);
+      form.setValue("password", "admin123456", options);
+      toast.success("Manager credentials loaded! Click 'Sign In' to proceed.");
+    } else {
+      form.setValue("email", "member@smartproject.com", options);
+      form.setValue("password", "member123456", options);
+      toast.success("Member credentials loaded! Click 'Sign In' to proceed.");
+    }
   };
 
   return (
@@ -171,16 +174,34 @@ const LoginForm = () => {
         </div>
       </div>
 
-      <Button
-        variant="outline"
-        type="button"
-        className="w-full border-primary/20 text-primary hover:bg-primary/5 font-bold h-11"
-        onClick={handleDemoLogin}
-        disabled={isLoading}
-      >
-        <IcfyIcon icon="solar:user-id-bold-duotone" className="mr-2 text-xl" />
-        One-Click Demo Credentials
-      </Button>
+      <div className="grid grid-cols-2 gap-3">
+        <Button
+          variant="outline"
+          type="button"
+          className="w-full border-primary/20 text-primary hover:bg-primary/5 font-bold h-11"
+          onClick={() => handleDemoLogin("manager")}
+          disabled={isLoading}
+        >
+          <IcfyIcon
+            icon="solar:user-id-bold-duotone"
+            className="mr-2 text-xl"
+          />
+          Manager
+        </Button>
+        <Button
+          variant="outline"
+          type="button"
+          className="w-full border-primary/20 text-primary hover:bg-primary/5 font-bold h-11"
+          onClick={() => handleDemoLogin("member")}
+          disabled={isLoading}
+        >
+          <IcfyIcon
+            icon="solar:users-group-two-rounded-bold-duotone"
+            className="mr-2 text-xl"
+          />
+          Member
+        </Button>
+      </div>
 
       {isForgetModalOpen && (
         <ForgetPassword closeModal={() => setIsForgetModalOpen(false)} />

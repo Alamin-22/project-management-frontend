@@ -2,9 +2,8 @@
 
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import { UserMinus, UserPlus, Users, Loader2 } from "lucide-react";
+import { UserMinus, UserPlus, Users } from "lucide-react";
 import Swal from "sweetalert2";
-
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import ReusableBreadcrumb from "@/components/Shared/ReusableBreadcrumb";
@@ -13,6 +12,8 @@ import {
   useUpdateTeamMembersMutation,
 } from "@/Redux/services/projectApi/ProjectApi";
 import { useGetAllStaffQuery } from "@/Redux/services/userApi/UserApi";
+import LogoLoader from "@/components/Shared/Loader/LogoLoader";
+import QueryNotFoundMessage from "@/components/Shared/QueryNotFoundMessage";
 
 const ProjectTeamPage = () => {
   const params = useParams();
@@ -67,17 +68,13 @@ const ProjectTeamPage = () => {
   };
 
   if (isProjectLoading || isStaffLoading) {
-    return (
-      <div className="flex h-[40vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <LogoLoader />;
   }
 
   if (!project) return null;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const assignedIds = project.teamMembers.map((m: any) =>
+  const assignedIds = project?.teamMembers?.map((m: any) =>
     typeof m === "object" ? m._id || m.id : m,
   );
   const availableStaff = allStaff.filter(
@@ -86,7 +83,7 @@ const ProjectTeamPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="px-6 pt-2">
+      <div className="px-6">
         <ReusableBreadcrumb
           paths={[
             { label: "Projects", href: "/manager_workspace/projects" },
@@ -103,8 +100,8 @@ const ProjectTeamPage = () => {
       <div
         className={`grid grid-cols-1 ${!project.isDeleted ? "lg:grid-cols-2" : "max-w-3xl mx-auto"} gap-6 px-6`}
       >
-        {/* LEFT COLUMN: Currently Assigned Members */}
-        <div className="bg-card rounded-xl border border-border p-6 shadow-sm flex flex-col ">
+        {/* left container, assigned members */}
+        <div className="bg-card rounded-xl border border-border p-6 shadow-xs flex flex-col ">
           <div className="flex items-center justify-between border-b border-border pb-4 mb-4">
             <div className="flex items-center gap-2">
               <Users className="h-5 w-5 text-primary" />
@@ -119,20 +116,15 @@ const ProjectTeamPage = () => {
 
           <div className="flex-1 overflow-y-auto pr-2 space-y-3 custom-scrollbar">
             {project.teamMembers.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-muted-foreground">
-                <Users className="h-10 w-10 mb-2 opacity-20" />
-                <p className="text-sm">
-                  No members assigned to this workspace yet.
-                </p>
-              </div>
+              <QueryNotFoundMessage message="No members assigned to this workspace yet." />
             ) : (
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              project.teamMembers.map((member: any) => {
+              project?.teamMembers?.map((member: any, idx) => {
                 if (typeof member !== "object") return null;
 
                 return (
                   <div
-                    key={member._id}
+                    key={idx}
                     className="flex items-center justify-between p-3 rounded-lg border border-border/50 bg-muted/10 hover:bg-muted/30 transition-colors"
                   >
                     <div className="flex items-center gap-3">
@@ -162,7 +154,6 @@ const ProjectTeamPage = () => {
                         </p>
                       </div>
                     </div>
-                    {/* Hide remove button if archived */}
                     {!project.isDeleted && (
                       <Button
                         variant="ghost"
@@ -182,9 +173,9 @@ const ProjectTeamPage = () => {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Available Staff (HIDDEN IF ARCHIVED) */}
+        {/* right container,, available staff */}
         {!project.isDeleted && (
-          <div className="bg-card rounded-xl border border-border p-6 shadow-sm flex flex-col ">
+          <div className="bg-card rounded-xl border border-border p-6 shadow-xs flex flex-col ">
             <div className="flex items-center justify-between border-b border-border pb-4 mb-4">
               <div className="flex items-center gap-2">
                 <UserPlus className="h-5 w-5 text-muted-foreground" />
@@ -199,16 +190,12 @@ const ProjectTeamPage = () => {
 
             <div className="flex-1 overflow-y-auto pr-2 space-y-3 custom-scrollbar">
               {availableStaff.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-muted-foreground">
-                  <p className="text-sm">
-                    All available team members are already assigned.
-                  </p>
-                </div>
+                <QueryNotFoundMessage message="All available team members are already assigned." />
               ) : (
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                availableStaff.map((staff: any) => (
+                availableStaff.map((staff: any, idx) => (
                   <div
-                    key={staff._id}
+                    key={idx}
                     className="flex items-center justify-between p-3 rounded-lg border border-border/50 bg-background hover:border-primary/30 transition-colors"
                   >
                     <div className="flex items-center gap-3">

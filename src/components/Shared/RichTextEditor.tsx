@@ -116,7 +116,7 @@ const RichTextEditor = ({ value, onChange }: RichTextEditorProps) => {
         </div>
       </div>
 
-      {/* --- Editor Container --- */}
+      {/*  Editor Container  */}
       <div className="relative rounded-lg bg-card border border-input shadow-sm overflow-hidden">
         {isLoading && (
           <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-sm rounded-lg">

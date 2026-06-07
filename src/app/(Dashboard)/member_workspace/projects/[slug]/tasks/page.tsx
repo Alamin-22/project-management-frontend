@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import {
   DndContext,
@@ -41,6 +40,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useAppState } from "@/Provider/StateProvider";
+import LogoLoader from "@/components/Shared/Loader/LogoLoader";
 
 type BoardState = Record<TTaskStatus, ITask[]>;
 
@@ -178,7 +178,7 @@ const MemberTaskBoardPage = () => {
     const { active, over } = event;
     if (!over || !task) return;
 
-    // Reject the drop if they aren't authorized (it snaps back instantly)
+    // reject drop if they aren't authorized,,,,revert instantly
     if (!checkPermission(task)) return;
 
     const activeId = String(active.id);
@@ -245,27 +245,23 @@ const MemberTaskBoardPage = () => {
   };
 
   if (isProjectLoading || isTasksLoading) {
-    return (
-      <div className="flex h-[40vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <LogoLoader />;
   }
 
   if (!project) return null;
 
   return (
     <div className="space-y-6">
-      <div className="px-6 pt-2 flex items-center justify-between">
+      <div className="px-6 flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-foreground">Kanban Board</h2>
+          <h2 className="text-xl font-bold text-foreground">Tasks Board</h2>
           <p className="text-sm text-muted-foreground">
             Drag and drop tasks to update priorities and statuses.
           </p>
         </div>
 
-        {/* TASK FILTER TOGGLE */}
-        <div className="flex items-center bg-card border border-border p-1 rounded-lg shadow-sm">
+        {/* filter */}
+        <div className="flex items-center bg-card border border-border p-1 rounded-lg shadow-xs">
           <Button
             variant={filter === "mine" ? "default" : "ghost"}
             size="sm"
@@ -331,7 +327,7 @@ const MemberTaskBoardPage = () => {
           <DialogHeader>
             <DialogTitle className="text-xl">Update Task Status</DialogTitle>
             <DialogDescription>
-              Quickly move this task to a new stage on the Kanban board.
+              Quickly move this task to a new stage on the Tasks Board.
             </DialogDescription>
           </DialogHeader>
 

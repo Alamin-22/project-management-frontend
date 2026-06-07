@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, RotateCcw, Trash2, ArchiveX } from "lucide-react";
+import { ArrowLeft, RotateCcw, Trash2, ArchiveX } from "lucide-react";
 import Link from "next/link";
 import Swal from "sweetalert2";
 import { format } from "date-fns";
@@ -18,6 +18,7 @@ import {
 } from "@/Redux/services/taskApi/TaskApi";
 import { stripHtml } from "@/Utils/stripHtml";
 import { ITask } from "@/Redux/services/taskApi/Task.interface";
+import LogoLoader from "@/components/Shared/Loader/LogoLoader";
 
 const ArchivedTasksPage = () => {
   const params = useParams();
@@ -110,18 +111,14 @@ const ArchivedTasksPage = () => {
   };
 
   if (isProjectLoading || isTasksLoading) {
-    return (
-      <div className="flex h-[60vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <LogoLoader />;
   }
 
   if (!project) return null;
 
   return (
-    <div className="max-w-7xl mx-auto p-6 space-y-6">
-      <div className="space-y-2">
+    <div className=" px-6 space-y-6">
+      <div className="">
         <ReusableBreadcrumb
           paths={[
             { label: "Projects", href: "/manager_workspace/projects" },
@@ -157,7 +154,7 @@ const ArchivedTasksPage = () => {
         </div>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-5">
         {archivedTasks.length === 0 ? (
           <div className="bg-card border border-border rounded-xl p-12 flex flex-col items-center justify-center text-center ">
             <div className="h-16 w-16 bg-muted/50 rounded-full flex items-center justify-center mb-4">
@@ -182,12 +179,11 @@ const ArchivedTasksPage = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {archivedTasks.map((task: ITask) => (
+            {archivedTasks.map((task: ITask, idx) => (
               <div
-                key={task.slug}
+                key={idx}
                 className="bg-card p-5 rounded-xl border border-border  opacity-80 hover:opacity-100 transition-opacity flex flex-col"
               >
-                {/* Header Row */}
                 <div className="flex items-start justify-between mb-3">
                   <Badge
                     variant="outline"
@@ -203,7 +199,6 @@ const ArchivedTasksPage = () => {
                   </Badge>
                 </div>
 
-                {/* Title & Description */}
                 <Link
                   href={`/manager_workspace/projects/${slug}/tasks/${task.slug}`}
                 >
@@ -215,7 +210,7 @@ const ArchivedTasksPage = () => {
                   {stripHtml(task.description)}
                 </p>
 
-                {/* Multi-Avatar Display */}
+                {/* Multi Avatar Display */}
                 {task.assigneeProfiles && task.assigneeProfiles.length > 0 && (
                   <div className="flex items-center -space-x-2 overflow-hidden mb-4">
                     {task.assigneeProfiles.map((profile, i) => (
@@ -235,7 +230,6 @@ const ArchivedTasksPage = () => {
                   </div>
                 )}
 
-                {/* Footer Row: Actions */}
                 <div className="flex items-center justify-between border-t border-border pt-4 mt-auto">
                   <div className="flex flex-col">
                     <span className="text-[10px] font-medium text-muted-foreground mb-1">

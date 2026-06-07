@@ -11,6 +11,7 @@ import QueryNotFoundMessage from "@/components/Shared/QueryNotFoundMessage";
 import Pagination from "@/components/Shared/Pagination/Pagination";
 import { useGetArchivedProjectsQuery } from "@/Redux/services/projectApi/ProjectApi";
 import ProjectCard from "@/components/DashboardRelated/Admin/ProjectRelated/ProjectCard";
+import NotificationBell from "@/components/Shared/Notification/NotificationBell";
 
 const MemberArchivedProjectsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,11 +38,15 @@ const MemberArchivedProjectsPage = () => {
         onSearchChange={setSearchQuery}
         placeholder="Search archives by name..."
       >
-        <Link href="/member_workspace/projects">
-          <Button variant="outline" size="sm" className="h-9 font-semibold">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Active
-          </Button>
-        </Link>
+        <div className="flex items-center gap-3">
+          <NotificationBell />
+
+          <Link href="/member_workspace/projects">
+            <Button variant="outline" size="sm" className="h-9 font-semibold">
+              <ArrowLeft className="mr-2 h-4 w-4" /> Back to Active
+            </Button>
+          </Link>
+        </div>
       </PageHeader>
 
       <div className="p-6 flex-1">
@@ -62,7 +67,6 @@ const MemberArchivedProjectsPage = () => {
                 <ProjectCard
                   key={project._id}
                   project={project}
-                  // CRITICAL: Point the card links to the member workspace
                   baseUrl="/member_workspace/projects"
                 />
               ))}

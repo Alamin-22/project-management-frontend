@@ -1,4 +1,5 @@
 ├── .env.local
+├── .env.local.example
 ├── .gitignore
 ├── components.json
 ├── eslint.config.mjs
@@ -28,6 +29,8 @@
 │   │   │   ├── layout.tsx
 │   │   │   ├── manager_workspace
 │   │   │   │   ├── audit-logs
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── documentation
 │   │   │   │   │   └── page.tsx
 │   │   │   │   ├── layout.tsx
 │   │   │   │   ├── page.tsx
@@ -59,6 +62,8 @@
 │   │   │   │   └── users
 │   │   │   │       └── page.tsx
 │   │   │   └── member_workspace
+│   │   │       ├── documentation
+│   │   │       │   └── page.tsx
 │   │   │       ├── layout.tsx
 │   │   │       ├── page.tsx
 │   │   │       ├── projects
@@ -124,6 +129,9 @@
 │   │   │   │   ├── LogoLoader.tsx
 │   │   │   │   └── TableSkeleton.tsx
 │   │   │   ├── NotFoundPage.tsx
+│   │   │   ├── Notification
+│   │   │   │   ├── NotificationBell.tsx
+│   │   │   │   └── useSocketNotifications.ts
 │   │   │   ├── Pagination
 │   │   │   │   └── Pagination.tsx
 │   │   │   ├── QueryNotFoundMessage.tsx
@@ -187,9 +195,6 @@
 │   │   │   └── baseApi.ts
 │   │   ├── hook.ts
 │   │   ├── services
-│   │   │   ├── analyticalApi
-│   │   │   │   ├── Analytics.interface.ts
-│   │   │   │   └── AnalyticsApi.ts
 │   │   │   ├── auditApi
 │   │   │   │   ├── AuditLog.interface.ts
 │   │   │   │   └── AuditLogApi.ts
@@ -204,6 +209,9 @@
 │   │   │   ├── dashboardApi
 │   │   │   │   ├── Dashboard.interface.ts
 │   │   │   │   └── DashboardApi.ts
+│   │   │   ├── notificationApi
+│   │   │   │   ├── Notification.interface.ts
+│   │   │   │   └── NotificationApi.ts
 │   │   │   ├── projectApi
 │   │   │   │   ├── Project.interface.ts
 │   │   │   │   ├── Project.validation.ts
@@ -226,10 +234,8 @@
 │       ├── CustomFormField.tsx
 │       ├── errorFormatter.ts
 │       ├── fileDownloader.ts
-│       ├── formatCurrency.ts
 │       ├── formatHtml.ts
 │       ├── FormCard.tsx
-│       ├── getBlurDataURL.ts
 │       ├── serverDataFetcher.ts
 │       ├── slugify.ts
 │       ├── stripHtml.ts

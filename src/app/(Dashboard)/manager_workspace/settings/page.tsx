@@ -11,11 +11,13 @@ import {
   Users2,
   FileSearch,
   Activity,
-  ServerCrash,
 } from "lucide-react";
 import PageHeader from "@/components/DashboardRelated/PageHeader";
 import { usePageTitle } from "@/hooks/usePageTitle";
 import { useAppState } from "@/Provider/StateProvider";
+import NotificationBell from "@/components/Shared/Notification/NotificationBell";
+import LogoLoader from "@/components/Shared/Loader/LogoLoader";
+import { USER_ROLE } from "@/Redux/services/userApi/User.interface";
 
 interface SettingItem {
   title: string;
@@ -38,7 +40,7 @@ const GlobalSettingsPage = () => {
   usePageTitle("System Configuration");
 
   const { user, loading } = useAppState();
-  const isSuperAdmin = user?.role === "super_admin";
+  const isSuperAdmin = user?.role === USER_ROLE.super_admin;
 
   const SETTINGS_MENU: SettingSection[] = [
     {
@@ -129,85 +131,79 @@ const GlobalSettingsPage = () => {
   ];
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
-        <ServerCrash className="w-10 h-10 text-muted-foreground animate-pulse" />
-        <div className="text-center font-black text-muted-foreground uppercase text-[10px] tracking-[0.3em]">
-          Syncing System State...
-        </div>
-      </div>
-    );
+    return <LogoLoader />;
   }
 
   return (
-    <div className="min-h-screen pb-20">
-      <div className="p-6">
-        <PageHeader
-          title="Control Center"
-          description="Centralized configuration hub for system security and administrative logs."
-        />
-      </div>
+    <>
+      <PageHeader
+        title="Control Center"
+        description="Centralized configuration hub for system security and administrative logs."
+      >
+        <NotificationBell />
+      </PageHeader>
+      <div className="p-10">
+        <div className=" space-y-12">
+          {SETTINGS_MENU.map((section, idx) => (
+            <div key={idx} className="space-y-5">
+              <div className="flex items-center gap-4">
+                <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-muted-foreground whitespace-nowrap">
+                  {section.category}
+                </h2>
+                <div className="h-px w-full bg-border" />
+              </div>
 
-      <div className="max-w-6xl mx-auto px-6 space-y-12">
-        {SETTINGS_MENU.map((section) => (
-          <div key={section.category} className="space-y-5">
-            <div className="flex items-center gap-4">
-              <h2 className="text-[11px] font-black uppercase tracking-[0.25em] text-muted-foreground whitespace-nowrap">
-                {section.category}
-              </h2>
-              <div className="h-px w-full bg-border" />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {section.items.map((item) => (
-                <Link
-                  key={item.title}
-                  href={item.href}
-                  className={`group relative flex items-start gap-6 p-6 bg-card border rounded-3xl transition-all ${
-                    item.href === "#"
-                      ? "opacity-50 cursor-default border-border"
-                      : "border-border hover:border-primary/50 hover:shadow-lg hover:-translate-y-1 active:scale-[0.98]"
-                  } ${item.isCritical ? "border-orange-500/30 bg-orange-500/5" : ""}`}
-                >
-                  <div
-                    className={`shrink-0 w-16 h-16 ${item.bg} ${item.color} rounded-2xl flex items-center justify-center group-hover:scale-105 transition-all duration-300 shadow-sm`}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {section.items.map((item, idx) => (
+                  <Link
+                    key={idx}
+                    href={item.href}
+                    className={`group relative flex items-start gap-6 p-6 bg-card border rounded-3xl transition-all ${
+                      item.href === "#"
+                        ? "opacity-50 cursor-default border-border"
+                        : "border-border hover:border-primary/50 hover:shadow-lg hover:-translate-y-1 active:scale-[0.98]"
+                    } ${item.isCritical ? "border-orange-500/30 bg-orange-500/5" : ""}`}
                   >
-                    <item.icon className="w-8 h-8" />
-                  </div>
-
-                  <div className="flex-1 pr-8">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-black text-foreground text-[11px] uppercase tracking-wider">
-                        {item.title}
-                      </h3>
-                      {item.status && (
-                        <span className="text-[8px] font-black bg-muted text-muted-foreground px-2 py-0.5 rounded-full uppercase tracking-tighter">
-                          {item.status}
-                        </span>
-                      )}
-                      {item.ownerOnly && (
-                        <span className="text-[8px] font-black bg-orange-600 text-white px-2 py-0.5 rounded-full uppercase tracking-widest animate-pulse">
-                          Super Admin
-                        </span>
-                      )}
+                    <div
+                      className={`shrink-0 w-16 h-16 ${item.bg} ${item.color} rounded-2xl flex items-center justify-center group-hover:scale-105 transition-all duration-300 shadow-sm`}
+                    >
+                      <item.icon className="w-8 h-8" />
                     </div>
-                    <p className="text-[11px] font-medium text-muted-foreground leading-relaxed">
-                      {item.description}
-                    </p>
-                  </div>
 
-                  {item.href !== "#" && (
-                    <div className="absolute right-6 top-1/2 -translate-y-1/2 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all">
-                      <ChevronRight className="w-5 h-5" />
+                    <div className="flex-1 pr-8">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-black text-foreground text-[11px] uppercase tracking-wider">
+                          {item.title}
+                        </h3>
+                        {item.status && (
+                          <span className="text-[8px] font-black bg-muted text-muted-foreground px-2 py-0.5 rounded-full uppercase tracking-tighter">
+                            {item.status}
+                          </span>
+                        )}
+                        {item.ownerOnly && (
+                          <span className="text-[8px] font-black bg-orange-600 text-white px-2 py-0.5 rounded-full uppercase tracking-widest animate-pulse">
+                            Super Admin
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[11px] font-medium text-muted-foreground leading-relaxed">
+                        {item.description}
+                      </p>
                     </div>
-                  )}
-                </Link>
-              ))}
+
+                    {item.href !== "#" && (
+                      <div className="absolute right-6 top-1/2 -translate-y-1/2 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all">
+                        <ChevronRight className="w-5 h-5" />
+                      </div>
+                    )}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

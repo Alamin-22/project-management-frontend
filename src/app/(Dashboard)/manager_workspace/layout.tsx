@@ -1,9 +1,9 @@
-import AdminMobileHeader from "@/components/DashboardRelated/LayoutRelated/MobileHeader";
 import AppSidebar from "@/components/DashboardRelated/LayoutRelated/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { ManagerNavLinks } from "@/lib/getDashboardNavLinks";
 import PrivateRoute from "@/Provider/PrivateRoute";
 import { USER_ROLE } from "@/Redux/services/userApi/User.interface";
+import MobileHeader from "@/components/DashboardRelated/LayoutRelated/MobileHeader";
 
 export const metadata = {
   title: "Smart Project Workspace",
@@ -17,9 +17,8 @@ const ManagerLayout = ({ children }: { children: React.ReactNode }) => {
         <AppSidebar links={ManagerNavLinks} />
 
         <main className="flex flex-1 flex-col min-w-0 min-h-0 overflow-hidden">
-          <AdminMobileHeader />
+          <MobileHeader />
 
-          {/* Scrollable Content Area */}
           <div
             id="admin-scroll-container"
             className="flex-1 overflow-y-auto overflow-x-hidden relative bg-muted/20"

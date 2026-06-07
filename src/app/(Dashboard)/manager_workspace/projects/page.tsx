@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import PageHeader from "@/components/DashboardRelated/PageHeader";
@@ -11,6 +10,7 @@ import QueryNotFoundMessage from "@/components/Shared/QueryNotFoundMessage";
 import Pagination from "@/components/Shared/Pagination/Pagination";
 import { useGetAllProjectsQuery } from "@/Redux/services/projectApi/ProjectApi";
 import ProjectCard from "@/components/DashboardRelated/Admin/ProjectRelated/ProjectCard";
+import NotificationBell from "@/components/Shared/Notification/NotificationBell";
 
 const ProjectsDashboardPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -29,7 +29,7 @@ const ProjectsDashboardPage = () => {
   const showLoading = isLoading || isFetching;
 
   return (
-    <div className="min-h-full flex flex-col">
+    <>
       <PageHeader
         title="Project Workspaces"
         description="Initialize new projects, assign teams, and monitor overarching deadlines."
@@ -37,11 +37,15 @@ const ProjectsDashboardPage = () => {
         onSearchChange={setSearchQuery}
         placeholder="Search projects by name or ID..."
       >
-        <Link href="/manager_workspace/projects/create">
-          <Button size="sm" className="h-9 font-semibold">
-            <Plus className="mr-2 h-4 w-4" /> New Project
-          </Button>
-        </Link>
+        <div className="flex items-center gap-3">
+          <NotificationBell />
+
+          <Link href="/manager_workspace/projects/create">
+            <Button size="sm" className="h-9 font-semibold">
+              <Plus className="mr-2 h-4 w-4" /> New Project
+            </Button>
+          </Link>
+        </div>
       </PageHeader>
 
       <div className="p-6 flex-1">
@@ -57,9 +61,9 @@ const ProjectsDashboardPage = () => {
         ) : projects.length > 0 ? (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {projects.map((project) => (
+              {projects?.map((project, idx) => (
                 <ProjectCard
-                  key={project._id}
+                  key={idx}
                   project={project}
                   baseUrl="/manager_workspace/projects"
                 />
@@ -82,7 +86,7 @@ const ProjectsDashboardPage = () => {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
 

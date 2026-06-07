@@ -13,7 +13,7 @@ import { useEffect } from "react";
 import TiptapToolbar from "./TiptapToolbar";
 import { CustomImage } from "./tiptap-extensions";
 
-// --- TypeScript Declaration for our custom commands ---
+//  TypeScript Declaration for our custom commands
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     fontSize: {
@@ -24,7 +24,7 @@ declare module "@tiptap/core" {
   }
 }
 
-// --- Custom Font Size Extension ---
+//  Custom Font Size Extension
 const FontSize = Extension.create({
   name: "fontSize",
   addOptions() {
