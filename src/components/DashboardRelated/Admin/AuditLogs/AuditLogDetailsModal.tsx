@@ -37,7 +37,6 @@ const AuditLogDetailsModal = ({ log }: { log: IAuditLog }) => {
 
   return (
     <div className="p-8 space-y-8">
-      {/* 1. METADATA GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           {
@@ -82,7 +81,7 @@ const AuditLogDetailsModal = ({ log }: { log: IAuditLog }) => {
         ))}
       </div>
 
-      {/* 2. USER AGENT */}
+      {/* user agent */}
       <div className="bg-card p-6 rounded-2xl border border-border shadow-sm relative overflow-hidden group">
         <div className="absolute top-0 left-0 w-1.5 h-full bg-muted group-hover:bg-primary/50 transition-colors" />
         <div className="flex justify-between items-center mb-4">
@@ -104,7 +103,6 @@ const AuditLogDetailsModal = ({ log }: { log: IAuditLog }) => {
         </p>
       </div>
 
-      {/* 3. PAYLOAD VIEW */}
       <div className="space-y-4">
         <div className="flex items-center justify-between px-1">
           <div className="flex items-center gap-2.5">

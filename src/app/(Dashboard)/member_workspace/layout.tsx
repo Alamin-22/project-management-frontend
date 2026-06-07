@@ -1,9 +1,9 @@
-import AdminMobileHeader from "@/components/DashboardRelated/LayoutRelated/MobileHeader";
 import AppSidebar from "@/components/DashboardRelated/LayoutRelated/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { MemberNavLinks } from "@/lib/getDashboardNavLinks";
 import PrivateRoute from "@/Provider/PrivateRoute";
 import { USER_ROLE } from "@/Redux/services/userApi/User.interface";
+import MobileHeader from "@/components/DashboardRelated/LayoutRelated/MobileHeader";
 
 export const metadata = {
   title: "Team Workspace | Smart Project",
@@ -17,7 +17,7 @@ const MemberLayout = ({ children }: { children: React.ReactNode }) => {
         <AppSidebar links={MemberNavLinks} />
 
         <main className="flex flex-1 flex-col min-w-0 min-h-0 overflow-hidden">
-          <AdminMobileHeader />
+          <MobileHeader />
 
           <div
             id="member-scroll-container"

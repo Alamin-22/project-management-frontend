@@ -203,7 +203,7 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
           </div>
         </div>
 
-        {/* --- Security Section --- */}
+        {/*  Security Section  */}
         <div className="bg-muted/30 p-5 rounded-lg border border-dashed border-border/60">
           <div className="flex flex-col mb-4">
             <h3 className="text-[10px] font-bold uppercase text-muted-foreground tracking-widest">
@@ -291,7 +291,6 @@ const ManageStaffModal = ({ user, closeModal }: ManageStaffModalProps) => {
           </div>
         </div>
 
-        {/* --- Footer Actions --- */}
         <div className="flex justify-end gap-3 pt-4 border-t border-border">
           <Button
             type="button"

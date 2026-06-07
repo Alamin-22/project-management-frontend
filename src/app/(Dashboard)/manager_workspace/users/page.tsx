@@ -145,7 +145,7 @@ const UserManagementPage = () => {
   };
 
   return (
-    <div className="min-h-full flex flex-col">
+    <>
       <PageHeader
         title="Team Directory"
         description="Manage system access, roles, and staff account security."
@@ -201,7 +201,7 @@ const UserManagementPage = () => {
           />
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 };
 

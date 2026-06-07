@@ -91,7 +91,7 @@ const UsersManagementTable = ({
 
               return (
                 <TableRow
-                  key={staff._id}
+                  key={idx}
                   className="group border-b border-border/50 even:bg-muted/50 hover:bg-muted/50 transition-colors"
                 >
                   <TableCell>
