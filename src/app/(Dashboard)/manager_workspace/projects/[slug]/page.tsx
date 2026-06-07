@@ -5,7 +5,6 @@ import { useParams } from "next/navigation";
 import DOMPurify from "isomorphic-dompurify";
 import { format, differenceInDays, startOfDay } from "date-fns";
 import { CalendarDays, Clock, FileText, Activity, Users } from "lucide-react";
-
 import { useGetSingleProjectQuery } from "@/Redux/services/projectApi/ProjectApi";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,15 +19,16 @@ import UpdateStatusModal from "@/components/DashboardRelated/Admin/ProjectRelate
 
 const ProjectOverviewPage = () => {
   const params = useParams();
-  const slug = params.slug as string;
+  const slug = params.slug;
 
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
 
-  const { data } = useGetSingleProjectQuery(slug, { skip: !slug });
+  const { data } = useGetSingleProjectQuery(slug as string, { skip: !slug });
   const project = data?.data;
 
   if (!project) return null;
 
+  // it stripout any dangerous js script from the description, it is ncessry because we used richtext here
   const sanitizedDescription = DOMPurify.sanitize(project.description);
 
   const isActive = project.status === "Active";
@@ -45,9 +45,9 @@ const ProjectOverviewPage = () => {
   return (
     <>
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 px-6">
-        {/* Left Column: Rich Text Brief */}
+        {/* lect container*/}
         <div className="xl:col-span-2 space-y-6">
-          <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
+          <div className="bg-card rounded-xl border border-border p-6 shadow-xs">
             <div className="flex items-center gap-2 border-b border-border pb-4 mb-4">
               <FileText className="h-5 w-5 text-primary" />
               <h2 className="text-lg font-bold text-foreground">
@@ -64,9 +64,9 @@ const ProjectOverviewPage = () => {
           </div>
         </div>
 
-        {/* Right Column: Key Details & Quick Actions */}
+        {/* right container*/}
         <div className="space-y-6">
-          <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
+          <div className="bg-card rounded-xl border border-border p-6 shadow-xs">
             <h3 className="text-sm font-bold uppercase tracking-widest text-muted-foreground mb-4">
               Project Details
             </h3>
@@ -118,7 +118,6 @@ const ProjectOverviewPage = () => {
                       )}
                     </p>
 
-                    {/* Urgency Badges */}
                     {isCritical && (
                       <Badge
                         variant="outline"

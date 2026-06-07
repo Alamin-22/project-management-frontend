@@ -88,8 +88,7 @@ const CreateEditProjectForm = ({ project }: CreateEditProjectFormProps) => {
           background: "var(--card)",
           color: "var(--foreground)",
         });
-
-        // Redirect to the overview page using the NEW slug
+        //upon creation redirect to overview page
         const updatedSlug = response.data.slug;
         router.push(`/manager_workspace/projects/${updatedSlug}`);
       } else {

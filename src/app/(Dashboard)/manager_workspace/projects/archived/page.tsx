@@ -31,7 +31,7 @@ const ArchivedProjectsPage = () => {
   const showLoading = isLoading || isFetching;
 
   return (
-    <div className="min-h-full flex flex-col">
+    <>
       <PageHeader
         title="Archived Projects"
         description="View past projects and reactivate them if necessary."
@@ -63,9 +63,9 @@ const ArchivedProjectsPage = () => {
         ) : projects.length > 0 ? (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 opacity-80 hover:opacity-100 transition-opacity">
-              {projects.map((project: IProject) => (
+              {projects.map((project: IProject, idx) => (
                 <ProjectCard
-                  key={project._id}
+                  key={idx}
                   project={project}
                   baseUrl="/manager_workspace/projects"
                 />
@@ -88,7 +88,7 @@ const ArchivedProjectsPage = () => {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
 
