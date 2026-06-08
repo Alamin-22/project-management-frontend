@@ -48,6 +48,9 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
   // Critical = Due Today or Overdue
   const isCritical = daysUntilDeadline <= 0 && !isCompleted;
 
+  // Strictly Overdue = Deadline has passed
+  const isStrictlyOverdue = daysUntilDeadline < 0 && !isCompleted;
+
   // Warning = 1 to 3 days left
   const isWarning =
     daysUntilDeadline > 0 && daysUntilDeadline <= 3 && !isCompleted;
@@ -75,6 +78,15 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
           </div>
 
           <div className="flex items-center gap-1 relative z-20">
+            {isStrictlyOverdue && (
+              <Badge
+                variant="outline"
+                className="shrink-0 text-[10px] font-bold uppercase tracking-wider border-destructive text-destructive bg-destructive/10 mr-1 shadow-sm"
+              >
+                Overdue
+              </Badge>
+            )}
+
             <Badge
               variant="secondary"
               className={`shrink-0 text-[10px] font-bold uppercase tracking-wider mr-1 ${
@@ -153,7 +165,9 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
                   variant="outline"
                   className="text-[9px] px-1 py-0 h-4 border-destructive text-destructive bg-destructive/10 leading-none"
                 >
-                  {daysUntilDeadline === 0 ? "Due Today" : "Overdue"}
+                  {daysUntilDeadline === 0
+                    ? "Due Today"
+                    : `Past by ${Math.abs(daysUntilDeadline)} days`}
                 </Badge>
               )}
 
@@ -189,7 +203,7 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
       </div>
 
       <Dialog open={isStatusModalOpen} onOpenChange={setIsStatusModalOpen}>
-        <DialogContent className="max-w-md w-full border-border bg-card">
+        <DialogContent className="max-w-md w-full border-border bg-card z-100">
           <DialogHeader>
             <DialogTitle className="text-xl">Update Project Status</DialogTitle>
             <DialogDescription>
