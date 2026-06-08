@@ -28,6 +28,7 @@ import {
   TASK_STATUS,
 } from "@/Redux/services/taskApi/Task.interface";
 import LogoLoader from "@/components/Shared/Loader/LogoLoader";
+import { formatAndBuildErrorList } from "@/Utils/errorFormatter";
 
 interface CreateEditTaskFormProps {
   task?: ITask;
@@ -120,15 +121,29 @@ const CreateEditTaskForm = ({ task, projectSlug }: CreateEditTaskFormProps) => {
       }
       router.push(`/manager_workspace/projects/${projectSlug}/tasks`);
     } catch (error: any) {
-      Swal.fire({
-        title: "Error",
-        text:
-          error?.data?.message ||
-          `Failed to ${isUpdateMode ? "update" : "create"} task.`,
-        icon: "error",
-        background: "var(--card)",
-        color: "var(--foreground)",
-      });
+      if (error?.data?.errorSources && error.data.errorSources.length > 0) {
+        const errorHtml = formatAndBuildErrorList(error.data.errorSources);
+        Swal.fire({
+          title: "Validation Error",
+          html: errorHtml,
+          icon: "error",
+          confirmButtonColor: "var(--primary)",
+          background: "var(--card)",
+          color: "var(--foreground)",
+        });
+      } else {
+        // Fallback for missing permissions or standard text-based exception messages
+        Swal.fire({
+          title: "Error",
+          text:
+            error?.data?.message ||
+            `Failed to ${isUpdateMode ? "update" : "create"} task.`,
+          icon: "error",
+          confirmButtonColor: "var(--primary)",
+          background: "var(--card)",
+          color: "var(--foreground)",
+        });
+      }
     }
   };
 

@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/dialog";
 import { IProject } from "@/Redux/services/projectApi/Project.interface";
 import UpdateStatusModal from "./UpdateStatusModal";
+import { useAppState } from "@/Provider/StateProvider";
 
 interface ProjectCardProps {
   project: IProject;
@@ -36,7 +37,10 @@ interface ProjectCardProps {
 }
 
 const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
+  const { user } = useAppState();
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+
+  const canUpdateProjectStatus = user?.role !== "team_member";
 
   const isActive = project.status === "Active";
   const isCompleted = project.status === "Completed";
@@ -45,10 +49,8 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
   const today = startOfDay(new Date());
   const daysUntilDeadline = differenceInDays(deadlineDate, today);
 
-  // Critical = Due Today or Overdue
   const isCritical = daysUntilDeadline <= 0 && !isCompleted;
-
-  // Warning = 1 to 3 days left
+  const isStrictlyOverdue = daysUntilDeadline < 0 && !isCompleted;
   const isWarning =
     daysUntilDeadline > 0 && daysUntilDeadline <= 3 && !isCompleted;
 
@@ -65,7 +67,7 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
 
         <div className="relative flex justify-between items-start mb-4">
           <div className="space-y-1 pr-2 relative z-0 pointer-events-none">
-            <h3 className="font-bold text-lg leading-tight text-foreground group-hover:text-primary transition-colors line-clamp-1 ">
+            <h3 className="font-bold text-lg leading-tight text-foreground group-hover:text-primary transition-colors line-clamp-1">
               {project.name}
             </h3>
             <p className="text-xs text-muted-foreground flex items-center gap-1.5">
@@ -75,6 +77,15 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
           </div>
 
           <div className="flex items-center gap-1 relative z-20">
+            {isStrictlyOverdue && (
+              <Badge
+                variant="outline"
+                className="shrink-0 text-[10px] font-bold uppercase tracking-wider border-destructive text-destructive bg-destructive/10 mr-1 shadow-sm"
+              >
+                Overdue
+              </Badge>
+            )}
+
             <Badge
               variant="secondary"
               className={`shrink-0 text-[10px] font-bold uppercase tracking-wider mr-1 ${
@@ -88,21 +99,24 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
               {project.status.replace("_", " ")}
             </Badge>
 
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
                   size="icon"
                   className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-muted"
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <MoreVertical className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
+
               <DropdownMenuContent
                 align="end"
                 className="w-44 border-border shadow-lg z-50"
+                onClick={(e) => e.stopPropagation()}
               >
-                {!project.isDeleted && (
+                {!project.isDeleted && canUpdateProjectStatus && (
                   <DropdownMenuItem
                     className="cursor-pointer"
                     onSelect={(e) => {
@@ -114,10 +128,11 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
                     Update Status
                   </DropdownMenuItem>
                 )}
+
                 <DropdownMenuItem asChild className="cursor-pointer">
                   <Link href={`${baseUrl}/${project.slug}/team`}>
                     <UserPlus className="w-4 h-4 mr-2 text-muted-foreground" />
-                    Manage Team
+                    {canUpdateProjectStatus ? "Manage Team" : "View Team"}
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -153,7 +168,9 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
                   variant="outline"
                   className="text-[9px] px-1 py-0 h-4 border-destructive text-destructive bg-destructive/10 leading-none"
                 >
-                  {daysUntilDeadline === 0 ? "Due Today" : "Overdue"}
+                  {daysUntilDeadline === 0
+                    ? "Due Today"
+                    : `Past by ${Math.abs(daysUntilDeadline)} days`}
                 </Badge>
               )}
 

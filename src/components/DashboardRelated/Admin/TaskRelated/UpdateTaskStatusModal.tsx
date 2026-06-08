@@ -14,6 +14,7 @@ import {
   TTaskStatus,
 } from "@/Redux/services/taskApi/Task.interface";
 import { useAppState } from "@/Provider/StateProvider";
+import { formatAndBuildErrorList } from "@/Utils/errorFormatter";
 
 interface Props {
   task: ITask;
@@ -47,7 +48,7 @@ const UpdateTaskStatusModal = ({ task, closeModal }: Props) => {
 
       Swal.fire({
         title: "Status Updated",
-        text: `Task successfully moved to ${selectedStatus}.`,
+        text: `Task successfully moved to ${selectedStatus.replace("_", " ")}.`,
         icon: "success",
         toast: true,
         position: "top-end",
@@ -59,11 +60,27 @@ const UpdateTaskStatusModal = ({ task, closeModal }: Props) => {
       closeModal();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      Swal.fire(
-        "Error",
-        error?.data?.message || "Failed to update status",
-        "error",
-      );
+      if (error?.data?.errorSources && error.data.errorSources.length > 0) {
+        const errorHtml = formatAndBuildErrorList(error.data.errorSources);
+        Swal.fire({
+          title: "Validation Error",
+          html: errorHtml,
+          icon: "error",
+          confirmButtonColor: "var(--primary)",
+          background: "var(--card)",
+          color: "var(--foreground)",
+        });
+      } else {
+        // Fallback for general server errors
+        Swal.fire({
+          title: "Error",
+          text: error?.data?.message || "Failed to update status",
+          icon: "error",
+          confirmButtonColor: "var(--primary)",
+          background: "var(--card)",
+          color: "var(--foreground)",
+        });
+      }
     }
   };
 
@@ -94,7 +111,14 @@ const UpdateTaskStatusModal = ({ task, closeModal }: Props) => {
         onValueChange={(val) => setSelectedStatus(val as TTaskStatus)}
         className="flex flex-col gap-3"
       >
-        <div className="flex items-center space-x-3 space-y-0 rounded-md border border-border p-4 hover:bg-muted/50 cursor-pointer">
+        <div
+          onClick={() => setSelectedStatus(TASK_STATUS.todo)}
+          className={`flex items-center space-x-3 space-y-0 rounded-md border p-4 cursor-pointer transition-colors ${
+            selectedStatus === TASK_STATUS.todo
+              ? "border-primary bg-primary/5"
+              : "border-border hover:bg-muted/50"
+          }`}
+        >
           <RadioGroupItem value={TASK_STATUS.todo} id="status-todo" />
           <Label
             htmlFor="status-todo"
@@ -103,7 +127,15 @@ const UpdateTaskStatusModal = ({ task, closeModal }: Props) => {
             <span className="h-2 w-2 rounded-full bg-amber-500" /> To-Do
           </Label>
         </div>
-        <div className="flex items-center space-x-3 space-y-0 rounded-md border border-border p-4 hover:bg-muted/50 cursor-pointer">
+
+        <div
+          onClick={() => setSelectedStatus(TASK_STATUS.in_progress)}
+          className={`flex items-center space-x-3 space-y-0 rounded-md border p-4 cursor-pointer transition-colors ${
+            selectedStatus === TASK_STATUS.in_progress
+              ? "border-primary bg-primary/5"
+              : "border-border hover:bg-muted/50"
+          }`}
+        >
           <RadioGroupItem
             value={TASK_STATUS.in_progress}
             id="status-in-progress"
@@ -115,7 +147,15 @@ const UpdateTaskStatusModal = ({ task, closeModal }: Props) => {
             <span className="h-2 w-2 rounded-full bg-blue-500" /> In Progress
           </Label>
         </div>
-        <div className="flex items-center space-x-3 space-y-0 rounded-md border border-border p-4 hover:bg-muted/50 cursor-pointer">
+
+        <div
+          onClick={() => setSelectedStatus(TASK_STATUS.completed)}
+          className={`flex items-center space-x-3 space-y-0 rounded-md border p-4 cursor-pointer transition-colors ${
+            selectedStatus === TASK_STATUS.completed
+              ? "border-primary bg-primary/5"
+              : "border-border hover:bg-muted/50"
+          }`}
+        >
           <RadioGroupItem value={TASK_STATUS.completed} id="status-completed" />
           <Label
             htmlFor="status-completed"

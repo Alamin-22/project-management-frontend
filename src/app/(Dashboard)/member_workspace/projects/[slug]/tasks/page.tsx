@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 import {
   DndContext,
   DragOverlay,
@@ -41,6 +42,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useAppState } from "@/Provider/StateProvider";
 import LogoLoader from "@/components/Shared/Loader/LogoLoader";
+import { formatAndBuildErrorList } from "@/Utils/errorFormatter";
 
 type BoardState = Record<TTaskStatus, ITask[]>;
 
@@ -118,7 +120,11 @@ const MemberTaskBoardPage = () => {
   };
 
   const checkPermission = (task: ITask) => {
-    const isAssigned = task.assignedMembers?.includes(user?.id || "");
+    const userId = user?._id;
+    const isAssigned = task.assignedMembers?.some(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (member: any) => member === userId || member._id === userId,
+    );
     return user?.role !== "team_member" || isAssigned;
   };
 
@@ -238,8 +244,37 @@ const MemberTaskBoardPage = () => {
     if (payloadTasks.length > 0) {
       try {
         await reorderTasks({ tasks: payloadTasks }).unwrap();
-      } catch (error) {
-        console.error("Failed to reorder tasks", error);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        // rollback state if api call fails
+        if (serverDataRef) {
+          setBoardData({
+            [TASK_STATUS.todo]: serverDataRef
+              .filter((t) => t.status === TASK_STATUS.todo)
+              .sort((a, b) => a.order - b.order),
+            [TASK_STATUS.in_progress]: serverDataRef
+              .filter((t) => t.status === TASK_STATUS.in_progress)
+              .sort((a, b) => a.order - b.order),
+            [TASK_STATUS.completed]: serverDataRef
+              .filter((t) => t.status === TASK_STATUS.completed)
+              .sort((a, b) => a.order - b.order),
+          });
+        }
+
+        if (error?.data?.errorSources && error.data.errorSources.length > 0) {
+          const errorHtml = formatAndBuildErrorList(error.data.errorSources);
+          Swal.fire({
+            title: "Validation Error",
+            html: errorHtml,
+            icon: "error",
+            confirmButtonColor: "var(--primary)",
+            background: "var(--card)",
+            color: "var(--foreground)",
+          });
+        } else {
+          // Fallback for general server errors
+          toast.error(error?.data?.message || "Failed to update task status.");
+        }
       }
     }
   };
