@@ -11,7 +11,9 @@ import {
   AlertCircle,
   Activity,
 } from "lucide-react";
+import { differenceInDays, startOfDay } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useGetSingleProjectQuery } from "@/Redux/services/projectApi/ProjectApi";
 import NotificationBell from "@/components/Shared/Notification/NotificationBell";
 import LogoLoader from "@/components/Shared/Loader/LogoLoader";
@@ -70,10 +72,22 @@ const ProjectWorkspaceLayout = ({
 
   if (!project) return null;
 
+  const isActive = project.status === "Active";
+  const isCompleted = project.status === "Completed";
+
+  const deadlineDate = startOfDay(new Date(project.deadline));
+  const today = startOfDay(new Date());
+  const daysUntilDeadline = differenceInDays(deadlineDate, today);
+
+  const isCritical = daysUntilDeadline <= 0 && !isCompleted;
+  const isStrictlyOverdue = daysUntilDeadline < 0 && !isCompleted;
+  const isWarning =
+    daysUntilDeadline > 0 && daysUntilDeadline <= 3 && !isCompleted;
+
   return (
     <div className="flex flex-col min-h-full">
       <div className="bg-card border-b border-border px-6 py-3">
-        <div className="max-w-7xl mx-auto flex items-start  justify-between">
+        <div className="max-w-7xl mx-auto flex items-start justify-between">
           <div className="flex items-start gap-4">
             <Link
               href={
@@ -93,14 +107,66 @@ const ProjectWorkspaceLayout = ({
             </Link>
 
             <div>
-              <div className="flex items-center gap-3 mb-1.5">
-                <span className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold tracking-widest uppercase">
+              <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                <Badge
+                  variant="secondary"
+                  className={`text-[10px] font-bold uppercase tracking-widest ${
+                    isActive
+                      ? "bg-blue-500/10 text-blue-500 border-blue-500/20"
+                      : isCompleted
+                        ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                        : "bg-amber-500/10 text-amber-500 border-amber-500/20"
+                  }`}
+                >
                   {project.status.replace("_", " ")}
-                </span>
+                </Badge>
+
+                {isStrictlyOverdue && (
+                  <Badge
+                    variant="outline"
+                    className="text-[10px] font-bold uppercase tracking-wider border-destructive text-destructive bg-destructive/10"
+                  >
+                    Overdue
+                  </Badge>
+                )}
+
+                {isCritical && (
+                  <Badge
+                    variant="outline"
+                    className="text-[10px] px-1.5 py-0 h-5 border-destructive text-destructive bg-destructive/10 leading-none"
+                  >
+                    {daysUntilDeadline === 0
+                      ? "Due Today"
+                      : `Past by ${Math.abs(daysUntilDeadline)} ${
+                          Math.abs(daysUntilDeadline) === 1 ? "Day" : "Days"
+                        }`}
+                  </Badge>
+                )}
+
+                {isWarning && (
+                  <Badge
+                    variant="outline"
+                    className="text-[10px] px-1.5 py-0 h-5 border-orange-500 text-orange-600 dark:text-orange-500 bg-orange-50 dark:bg-orange-500/10 leading-none"
+                  >
+                    Due in {daysUntilDeadline}{" "}
+                    {daysUntilDeadline === 1 ? "Day" : "Days"}
+                  </Badge>
+                )}
+
+                {!isCritical && !isWarning && !isCompleted && (
+                  <Badge
+                    variant="outline"
+                    className="text-[10px] px-1.5 py-0 h-5 border-border text-muted-foreground bg-muted/30 leading-none"
+                  >
+                    On Track
+                  </Badge>
+                )}
+
                 <span className="text-xs text-muted-foreground font-medium">
                   ID: {project.projectId}
                 </span>
               </div>
+
               <h1 className="text-3xl font-bold text-foreground leading-tight">
                 {project.name}
               </h1>

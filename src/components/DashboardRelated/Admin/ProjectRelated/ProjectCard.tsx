@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/dialog";
 import { IProject } from "@/Redux/services/projectApi/Project.interface";
 import UpdateStatusModal from "./UpdateStatusModal";
+import { useAppState } from "@/Provider/StateProvider";
 
 interface ProjectCardProps {
   project: IProject;
@@ -36,7 +37,10 @@ interface ProjectCardProps {
 }
 
 const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
+  const { user } = useAppState();
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+
+  const canUpdateProjectStatus = user?.role !== "team_member";
 
   const isActive = project.status === "Active";
   const isCompleted = project.status === "Completed";
@@ -45,13 +49,8 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
   const today = startOfDay(new Date());
   const daysUntilDeadline = differenceInDays(deadlineDate, today);
 
-  // Critical = Due Today or Overdue
   const isCritical = daysUntilDeadline <= 0 && !isCompleted;
-
-  // Strictly Overdue = Deadline has passed
   const isStrictlyOverdue = daysUntilDeadline < 0 && !isCompleted;
-
-  // Warning = 1 to 3 days left
   const isWarning =
     daysUntilDeadline > 0 && daysUntilDeadline <= 3 && !isCompleted;
 
@@ -68,7 +67,7 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
 
         <div className="relative flex justify-between items-start mb-4">
           <div className="space-y-1 pr-2 relative z-0 pointer-events-none">
-            <h3 className="font-bold text-lg leading-tight text-foreground group-hover:text-primary transition-colors line-clamp-1 ">
+            <h3 className="font-bold text-lg leading-tight text-foreground group-hover:text-primary transition-colors line-clamp-1">
               {project.name}
             </h3>
             <p className="text-xs text-muted-foreground flex items-center gap-1.5">
@@ -100,21 +99,24 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
               {project.status.replace("_", " ")}
             </Badge>
 
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
                   size="icon"
                   className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-muted"
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <MoreVertical className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
+
               <DropdownMenuContent
                 align="end"
                 className="w-44 border-border shadow-lg z-50"
+                onClick={(e) => e.stopPropagation()}
               >
-                {!project.isDeleted && (
+                {!project.isDeleted && canUpdateProjectStatus && (
                   <DropdownMenuItem
                     className="cursor-pointer"
                     onSelect={(e) => {
@@ -126,10 +128,11 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
                     Update Status
                   </DropdownMenuItem>
                 )}
+
                 <DropdownMenuItem asChild className="cursor-pointer">
                   <Link href={`${baseUrl}/${project.slug}/team`}>
                     <UserPlus className="w-4 h-4 mr-2 text-muted-foreground" />
-                    Manage Team
+                    {canUpdateProjectStatus ? "Manage Team" : "View Team"}
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -203,7 +206,7 @@ const ProjectCard = ({ project, baseUrl }: ProjectCardProps) => {
       </div>
 
       <Dialog open={isStatusModalOpen} onOpenChange={setIsStatusModalOpen}>
-        <DialogContent className="max-w-md w-full border-border bg-card z-100">
+        <DialogContent className="max-w-md w-full border-border bg-card">
           <DialogHeader>
             <DialogTitle className="text-xl">Update Project Status</DialogTitle>
             <DialogDescription>
