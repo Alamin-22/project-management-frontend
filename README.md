@@ -2,6 +2,18 @@
 
 ### High-Density Interactive Project Management Client
 
+> 🚀 **Project Status: Standalone v1 & Transition to SaaS (v2)**
+>
+> This repository contains the **v1 standalone frontend client** for the task management platform. It showcases the core UI architecture, real-time state management, and role-based interactive workspaces.
+>
+> **What's Next?**
+> I am currently developing **v2**—a complete, multi-tenant SaaS platform where any company can register, create a profile, and use the platform entirely for free as their own internal tool.
+>
+> **Note to Recruiters and Developers:**
+> To protect the proprietary architecture of the SaaS engine, the advanced v2 frontend features (such as dynamic tenant routing, advanced organization-wide dashboards, and multi-tenant UI state isolation) are maintained in a **separate, private repository**. This public v1 repo remains available as a transparent showcase of my frontend coding standards, component architecture, and Next.js proficiency.
+
+---
+
 This repository contains the frontend client for the Smart Project Management System. Built with a focus on seamless user experience and strict operational role enforcement, it delivers a high-performance interactive workspace featuring drag-and-drop task boards, real-time WebSocket notifications, analytic dashboards, and professional rich-text documentation.
 
 ---
@@ -78,7 +90,7 @@ INTERNAL_SERVER_API=[https://project-management-backend-l2ru.onrender.com/api/v1
 
 ```bash
 # Clone the frontend repository
-git clone https://github.com/Alamin-22/project-management-frontend
+git clone [https://github.com/Alamin-22/project-management-frontend](https://github.com/Alamin-22/project-management-frontend)
 cd project-management-frontend
 
 # Install dependencies
@@ -86,6 +98,7 @@ npm install
 
 # Start the development server
 npm run dev
+
 ```
 
 Navigate to `http://localhost:3000` to view the application.
